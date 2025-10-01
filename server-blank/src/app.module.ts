@@ -10,7 +10,7 @@ import { KafkaService } from './kafka.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env'],
+      envFilePath: ['../envs/.env.blank-dev'],
     }),
     ClientsModule.registerAsync([
       {
