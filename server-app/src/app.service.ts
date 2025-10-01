@@ -3,7 +3,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 @Injectable()
 export class AppService implements OnModuleInit {
   constructor() {
-    console.log('AppService start');
+    console.log('AppService start1');
   }
 
   async onModuleInit() {}
