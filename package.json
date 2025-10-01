@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "app": "concurrently \"(npm run start:dev --prefix server-app)\" \"(npm run start:dev --prefix server-blank)\" \"(docker compose up -d)\"",
+    "npmi": "npm i && cd server && npm i && cd .. && cd client && npm i && cd .. && cd site && npm i && cd ..",
+    "push": "git add . && git commit -m 'home' && git push origin main",
+    "pull": "git pull origin main"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
