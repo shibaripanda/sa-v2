@@ -1,17 +1,29 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
   constructor(
     @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
+    private readonly configService: ConfigService,
   ) {
     console.log('KafkaService start');
   }
 
   async onModuleInit() {
+    console.log('conecting.....');
     await this.kafkaClient.connect();
-    this.kafkaClient.subscribeToResponseOf('hello');
+  }
+
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  ping() {
+    console.log('CRON');
+    this.kafkaClient.emit('hello', {
+      mesage: `Hello from ${this.configService.get<string>('SERVICE_NAME')}`,
+      key: 'my-key2',
+    });
   }
 
   sendMessage(message: string): any {
