@@ -13,16 +13,22 @@ export class KafkaService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    console.log('conecting.....');
+    // this.kafkaClient.subscribeToResponseOf('hello');
+    console.log(
+      this.configService.get<string>('SERVICE_NAME'),
+      'conecting.....',
+    );
     await this.kafkaClient.connect();
   }
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   ping() {
-    console.log('CRON');
+    console.log('CRON BLANK');
     this.kafkaClient.emit('hello', {
-      mesage: `Hello from ${this.configService.get<string>('SERVICE_NAME')}`,
-      key: 'my-key2',
+      value: {
+        message: `Hello from ${this.configService.get<string>('SERVICE_NAME')}`,
+      },
+      key: 123,
     });
   }
 

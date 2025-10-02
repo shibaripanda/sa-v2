@@ -16,8 +16,7 @@ export class KafkaController {
 
   // Kafka Listener
   @MessagePattern('hello')
-  handleKafkaMessage(@Payload() message: KafkaMessage) {
-    const value = message.value;
-    console.log('Received from Kafka:', value);
+  handleKafkaMessage(@Payload() value: KafkaMessage) {
+    console.log('App:', value);
   }
 }
