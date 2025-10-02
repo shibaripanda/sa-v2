@@ -23,7 +23,7 @@ export class KafkaService implements OnModuleInit {
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   ping() {
-    console.log('CRON APP');
+    console.log(`CRON ${this.configService.get<string>('SERVICE_NAME')}`);
     this.kafkaClient.emit('test', {
       value: {
         message: `Hello from ${this.configService.get<string>('SERVICE_NAME')}`,
