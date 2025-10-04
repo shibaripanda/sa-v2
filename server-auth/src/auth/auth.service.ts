@@ -104,8 +104,9 @@ export class AuthService {
   }
 
   private generateToken(user: UserDocument, ip: string, location: string) {
+    const userObj = user.toJSON();
     const payload = {
-      ...user,
+      ...userObj,
       ip,
       location,
     };

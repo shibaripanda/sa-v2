@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "app": "concurrently \"(npm run start:dev --prefix server-app)\" \"(npm run start:dev --prefix server-blank)\" \"(npm run start:dev --prefix server-auth)\" \"(docker compose up -d)\"",
-    "npmi": "concurrently \"(npm i)\" \"(npm i --prefix server-app)\" \"(npm i --prefix server-blank)\" \"(npm i --prefix server-auth)\"",
+    "app": "concurrently \"(npm run dev --prefix client-user)\" \"(npm run start:dev --prefix server-app)\" \"(npm run start:dev --prefix server-blank)\" \"(npm run start:dev --prefix server-auth)\" \"(docker compose up -d)\"",
+    "npmi": "concurrently \"(npm i)\" \"(npm i --prefix client-user)\" \"(npm i --prefix server-app)\" \"(npm i --prefix server-blank)\" \"(npm i --prefix server-auth)\"",
     "push": "node push.js",
     "pull": "git pull origin main"
   },

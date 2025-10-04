@@ -9,6 +9,7 @@ export class AuthController {
 
   @Post('/googleLogin')
   async googleLogin(@Body() data: GoogleLoginDto, @Ip() ip: string) {
+    console.log('HELLO FROM CLIENT');
     return this.authService.googleLogin(data, ip);
   }
 
