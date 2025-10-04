@@ -14,13 +14,17 @@ import { ActivUsersBlock } from '../subAuthScreen/ActivUsersBlock.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { User } from '../../../interfaces/user.ts';
 import { TelegramButton } from '../subAuthScreen/TelegramButton.tsx';
-import { IconBrandGoogle } from '@tabler/icons-react';
+import { LanguagePicker } from '../../subComponents/languagePicker/LanguagePicker.tsx';
+import { TextLib } from '../../../interfaces/textLib.ts';
 
 export interface AuthScreenInterface {
   loginedUsers: User[];
   setLoginedUsers: any;
   setActivUserId: any;
   setActiveServiceId: any;
+  text: TextLib | null;
+  setText: any;
+  leng: string;
 }
 
   export function AuthScreen(props: AuthScreenInterface) {
@@ -49,7 +53,7 @@ export interface AuthScreenInterface {
 
           <Grid justify="space-between" align="center">
             <Grid.Col span={11}>
-              {/* <LanguagePicker avLeng={props.avLeng} setLeng={props.setLeng} leng={props.leng}/> */}
+              <LanguagePicker {...props}/>
             </Grid.Col>
             <Grid.Col span={1}>
               <ColorShema/>

@@ -9,6 +9,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserModule } from 'src/user/user.module';
+import { TextModule } from 'src/text/text.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UserModule } from 'src/user/user.module';
     ]),
     UserModule,
     AuthModule,
+    TextModule,
   ],
   controllers: [AppController, KafkaController],
   providers: [AppService, KafkaService],
