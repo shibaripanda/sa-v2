@@ -26,7 +26,7 @@ export class UserService {
     const created = new this.userModel({
       telegramId: user.id,
       telegramUserName: user.username ?? '',
-      name: user.first_name + ' ' + (user.last_name ?? ''),
+      name: user.first_name + (user.last_name ? ' ' + user.last_name : ''),
     });
     return created.save();
   }

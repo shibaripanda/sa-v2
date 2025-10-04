@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { UnstyledButton, Menu, Group, ScrollArea } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-// @ts-ignore
 import classes from './LanguagePicker.module.css'
-import React from 'react'
 
 export function LanguagePicker(props) {
   const [opened, setOpened] = useState(false)

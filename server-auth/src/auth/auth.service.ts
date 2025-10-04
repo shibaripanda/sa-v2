@@ -10,7 +10,6 @@ import { JwtService } from '@nestjs/jwt';
 import { IpInfo } from './interfaces/IpInfo';
 import { AuthDataValidator } from '@telegram-auth/server';
 import { urlStrToAuthDataMap } from '@telegram-auth/server/utils';
-import { TelegramLoginDto } from './dto/telegramLogin.dto';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async telegramLogin(data: TelegramLoginDto, ip: string) {
+  async telegramLogin(data: object, ip: string) {
     const telegramUserData = await this.telegramAuth(data);
     if (telegramUserData) {
       const user: UserDocument | null =
@@ -74,11 +73,11 @@ export class AuthService {
     return parts.length ? parts.join(', ') : 'noLocation';
   }
 
-  private async telegramAuth(data: TelegramLoginDto) {
+  private async telegramAuth(data: object) {
     const validator = new AuthDataValidator({
       botToken: this.configService.get<string>('BOT_TOKEN')!,
     });
-    let dataCheck: string = '/aut/login?';
+    let dataCheck: string = '/auth/telegramLogin?';
     for (const key in data) {
       dataCheck = dataCheck + key + '=' + data[key] + '&';
     }

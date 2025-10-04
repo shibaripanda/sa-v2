@@ -21,4 +21,9 @@ dotenv.config({ path: path.resolve(__dirname, '../envs/.env.client-user-dev') })
 export default defineConfig({
   // теперь переменные из файла доступны
   // в клиентском коде нужны с VITE_*
+  server: {
+    allowedHosts: [
+      '543f10c370ee.ngrok-free.app', // 👈 твой ngrok-хост
+    ],
+  },
 });

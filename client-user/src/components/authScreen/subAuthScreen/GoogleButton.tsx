@@ -3,16 +3,16 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../../interfaces/user";
+import { AuthScreenInterface } from "../mainScreen/AuthScreen";
+import { IconBrandGoogle } from "@tabler/icons-react";
 
-interface GoogleButtonInterface {
+interface GoogleButtonInterface extends AuthScreenInterface {
     title: string;
     agreement: boolean;
-    setLoginedUsers: any;
     setAgreement: any;
 }
 
-export function GoogleButton({title, agreement, setLoginedUsers, setAgreement}: GoogleButtonInterface) {
-    console.log(import.meta.env.VITE_API_LINK)
+export function GoogleButton(props: GoogleButtonInterface) {
 
     const loginServerRequest = async (credentialResponse: string) => {
         return await axios({
@@ -35,8 +35,8 @@ export function GoogleButton({title, agreement, setLoginedUsers, setAgreement}: 
             else{
                 sessionStorage.setItem('loginedUsers', JSON.stringify([newUser, ...existUsers]))
             }
-            setAgreement(false)
-            setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
+            props.setAgreement(false)
+            props.setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
         })
         .catch((er) => {
             console.log(er)
@@ -51,13 +51,13 @@ export function GoogleButton({title, agreement, setLoginedUsers, setAgreement}: 
 
     return (
         <Button
-            disabled={!agreement}
+            disabled={!props.agreement}
             variant='default'
             fullWidth
             mt="xl"
             size="md" 
             onClick={() => login()}>
-            {title} 🚀
+            {props.title}&nbsp;&nbsp;<IconBrandGoogle/>
         </Button>
     )
 }

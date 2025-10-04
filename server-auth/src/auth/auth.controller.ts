@@ -1,7 +1,6 @@
 import { Body, Controller, Ip, Post } from '@nestjs/common';
 import { GoogleLoginDto } from './dto/googleLogin.dto';
 import { AuthService } from './auth.service';
-import { TelegramLoginDto } from './dto/telegramLogin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -9,12 +8,12 @@ export class AuthController {
 
   @Post('/googleLogin')
   async googleLogin(@Body() data: GoogleLoginDto, @Ip() ip: string) {
-    console.log('HELLO FROM CLIENT');
     return this.authService.googleLogin(data, ip);
   }
 
   @Post('/telegramLogin')
-  async telegramLogin(@Body() data: TelegramLoginDto, @Ip() ip: string) {
+  async telegramLogin(@Body() data: object, @Ip() ip: string) {
+    console.log(data);
     return this.authService.telegramLogin(data, ip);
   }
 }

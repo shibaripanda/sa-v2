@@ -16,6 +16,8 @@
     "@mantinex/dev-icons": "^2.0.0",
     "@react-oauth/google": "^0.12.2",
     "@tabler/icons-react": "^3.35.0",
+    "@telegram-auth/react": "^1.0.4",
+    "@telegram-login-ultimate/react": "^1.1.0",
     "axios": "^1.12.2",
     "dotenv": "^17.2.3",
     "jwt-decode": "^4.0.0",

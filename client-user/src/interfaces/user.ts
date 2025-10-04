@@ -1,8 +1,14 @@
+interface HistoryLogin {
+    date: number;
+    ip: string;
+    location: string;
+}
+
 export interface User {
     createdAt: string;
     email: string;
     exp: number;
-    historyLogin: object[];
+    historyLogin: HistoryLogin[];
     iat: number;
     ip: string;
     location: string;

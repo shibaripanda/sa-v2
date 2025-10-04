@@ -1,5 +1,4 @@
 import { Center, Loader } from "@mantine/core"
-import React from "react"
 
 export const LoaderShow = () => {
     return (

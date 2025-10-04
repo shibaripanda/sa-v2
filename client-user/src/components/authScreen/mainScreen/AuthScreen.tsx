@@ -1,68 +1,32 @@
 import { useState } from 'react'
 import {
-  Button,
     Checkbox,
     Grid,
     Paper,
     Space,
     Title,
   } from '@mantine/core';
-import classes from './AuthForm.module.css'
+import classes from './AuthScreen.module.css'
 import mainPic from '../../../images/mainpic.png'
-import { ColorShema } from '../../miniComponents/ColorShema.tsx';
-import { GoogleButton } from './GoogleButton.tsx';
+import { ColorShema } from '../../subComponents/colorShema/ColorShema.tsx';
+import { GoogleButton } from '../subAuthScreen/GoogleButton.tsx';
+import { ActivUsersBlock } from '../subAuthScreen/ActivUsersBlock.tsx';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { User } from '../../../interfaces/user.ts';
-import { googleLogout } from '@react-oauth/google';
+import { TelegramButton } from '../subAuthScreen/TelegramButton.tsx';
+import { IconBrandGoogle } from '@tabler/icons-react';
 
-interface AuthFormInterface {
+export interface AuthScreenInterface {
   loginedUsers: User[];
   setLoginedUsers: any;
   setActivUserId: any;
+  setActiveServiceId: any;
 }
 
-  export function AuthForm({loginedUsers, setLoginedUsers, setActivUserId}: AuthFormInterface) {
+  export function AuthScreen(props: AuthScreenInterface) {
 
     const [agreement, setAgreement] = useState(false)
 
-
-    const usersBlock = () => {
-      if(loginedUsers.length)
-        return (
-          <div>
-          {loginedUsers.map(item => <Button
-            key={item._id}
-            color='green'
-            fullWidth
-            mt="xl"
-            size="md"
-            onClick={async () => {
-              setActivUserId(item._id)
-              sessionStorage.setItem('activeUserId', item._id)
-              // open()
-            }}
-            >
-            {item.name ? item.name : item.email}
-          </Button>)}
-          <Button
-            color='red'
-            fullWidth
-            mt="xl"
-            size="md"
-            onClick={async () => {
-              sessionStorage.clear()
-              setLoginedUsers([])
-              setActivUserId('')
-              googleLogout()
-            }}
-            >
-            Выходj
-          </Button>
-          <Space h='lg'/>
-          <hr></hr>
-          </div>
-
-          )
-    }
     // const modalBlock = () => {
     //   if(sessionStorage.getItem('currentUser')){
         
@@ -79,6 +43,7 @@ interface AuthFormInterface {
     // }
 
     return (
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_TOKEN}>
       <div className={classes.wrapper}  style={{ backgroundImage: `url(${mainPic}` }}>
         <Paper className={classes.form} p={30}>
 
@@ -94,16 +59,22 @@ interface AuthFormInterface {
           <Title order={3} className={classes.title} ta="center" mt="md" mb={50}>
             Welcom
           </Title>
-            {usersBlock()}
-            <GoogleButton title='Google Login' agreement={agreement} setLoginedUsers={setLoginedUsers} setAgreement={setAgreement}/>
-            <Space h='md'/>
-            <Checkbox
+          {/* 🚀 */}
+          <ActivUsersBlock {...props}/>
+          <Grid justify="space-between" align="center">
+          <Grid.Col span={6}><GoogleButton {...props} title={'Google'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
+          <Grid.Col span={6}><TelegramButton {...props} title={'Telegram'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
+          </Grid>
+          <Space h='md'/>
+          <Checkbox
             checked={agreement}
             color='grey'
             onChange={(event) => setAgreement(event.currentTarget.checked)}
-            />
+          />
+
         </Paper>
         {/* {modalBlock()} */}
       </div>
+      </GoogleOAuthProvider>
     )
   }
