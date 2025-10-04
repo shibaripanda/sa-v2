@@ -10,7 +10,7 @@ if (!msg) {
 try {
   execSync('git add .', { stdio: 'inherit' });
   execSync(`git commit -m "${msg}"`, { stdio: 'inherit' });
-  execSync('git push -f origin main', { stdio: 'inherit' });
+  execSync('git push origin main', { stdio: 'inherit' });
 } catch (err) {
   console.error('Ошибка при выполнении git команд:', err.message);
   process.exit(1);
