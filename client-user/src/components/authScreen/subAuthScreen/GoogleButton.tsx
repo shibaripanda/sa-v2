@@ -17,7 +17,7 @@ export function GoogleButton(props: GoogleButtonInterface) {
     const loginServerRequest = async (credentialResponse: string) => {
         return await axios({
             method: 'POST',
-            url: import.meta.env.VITE_API_LINK + '/auth/googleLogin',
+            url: import.meta.env.VITE_API_AUTH_LINK + '/auth/googleLogin',
             data: {access_token: credentialResponse},
             headers: {},
             timeout: 10000

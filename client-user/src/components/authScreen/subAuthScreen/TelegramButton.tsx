@@ -18,7 +18,7 @@ export function TelegramButton(props: GoogleButtonInterface) {
         console.log(credentialResponse)
         return await axios({
             method: 'POST',
-            url: import.meta.env.VITE_API_LINK + '/auth/telegramLogin',
+            url: import.meta.env.VITE_API_AUTH_LINK + '/auth/telegramLogin',
             data: credentialResponse,
             headers: {},
             timeout: 10000

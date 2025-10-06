@@ -1,4 +1,6 @@
-export const myLengs = [
+import { LengIndexes, LengInstruction } from './text.schema';
+
+export const myLengs: LengIndexes[] = [
   { title: 'Русский', index: 'ru', info: 'русский' },
   { title: 'English', index: 'en', info: 'английский' },
   { title: 'Español', index: 'es', info: 'испанский' },
@@ -30,11 +32,16 @@ export const myLengs = [
   { title: 'Беларуская', index: 'be', info: 'белорусский' },
 ];
 
-export const myLib = [
+export const myLib: LengInstruction[] = [
   { rutext: 'Привет', index: 'hello', update: false },
   {
     rutext: 'Пользователь не найден или произошла ошибка',
     index: 'userError1',
+    update: false,
+  },
+  {
+    rutext: 'Выход',
+    index: 'exit',
     update: false,
   },
 ];

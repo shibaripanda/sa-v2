@@ -7,12 +7,16 @@ import { AuthScreen } from "./components/authScreen/mainScreen/AuthScreen";
 import { TextLib } from "./interfaces/textLib";
 
 export default function App() {
+
   const [leng, setLeng] = useState<string>(window.navigator.language.substring(0,2) ? window.navigator.language.substring(0,2) : 'en')
   const [text, setText] = useState<TextLib | null>(null)
+
   const [loginedUsers, setLoginedUsers] = useState<User[]>(sessionStorage.getItem('loginedUsers') ? JSON.parse(sessionStorage.getItem('loginedUsers')!) : [])
   const [activeUserId, setActivUserId] = useState<string>(sessionStorage.getItem('activeUserId') ?? '')
-  const [activeServiceId, setActiveServiceId] = useState<string>(sessionStorage.getItem('activeServiceId') ?? 'fgg')
   const [user, setUser] = useState<User | null>(null)
+
+  const [activeServiceId, setActiveServiceId] = useState<string>(sessionStorage.getItem('activeServiceId') ?? '')
+  
 
   useEffect(() => {
     if(activeUserId && loginedUsers) {
@@ -31,7 +35,16 @@ export default function App() {
   <MantineProvider theme={theme}>
     {activeUserId && activeServiceId ? 
     <div>Dashboard {user?.name}</div> : 
-    <AuthScreen leng={leng} text={text} setText={setText} loginedUsers={loginedUsers} setLoginedUsers={setLoginedUsers} setActivUserId={setActivUserId} setActiveServiceId={setActiveServiceId}/>}
+    <AuthScreen
+      user={user} 
+      setLeng={setLeng} 
+      leng={leng} 
+      text={text} 
+      setText={setText} 
+      loginedUsers={loginedUsers} 
+      setLoginedUsers={setLoginedUsers} 
+      setActivUserId={setActivUserId} 
+      setActiveServiceId={setActiveServiceId}/>}
   </MantineProvider>
 );
 }

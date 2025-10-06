@@ -31,6 +31,16 @@
 .label {
   font-weight: 500;
   font-size: var(--mantine-font-size-sm);
+  cursor: pointer; /* 👈 Добавляем "руку" */
+  transition: color 0.2s ease;
+}
+
+.activeLabel {
+  font-weight: 500;
+  font-size: var(--mantine-font-size-sm);
+  cursor: pointer; /* 👈 Добавляем "руку" */
+  transition: color 0.2s ease;
+  text-decoration: underline; /* 👈 Подчёркиваем активный элемент */
 }
 
 .icon {

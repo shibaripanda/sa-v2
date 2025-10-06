@@ -1,10 +1,14 @@
-import { Button, Grid, Space } from "@mantine/core"
+import { Button, Divider, Grid, Space } from "@mantine/core"
 import { googleLogout } from "@react-oauth/google";
 import { AuthScreenInterface } from "../mainScreen/AuthScreen";
 import { IconLogout } from "@tabler/icons-react";
 import { User } from "../../../interfaces/user";
+import { ServiceModal } from "./ServiceModal";
+import { useDisclosure } from "@mantine/hooks";
 
 export function ActivUsersBlock(props: AuthScreenInterface) {
+
+    const [serviseModal, setServiseModal] = useDisclosure(false)
 
     const showIndividualButExit = (item: User) => {
         if (props.loginedUsers.length > 1) {
@@ -34,22 +38,21 @@ export function ActivUsersBlock(props: AuthScreenInterface) {
         return (
             <div>
             <Grid justify="space-between" align="center" gutter={10}>
-            {props.loginedUsers.map(item => <><Grid.Col span={props.loginedUsers.length > 1 ? 9 : 12}><Button
+            {props.loginedUsers.map(item => <><Grid.Col key={item._id} span={props.loginedUsers.length > 1 ? 9 : 12}><Button
                 key={item._id}
                 color='green'
                 fullWidth
-                mt="xs"
+                mt="xs" 
                 size="md"
                 onClick={async () => {
                 props.setActivUserId(item._id)
                 sessionStorage.setItem('activeUserId', item._id)
-                // open()
+                setServiseModal.open()
                 }}
                 >
                 {item.name ? item.name : item.email}
             </Button></Grid.Col>
             {showIndividualButExit(item)}
-
             </>)}
             </Grid>
             <Button
@@ -65,10 +68,11 @@ export function ActivUsersBlock(props: AuthScreenInterface) {
                     googleLogout()
                 }}
                 >
-                Выход&nbsp;&nbsp;<IconLogout/>
+                {props.text?.exit}&nbsp;&nbsp;<IconLogout/>
             </Button>
             <Space h='lg'/>
-            <hr></hr>
+            <Divider/>
+            <ServiceModal {...props} serviseModal={serviseModal} setServiseModal={setServiseModal}/>
             </div>
         )
 }

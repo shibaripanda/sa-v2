@@ -10,14 +10,18 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('PORT')!;
   const SERVICE_NAME = configService.get<number>('SERVICE_NAME')!;
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
-    options: {
-      client: { brokers: [configService.get<string>('KAFKA_BROKER')!] },
-      consumer: { groupId: configService.get<string>('KAFKA_GROUP_ID')! },
-    },
-  });
-  await app.startAllMicroservices();
+  try {
+    app.connectMicroservice<MicroserviceOptions>({
+      transport: Transport.KAFKA,
+      options: {
+        client: { brokers: [configService.get<string>('KAFKA_BROKER')!] },
+        consumer: { groupId: configService.get<string>('KAFKA_GROUP_ID')! },
+      },
+    });
+    await app.startAllMicroservices();
+  } catch (error) {
+    console.log(error);
+  }
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     origin: '*',

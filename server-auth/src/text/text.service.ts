@@ -10,15 +10,20 @@ import {
   TextDocument,
 } from './text.schema';
 import { Model } from 'mongoose';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TextService implements OnModuleInit {
   private readonly clientAI: OpenAI;
   public textLib: Text[] = [];
 
-  constructor(@InjectModel(Text.name) private textModel: Model<TextDocument>) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    this.clientAI = new OpenAI({ apiKey: 'fgfgfgfgfgfg' }) as OpenAI;
+  constructor(
+    @InjectModel(Text.name) private textModel: Model<TextDocument>,
+    private readonly configService: ConfigService,
+  ) {
+    this.clientAI = new OpenAI({
+      apiKey: this.configService.get<string>('OPEN_AI_TOKEN'),
+    });
   }
 
   async onModuleInit() {
@@ -99,14 +104,12 @@ export class TextService implements OnModuleInit {
   }
 
   async openAiRequest(request: string): Promise<string> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const chatCompletion = await this.clientAI.chat.completions.create({
       messages: [{ role: 'user', content: request }],
       model: 'gpt-3.5-turbo',
     });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
     if (chatCompletion.choices[0].message.content) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
       return chatCompletion.choices[0].message.content;
     } else {
       return 'ooops... error';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { UnstyledButton, Menu, Group, ScrollArea } from '@mantine/core'
-import { IconChevronDown } from '@tabler/icons-react'
+import { Popover, Grid, ActionIcon } from '@mantine/core'
+import { IconWorld } from '@tabler/icons-react'
 import classes from './LanguagePicker.module.css'
 import axios from 'axios'
 import { AuthScreenInterface } from '../../authScreen/mainScreen/AuthScreen'
@@ -12,18 +12,19 @@ export function LanguagePicker(props: AuthScreenInterface) {
   useEffect(() => {
     getTextAvailable()
     getTextLib()
-  }, [props.text])
+  }, [props.leng])
 
   const getTextAvailable = async () => {
     return await axios({
           method: 'POST',
-          url: import.meta.env.VITE_API_LINK + '/text/textavailable',
-          data: props.leng,
+          url: import.meta.env.VITE_API_AUTH_LINK + '/text/textavailable',
+          data: {},
           headers: {},
           timeout: 10000
       })
       .then(async (res) => {
-        setAvailableLengs(res.data.lengs)
+        console.log(res)
+        setAvailableLengs(res.data)
       })
       .catch((er) => {
           console.log(er)
@@ -33,13 +34,14 @@ export function LanguagePicker(props: AuthScreenInterface) {
   const getTextLib = async () => {
     return await axios({
           method: 'POST',
-          url: import.meta.env.VITE_API_LINK + '/text/textlib',
-          data: props.leng,
+          url: import.meta.env.VITE_API_AUTH_LINK + '/text/textlib',
+          data: {leng: props.leng},
           headers: {},
           timeout: 10000
       })
       .then(async (res) => {
-        props.setText(res.data.text)
+        console.log(res)
+        props.setText(res.data)
       })
       .catch((er) => {
           console.log(er)
@@ -47,37 +49,28 @@ export function LanguagePicker(props: AuthScreenInterface) {
   }
 
   const items = availableLengs.map((item) => (
-    <Menu.Item
-      onClick={() => {
-          props.setText(item.index)
+    <span className={item.index === props.leng ? classes.activeLabel : classes.label} onClick={() => {
+          props.setLeng(item.index)
           sessionStorage.setItem('leng', item.index)
+          setOpened((o) => !o)
         }
       }
-      key={item.index}
-    >
-      {item.title}
-    </Menu.Item>
+      key={item.index}>{item.title}</span>
   ))
 
   return (
-    <Menu
-      onOpen={() => setOpened(true)}
-      onClose={() => setOpened(false)}
-      radius="md"
-      width="target"
-      withinPortal
-    >
-      <Menu.Target>
-        <ScrollArea>
-            <UnstyledButton className={classes.control} data-expanded={opened || undefined}>
-            <Group gap="xs">
-                <span className={classes.label}>{props.leng}</span>
-            </Group>
-            <IconChevronDown size="1rem" className={classes.icon} stroke={1.5} />
-            </UnstyledButton>
-        </ScrollArea>
-      </Menu.Target>
-      <Menu.Dropdown>{items}</Menu.Dropdown>
-    </Menu>
+    <Popover width={500} position="bottom" withArrow shadow="md" opened={opened} onChange={setOpened}>
+      <Popover.Target>
+          <ActionIcon  onClick={() => {setOpened((o) => !o)}}
+          variant="transparent"
+          color="grey"
+          ><IconWorld stroke={1.5} /></ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Grid>
+          {items.map((l, index) => <Grid.Col key={index} span={4}>{l}</Grid.Col>)}
+        </Grid>
+      </Popover.Dropdown>
+    </Popover>
   )
 }
