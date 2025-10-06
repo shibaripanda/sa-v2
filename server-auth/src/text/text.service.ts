@@ -1,135 +1,112 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import OpenAI from 'openai';
-import { lengs, Text, TextDocument } from './text.schema';
+import {
+  LengIndexes,
+  LengInstruction,
+  lengs,
+  Text,
+  textArray,
+  TextDocument,
+} from './text.schema';
 import { Model } from 'mongoose';
 
-interface LengData {
-  rutext: string;
-  index: string;
-  info_data: string;
-  update?: boolean;
-}
-export interface LengDataStart {
-  title: string;
-  index: string;
-  info: string;
-}
-interface LengResult {
-  [key: string]: string;
-}
-interface NewLengPack {
-  [key: string]: LengResult;
-}
-
 @Injectable()
-export class TextService {
+export class TextService implements OnModuleInit {
   private readonly clientAI: OpenAI;
+  public textLib: Text[] = [];
 
   constructor(@InjectModel(Text.name) private textModel: Model<TextDocument>) {
-    this.clientAI = new OpenAI({ apiKey: process.env.OPENAI_KEY });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    this.clientAI = new OpenAI({ apiKey: 'fgfgfgfgfgfg' }) as OpenAI;
   }
 
-  private textArray: LengData[] = [
-    { rutext: 'Привет', index: 'hello', info_data: 'приветствие' },
-    {
-      rutext: 'Пользователь не найден или произошла ошибка',
-      index: 'userError1',
-      info_data: 'юзер не найден',
-    },
-  ];
+  async onModuleInit() {
+    this.textLib = await this.getFullLib();
+    console.log(this.textLib);
+    await this.updateAppText(false, textArray, lengs);
+  }
+
+  async getFullLib() {
+    return await this.textModel.find().lean();
+  }
 
   getTextAvailable() {
-    return lengs;
+    return lengs.map((l) => ({ title: l.title, index: l.index }));
   }
 
-  getTextLib(data: string) {
-    const text: { [key: string]: string } = {};
-    for (const t of global.appText as TextDocument[]) {
-      text[t.index] = t[data];
+  getTextLib(lengIndex: string) {
+    const text: Record<string, string> = {};
+
+    if (Array.isArray(this.textLib)) {
+      for (const t of this.textLib) {
+        if (
+          t &&
+          typeof t.index === 'string' &&
+          typeof t[lengIndex] === 'string'
+        ) {
+          text[t.index] = t[lengIndex];
+        }
+      }
     }
     return text;
   }
 
-  async getAllLib() {
-    global.appText = await this.textModel.find();
-    return global.appText as TextDocument[];
-  }
-
-  async updateAppText() {
-    const appText = await this.getAllLib();
-    const newAppText = await this.getLenguagesFromAI(
-      false,
-      this.textArray,
-      lengs,
-      appText,
-    );
-    if (JSON.stringify(appText) !== JSON.stringify(newAppText)) {
-      await this.appMongo.findOneAndUpdate(
-        { mainServerAppSettings: 'mainServerAppSettings' },
-        { text: newAppText },
-      );
-      console.log('Текс обновлен');
-    } else {
-      console.log('Текст не требует обновления');
-    }
-    return this.getText();
-  }
-
-  getLenguagesFromAI = async (
+  async updateAppText(
     updateAll: boolean,
-    indata: LengData[],
-    lenguages: LengDataStart[],
-    existLengPack: NewLengPack,
-  ) => {
-    function dublicateIndexControl() {
-      return (
-        new Set(indata.map((item) => item.index)).size !==
-        indata.map((item) => item.index).length
-      );
-    }
-
-    if (dublicateIndexControl()) {
+    instruction: LengInstruction[],
+    lengsIndexes: LengIndexes[],
+  ) {
+    const dublicat =
+      new Set(instruction.map((item) => item.index)).size !==
+      instruction.map((item) => item.index).length;
+    if (dublicat) {
       console.log('!!! WARNING !!! Дубликаты текстовых индексов');
-      return existLengPack;
+      return;
     }
 
-    const newLengPack: NewLengPack = {};
     let time: number = 0;
+    let isNoItemToUpdate = false;
 
     const timer = setInterval(() => {
       console.log('UPDATING LENGUAGES...', time++);
     }, 1000);
-    for (const i of indata) {
-      if (
-        typeof existLengPack[i.index] === 'undefined' ||
-        updateAll ||
-        i.update
-      ) {
-        console.log('new', i.index);
-        const newRes: LengResult = { info_data: i.info_data, ru: i.rutext };
-        for (const l of lenguages.filter((item) => item.index !== 'ru')) {
-          newRes[l.index] = await this.openAiRequest(
+
+    for (const i of instruction) {
+      const existItem = await this.textModel.findOne({ index: i.index });
+      if (!existItem || i.update || updateAll) {
+        console.log(i.update ? 'update' : 'new', i.index);
+        const newText: Record<string, string> = { ru: i.rutext };
+        for (const l of lengsIndexes.filter((item) => item.index !== 'ru')) {
+          const res = await this.openAiRequest(
             `Переведи на ${l.info} язык: "${i.rutext}", без кавычек и с большой буквы, в ответе только перевод`,
           );
+          newText[l.index] = res;
         }
-        newLengPack[i.index] = newRes;
+        await this.textModel.updateOne({ index: i.index }, newText, {
+          upsert: true,
+        });
+        isNoItemToUpdate = true;
       } else {
         console.log('exist', i.index);
-        newLengPack[i.index] = existLengPack[i.index];
       }
+    }
+    if (isNoItemToUpdate) {
+      this.textLib = await this.getFullLib();
     }
     clearInterval(timer);
     console.log(time, 'seconds');
-    return newLengPack;
-  };
+  }
 
   async openAiRequest(request: string): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const chatCompletion = await this.clientAI.chat.completions.create({
       messages: [{ role: 'user', content: request }],
       model: 'gpt-3.5-turbo',
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (chatCompletion.choices[0].message.content) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
       return chatCompletion.choices[0].message.content;
     } else {
       return 'ooops... error';

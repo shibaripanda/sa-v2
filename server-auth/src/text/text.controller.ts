@@ -10,9 +10,9 @@ export class TextController {
     return this.textService.getTextAvailable();
   }
 
-  // @Post('/textlib')
-  // async getTextLib(@Body() data: { leng: string }) {
-  //   console.log(data);
-  //   return await this.textService.getTextLib(data.leng);
-  // }
+  @Post('/textlib')
+  getTextLib(@Body() data: { leng: string }) {
+    console.log(data);
+    return this.textService.getTextLib(data.leng);
+  }
 }
