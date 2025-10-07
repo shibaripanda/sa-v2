@@ -44,4 +44,14 @@ export const myLib: LengInstruction[] = [
     index: 'exit',
     update: false,
   },
+  {
+    rutext: 'Создать новый сервис',
+    index: 'crateNewService',
+    update: false,
+  },
+  {
+    rutext: 'Сервисы',
+    index: 'services',
+    update: false,
+  },
 ];

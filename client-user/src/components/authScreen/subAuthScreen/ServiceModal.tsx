@@ -57,13 +57,13 @@ export function ServiceModal(props: ServiceModalInterface) {
   
     return (
         <>
-            <Modal opened={props.serviseModal} title={props.text?.hello}
+            <Modal radius={'10px'} opened={props.serviseModal} title={props.text?.services}
                 onClose={() => {
                     props.setServiseModal.close()
                 }}>
             
-            {/* <Grid>
-                {services.map(item1 => 
+            <Grid>
+                {/* {services.map(item1 => 
                 <Grid.Col key={item1._id} span={12}>
                     <>
                         {item1.name}
@@ -93,7 +93,7 @@ export function ServiceModal(props: ServiceModalInterface) {
                         <Space h='sm'/>
                         <hr></hr>          
                     </>
-                </Grid.Col>)}
+                </Grid.Col>)} */}
 
                 <Grid.Col span={12}>
 
@@ -104,12 +104,10 @@ export function ServiceModal(props: ServiceModalInterface) {
                     onClick={() => {
                         createNewService()
                     }}>
-                    {props.text.createService[props.leng]}
+                    {props.text?.crateNewService}
                     </Button>
                 </Grid.Col>
-            </Grid> */}
-
-            sfsfsfsfs
+            </Grid>
             </Modal>
         </>
     )
