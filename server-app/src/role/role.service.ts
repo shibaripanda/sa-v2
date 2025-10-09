@@ -13,7 +13,8 @@ export class RoleService {
     @InjectModel(Role.name) private roleModel: Model<RoleDocument>,
   ) {}
 
-  async createNewRole(user_owner_id: string) {
-    return await this.roleModel.create({ user_owner_id });
+  async createNewRole() {
+    const res = await this.roleModel.create({ name: 'Owner' });
+    return res._id;
   }
 }

@@ -5,9 +5,6 @@ export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema({ timestamps: true })
 export class Company {
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
-
   @Prop({ required: true })
   user_owner_id: string;
 
@@ -33,26 +30,54 @@ export class Company {
   @Prop({ required: true, default: 20 })
   defaulTaxProcent: number;
 
-  @Prop({ required: true, default: [] })
-  services_ids: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Service' }],
+    required: true,
+    default: [],
+  })
+  services_ids: Types.ObjectId[];
 
-  @Prop({ required: true, default: [] })
-  roles_ids: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Role' }],
+    required: true,
+    default: [],
+  })
+  roles_ids: Types.ObjectId[];
 
-  @Prop({ required: true, default: [] })
-  statuses_ids: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Status' }],
+    required: true,
+    default: [],
+  })
+  statuses_ids: Types.ObjectId[];
 
-  @Prop({ required: true, default: [] })
-  devices_ids: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Device' }],
+    required: true,
+    default: [],
+  })
+  devices_ids: Types.ObjectId[];
 
-  @Prop({ required: true, default: [] })
-  parts_ids: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Part' }],
+    required: true,
+    default: [],
+  })
+  parts_ids: Types.ObjectId[];
 
-  @Prop({ required: true, default: [] })
-  works_ids: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Work' }],
+    required: true,
+    default: [],
+  })
+  works_ids: Types.ObjectId[];
 
-  @Prop({ required: true, default: [] })
-  shops_ids: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Shop' }],
+    required: true,
+    default: [],
+  })
+  shops_ids: Types.ObjectId[];
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);

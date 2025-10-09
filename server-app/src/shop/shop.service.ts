@@ -13,7 +13,8 @@ export class ShopService {
     @InjectModel(Shop.name) private shopModel: Model<ShopDocument>,
   ) {}
 
-  async createNewShop(user_owner_id: string) {
-    return await this.shopModel.create({ user_owner_id });
+  async createNewShop() {
+    const res = await this.shopModel.create({});
+    return res._id;
   }
 }

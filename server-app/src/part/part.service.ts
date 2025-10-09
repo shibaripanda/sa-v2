@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Part, PartDocument } from './part.schema';
 
 @Injectable()
@@ -13,7 +13,14 @@ export class PartService {
     @InjectModel(Part.name) private partModel: Model<PartDocument>,
   ) {}
 
-  async createNewPart(user_owner_id: string) {
-    return await this.partModel.create({ user_owner_id });
+  async createNewPart(
+    shop_owner_id: Types.ObjectId,
+    service_owner_id: Types.ObjectId,
+  ) {
+    const res = await this.partModel.create({
+      shop_owner_id,
+      service_owner_id,
+    });
+    return res._id;
   }
 }

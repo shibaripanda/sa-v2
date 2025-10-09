@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 type ProfitMode = 'fullProcent' | 'procentWork' | 'fix';
 
@@ -7,20 +7,8 @@ export type StaffUserDocument = HydratedDocument<StaffUser>;
 
 @Schema({ timestamps: true })
 export class StaffUser {
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
-
-  @Prop({ required: true })
-  company_owner_id: string;
-
   @Prop({ required: true })
   origin_user_id: string;
-
-  @Prop({ required: true, default: [] })
-  service_owner_ids: string[];
-
-  @Prop({ required: true, default: [] })
-  role_ids: string[];
 
   @Prop({ required: true, default: 'procentWork' })
   profitMode: ProfitMode;
@@ -28,11 +16,26 @@ export class StaffUser {
   @Prop({ required: true, default: 25 })
   profit: number;
 
-  @Prop({ required: true, default: [] })
-  filterStatuses: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Role' }],
+    required: true,
+    default: [],
+  })
+  role_ids: Types.ObjectId[];
 
-  @Prop({ required: true, default: [] })
-  filterDevices: string[];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Status' }],
+    required: true,
+    default: [],
+  })
+  filterStatuses: Types.ObjectId[];
+
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Device' }],
+    required: true,
+    default: [],
+  })
+  filterDevices: Types.ObjectId[];
 
   @Prop()
   startTime: number;

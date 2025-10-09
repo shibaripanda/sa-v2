@@ -1,29 +1,24 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 import { CompanyDocument } from 'src/company/company.schema';
 import { CompanyService } from 'src/company/company.service';
-import { DeviceDocument } from 'src/device/device.schema';
 import { DeviceService } from 'src/device/device.service';
-import { PartDocument } from 'src/part/part.schema';
 import { PartService } from 'src/part/part.service';
-import { RoleDocument } from 'src/role/role.schema';
 import { RoleService } from 'src/role/role.service';
-import { ServiceDocument } from 'src/service/service.schema';
 import { ServiceService } from 'src/service/service.service';
-import { ShopDocument } from 'src/shop/shop.schema';
 import { ShopService } from 'src/shop/shop.service';
-import { StaffUserDocument } from 'src/staff-user/staff-user..schema';
 import { StaffUserService } from 'src/staff-user/staff-user.service';
-import { StatusDocument } from 'src/status/status.schema';
 import { StatusService } from 'src/status/status.service';
-import { WorkDocument } from 'src/work/work.schema';
 import { WorkService } from 'src/work/work.service';
 
 @Injectable()
 export class AppService implements OnModuleInit {
   constructor(
     @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
+    @InjectConnection() private readonly connection: Connection,
     private readonly configService: ConfigService,
     private readonly companyService: CompanyService,
     private readonly deviceService: DeviceService,
@@ -45,39 +40,66 @@ export class AppService implements OnModuleInit {
     });
   }
 
-  async createNewCompany(user_owner_id: string) {
-    const company: CompanyDocument =
-      await this.companyService.createNewCompany(user_owner_id);
+  async createNewCompany(user_owner_id: string): Promise<CompanyDocument> {
+    const session = await this.connection.startSession();
+    session.startTransaction();
 
-    const service: ServiceDocument = await this.serviceService.createNewService(
-      company._id.toString(),
-    );
+    try {
+      const role_id = await this.roleService.createNewRole(session);
+      const shop_id = await this.shopService.createNewShop(session);
+      const device_id = await this.deviceService.createNewDevice(session);
+      const status_id = await this.statusService.createNewStatus(session);
+      const work_id = await this.workService.createNewWork(session);
 
-    const staffUser: StaffUserDocument =
-      await this.staffUserService.createNewStaffUser(company._id.toString());
+      const staffUser_id = await this.staffUserService.createNewStaffUser(
+        user_owner_id,
+        role_id,
+        session,
+      );
 
-    const role: RoleDocument = await this.roleService.createNewRole(
-      company._id.toString(),
-    );
+      const service_id = await this.serviceService.createNewService(staffUser_id, session);
+      const part_id = await this.partService.createNewPart(shop_id, service_id, session);
 
-    const shop: ShopDocument = await this.shopService.createNewShop(
-      company._id.toString(),
-    );
+      const company = await this.companyService.createNewCompany(
+        user_owner_id,
+        device_id,
+        status_id,
+        work_id,
+        service_id,
+        part_id,
+        session,
+      );
 
-    const part: PartDocument = await this.partService.createNewPart(
-      company._id.toString(),
-    );
-
-    const device: DeviceDocument = await this.deviceService.createNewDevice(
-      company._id.toString(),
-    );
-
-    const status: StatusDocument = await this.statusService.createNewStatus(
-      company._id.toString(),
-    );
-
-    const work: WorkDocument = await this.workService.createNewWork(
-      company._id.toString(),
-    );
+      await session.commitTransaction();
+      return company;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
+
+  // async createNewCompany(user_owner_id: string) {
+  //   const role_id = await this.roleService.createNewRole();
+  //   const shop_id = await this.shopService.createNewShop();
+  //   const device_id = await this.deviceService.createNewDevice();
+  //   const status_id = await this.statusService.createNewStatus();
+  //   const work_id = await this.workService.createNewWork();
+  //   const staffUser_id = await this.staffUserService.createNewStaffUser(
+  //     user_owner_id,
+  //     role_id,
+  //   );
+  //   const service_id = await this.serviceService.createNewService(staffUser_id);
+  //   const part_id = await this.partService.createNewPart(shop_id, service_id);
+  //   const company: CompanyDocument = await this.companyService.createNewCompany(
+  //     user_owner_id,
+  //     device_id,
+  //     status_id,
+  //     work_id,
+  //     service_id,
+  //     part_id,
+  //   );
+  //   console.log(company);
+  // }
 }

@@ -1,21 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type PartDocument = HydratedDocument<Part>;
 
 @Schema({ timestamps: true })
 export class Part {
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'Service', required: true })
+  service_owner_id: Types.ObjectId;
 
-  @Prop({ required: true })
-  company_owner_id: string;
-
-  @Prop({ required: true })
-  service_owner_id: string;
-
-  @Prop({ required: true })
-  shop_owner_id: string;
+  @Prop({ type: Types.ObjectId, ref: 'Device', required: true })
+  shop_owner_id: Types.ObjectId;
 
   @Prop({ required: true, default: 'New Part' })
   name: string;

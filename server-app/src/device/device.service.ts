@@ -13,7 +13,8 @@ export class DeviceService {
     @InjectModel(Device.name) private deviceModel: Model<DeviceDocument>,
   ) {}
 
-  async createNewDevice(user_owner_id: string) {
-    return await this.deviceModel.create({ user_owner_id });
+  async createNewDevice() {
+    const res = await this.deviceModel.create({});
+    return res._id;
   }
 }

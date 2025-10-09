@@ -13,7 +13,8 @@ export class WorkService {
     @InjectModel(Work.name) private workModel: Model<WorkDocument>,
   ) {}
 
-  async createNewWork(company_owner_id: string) {
-    return await this.workModel.create({ company_owner_id });
+  async createNewWork() {
+    const res = await this.workModel.create({});
+    return res._id;
   }
 }
