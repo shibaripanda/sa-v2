@@ -1,7 +1,6 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
-import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
@@ -13,29 +12,6 @@ export class KafkaService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    // this.kafkaClient.subscribeToResponseOf('hello');
-    console.log(
-      this.configService.get<string>('SERVICE_NAME'),
-      'conecting.....',
-    );
-    await this.kafkaClient.connect();
-  }
-
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  ping() {
-    console.log(`CRON ${this.configService.get<string>('SERVICE_NAME')}`);
-    this.kafkaClient.emit('hello', {
-      value: {
-        message: `Hello from ${this.configService.get<string>('SERVICE_NAME')}`,
-      },
-      key: 123,
-    });
-  }
-
-  sendMessage(message: string): any {
-    return this.kafkaClient.emit('my-topic', {
-      key: 'my-key',
-      value: JSON.stringify({ message }),
-    });
+    // await this.kafkaClient.connect();
   }
 }

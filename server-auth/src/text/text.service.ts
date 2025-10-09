@@ -28,7 +28,7 @@ export class TextService implements OnModuleInit {
 
   async onModuleInit() {
     this.textLib = await this.getFullLib();
-    console.log(this.textLib);
+    // console.log(this.textLib);
     await this.updateAppText(false, textArray, lengs);
   }
 

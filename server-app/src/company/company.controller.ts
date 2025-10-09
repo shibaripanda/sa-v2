@@ -1,6 +1,5 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CompanyService } from './company.service';
-import { UniversalJwtGuard } from 'src/app/guards/universalJwtGuard';
 import { CurrentUser } from 'src/app/decorators/current-user.decorator';
 import { User } from 'src/app/interfaces/user';
 
@@ -8,7 +7,7 @@ import { User } from 'src/app/interfaces/user';
 export class CompanyController {
   constructor(private companyService: CompanyService) {}
 
-  @UseGuards(UniversalJwtGuard)
+  // @UseGuards(UniversalJwtGuard)
   @Post('/create-company')
   async createCompany(
     @Body() data: any,

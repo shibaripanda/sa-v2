@@ -23,9 +23,11 @@ export function ServiceModal(props: ServiceModalInterface) {
     const getUserServices = async () => {
         await axios({
             method: 'POST',
-            url: import.meta.env.VITE_API_AUTH_LINK + '/service/all-user-services',
+            url: import.meta.env.VITE_API_APP_LINK + '/service/all-user-services',
             data: {token: props.user?.token},
-            headers: {},
+            headers: {
+                "Authorization": `Bearer ${props.user?.token}`
+            },
             timeout: 10000
         })
         .then(async (res) => {
@@ -40,9 +42,11 @@ export function ServiceModal(props: ServiceModalInterface) {
     const createNewService = async () => {
         await axios({
             method: 'POST',
-            url: import.meta.env.VITE_API_AUTH_LINK + '/service/create-service',
+            url: import.meta.env.VITE_API_APP_LINK + '/app/create-new-company',
             data: {token: props.user?.token},
-            headers: {},
+            headers: {
+                "Authorization": `Bearer ${props.user?.token}`
+            },
             timeout: 10000
         })
         .then(async (res) => {

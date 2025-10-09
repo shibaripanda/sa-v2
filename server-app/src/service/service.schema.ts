@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, HydratedDocument, Types } from 'mongoose';
 
 interface HistoryServiceLogin {
   date: number;
@@ -8,10 +8,13 @@ interface HistoryServiceLogin {
   user_id: string;
 }
 
-export type ServiceDocument = Service & Document;
+export type ServiceDocument = HydratedDocument<Service>;
 
 @Schema({ timestamps: true })
 export class Service {
+  @Prop({ type: Types.ObjectId })
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   company_owner_id: string;
 

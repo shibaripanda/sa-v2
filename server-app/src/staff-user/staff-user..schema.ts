@@ -1,12 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, HydratedDocument, Types } from 'mongoose';
 
 type ProfitMode = 'fullProcent' | 'procentWork' | 'fix';
 
-export type StaffUserDocument = StaffUser & Document;
+export type StaffUserDocument = HydratedDocument<StaffUser>;
 
 @Schema({ timestamps: true })
 export class StaffUser {
+  @Prop({ type: Types.ObjectId })
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   company_owner_id: string;
 

@@ -8,5 +8,6 @@ import { WorkSchema } from './work.schema';
   imports: [MongooseModule.forFeature([{ name: 'Work', schema: WorkSchema }])],
   controllers: [WorkController],
   providers: [WorkService],
+  exports: [WorkService],
 })
 export class WorkModule {}

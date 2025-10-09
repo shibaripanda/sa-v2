@@ -10,5 +10,6 @@ import { StatusSchema } from './status.schema';
   ],
   providers: [StatusService],
   controllers: [StatusController],
+  exports: [StatusService],
 })
 export class StatusModule {}

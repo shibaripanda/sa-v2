@@ -10,5 +10,6 @@ import { StaffUserSchema } from './staff-user..schema';
   ],
   controllers: [StaffUserController],
   providers: [StaffUserService],
+  exports: [StaffUserService],
 })
 export class StaffUserModule {}

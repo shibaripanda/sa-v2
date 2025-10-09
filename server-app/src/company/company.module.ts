@@ -10,5 +10,6 @@ import { CompanySchema } from './company.schema';
   ],
   controllers: [CompanyController],
   providers: [CompanyService],
+  exports: [CompanyService],
 })
 export class CompanyModule {}

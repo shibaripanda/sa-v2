@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { KafkaController } from './kafka.controller';
@@ -36,7 +34,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       },
     ]),
   ],
-  controllers: [AppController, KafkaController],
-  providers: [AppService, KafkaService],
+  controllers: [KafkaController],
+  providers: [KafkaService],
 })
 export class AppModule {}

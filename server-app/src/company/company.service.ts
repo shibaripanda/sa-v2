@@ -14,7 +14,6 @@ export class CompanyService {
   ) {}
 
   async createNewCompany(user_owner_id: string) {
-    const res = await this.companyModel.create({ user_owner_id });
-    console.log(res);
+    return await this.companyModel.create({ user_owner_id });
   }
 }

@@ -13,6 +13,8 @@ import { ShopModule } from 'src/shop/shop.module';
 import { StaffUserModule } from 'src/staff-user/staff-user.module';
 import { StatusModule } from 'src/status/status.module';
 import { WorkModule } from 'src/work/work.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Global()
 @Module({
@@ -67,8 +69,8 @@ import { WorkModule } from 'src/work/work.module';
     StatusModule,
     WorkModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
   exports: [ClientsModule],
 })
 export class AppModule {}
