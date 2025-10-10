@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Work, WorkDocument } from './work.schema';
-import { Model } from 'mongoose';
+import { ClientSession, Model, Types } from 'mongoose';
 
 @Injectable()
 export class WorkService {
@@ -13,8 +13,13 @@ export class WorkService {
     @InjectModel(Work.name) private workModel: Model<WorkDocument>,
   ) {}
 
-  async createNewWork() {
-    const res = await this.workModel.create({});
-    return res._id;
+  async createNewWork(session?: ClientSession): Promise<Types.ObjectId> {
+    const res = await this.workModel.create([{}], { session });
+    return res[0]._id;
   }
+
+  // async createNewWork() {
+  //   const res = await this.workModel.create({});
+  //   return res._id;
+  // }
 }

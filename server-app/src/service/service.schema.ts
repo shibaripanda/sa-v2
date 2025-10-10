@@ -32,7 +32,7 @@ export class Service {
   // parts_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'StaffUser' }],
+    type: [{ type: Types.ObjectId, ref: 'StaffUser', autopopulate: true }],
     required: true,
     default: [],
   })

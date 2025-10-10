@@ -40,7 +40,19 @@ export class AppService implements OnModuleInit {
     });
   }
 
-  async createNewCompany(user_owner_id: string): Promise<CompanyDocument> {
+  async getAllMyCompanysAndSrvices(user_id: string) {
+    const owner = await this.companyService.getCompanyWhereOwner(user_id);
+    console.log(owner ? 'ОК' : 'BAD');
+    const myStaffUsers = await this.staffUserService.getMyStaffUssers(user_id);
+    console.log(myStaffUsers ? myStaffUsers.map((su) => su._id) : 'BAD');
+
+    for (const su of myStaffUsers.map((su) => su._id)) {
+      const myService = await this.serviceService.getServiceWhereAamStaff(su);
+      console.log(myService[0]._id);
+    }
+  }
+
+  async createNewCompany(user_owner_id: string) {
     const session = await this.connection.startSession();
     session.startTransaction();
 
@@ -57,11 +69,20 @@ export class AppService implements OnModuleInit {
         session,
       );
 
-      const service_id = await this.serviceService.createNewService(staffUser_id, session);
-      const part_id = await this.partService.createNewPart(shop_id, service_id, session);
+      const service_id = await this.serviceService.createNewService(
+        staffUser_id,
+        session,
+      );
+      const part_id = await this.partService.createNewPart(
+        shop_id,
+        service_id,
+        session,
+      );
 
       const company = await this.companyService.createNewCompany(
         user_owner_id,
+        shop_id,
+        role_id,
         device_id,
         status_id,
         work_id,
@@ -71,7 +92,7 @@ export class AppService implements OnModuleInit {
       );
 
       await session.commitTransaction();
-      return company;
+      return await this.companyService.getCompanyWithRelations(company._id);
     } catch (error) {
       await session.abortTransaction();
       throw error;
@@ -79,27 +100,4 @@ export class AppService implements OnModuleInit {
       await session.endSession();
     }
   }
-
-  // async createNewCompany(user_owner_id: string) {
-  //   const role_id = await this.roleService.createNewRole();
-  //   const shop_id = await this.shopService.createNewShop();
-  //   const device_id = await this.deviceService.createNewDevice();
-  //   const status_id = await this.statusService.createNewStatus();
-  //   const work_id = await this.workService.createNewWork();
-  //   const staffUser_id = await this.staffUserService.createNewStaffUser(
-  //     user_owner_id,
-  //     role_id,
-  //   );
-  //   const service_id = await this.serviceService.createNewService(staffUser_id);
-  //   const part_id = await this.partService.createNewPart(shop_id, service_id);
-  //   const company: CompanyDocument = await this.companyService.createNewCompany(
-  //     user_owner_id,
-  //     device_id,
-  //     status_id,
-  //     work_id,
-  //     service_id,
-  //     part_id,
-  //   );
-  //   console.log(company);
-  // }
 }

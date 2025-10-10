@@ -17,21 +17,21 @@ export class StaffUser {
   profit: number;
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Role' }],
+    type: [{ type: Types.ObjectId, ref: 'Role', autopopulate: true }],
     required: true,
     default: [],
   })
   role_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Status' }],
+    type: [{ type: Types.ObjectId, ref: 'Status', autopopulate: true }],
     required: true,
     default: [],
   })
   filterStatuses: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Device' }],
+    type: [{ type: Types.ObjectId, ref: 'Device', autopopulate: true }],
     required: true,
     default: [],
   })

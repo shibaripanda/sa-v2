@@ -12,14 +12,14 @@ export class Role {
   actions: string[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Device' }],
+    type: [{ type: Types.ObjectId, ref: 'Device', autopopulate: true }],
     required: true,
     default: [],
   })
   devices_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Status' }],
+    type: [{ type: Types.ObjectId, ref: 'Status', autopopulate: true }],
     required: true,
     default: [],
   })

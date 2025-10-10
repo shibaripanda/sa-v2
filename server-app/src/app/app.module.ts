@@ -15,6 +15,8 @@ import { StatusModule } from 'src/status/status.module';
 import { WorkModule } from 'src/work/work.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { useGlobalAutopopulatePlugin } from './plugins/populateMongo';
+import { Connection } from 'mongoose';
 
 @Global()
 @Module({
@@ -29,6 +31,10 @@ import { AppService } from './app.service';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         uri: config.get<string>('MONGO_TOKEN')!,
+        connectionFactory: (connection: Connection) => {
+          useGlobalAutopopulatePlugin(connection);
+          return connection;
+        },
       }),
     }),
     ClientsModule.registerAsync([

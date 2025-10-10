@@ -6,16 +6,25 @@ import { AppService } from './app.service';
 
 @Controller('app')
 export class AppController {
-  constructor(private appService: AppService) {}
+  constructor(private readonly appService: AppService) {}
 
   @UseGuards(UniversalJwtGuard)
-  @Post('/create-new-company')
-  createNewCompany(
+  @Post('/get-all-my-companys-and-services')
+  getAllMyCompanysAndSrvices(
     @Body() data: any,
     @CurrentUser() user: User,
     // @Ip() ip: string,
   ) {
-    console.log('dddddddddddddddd');
-    return this.appService.createNewCompany(user._id);
+    return this.appService.getAllMyCompanysAndSrvices(user._id);
+  }
+
+  @UseGuards(UniversalJwtGuard)
+  @Post('/create-new-company')
+  async createNewCompany(
+    @Body() data: any,
+    @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    return await this.appService.createNewCompany(user._id);
   }
 }

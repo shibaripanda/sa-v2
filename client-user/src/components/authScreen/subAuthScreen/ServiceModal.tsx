@@ -23,7 +23,7 @@ export function ServiceModal(props: ServiceModalInterface) {
     const getUserServices = async () => {
         await axios({
             method: 'POST',
-            url: import.meta.env.VITE_API_APP_LINK + '/service/all-user-services',
+            url: import.meta.env.VITE_API_APP_LINK + '/app/get-all-my-companys-and-services',
             data: {token: props.user?.token},
             headers: {
                 "Authorization": `Bearer ${props.user?.token}`

@@ -31,49 +31,49 @@ export class Company {
   defaulTaxProcent: number;
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Service' }],
+    type: [{ type: Types.ObjectId, ref: 'Service', autopopulate: true }],
     required: true,
     default: [],
   })
   services_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Role' }],
+    type: [{ type: Types.ObjectId, ref: 'Role', autopopulate: true }],
     required: true,
     default: [],
   })
   roles_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Status' }],
+    type: [{ type: Types.ObjectId, ref: 'Status', autopopulate: true }],
     required: true,
     default: [],
   })
   statuses_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Device' }],
+    type: [{ type: Types.ObjectId, ref: 'Device', autopopulate: true }],
     required: true,
     default: [],
   })
   devices_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Part' }],
+    type: [{ type: Types.ObjectId, ref: 'Part', autopopulate: true }],
     required: true,
     default: [],
   })
   parts_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Work' }],
+    type: [{ type: Types.ObjectId, ref: 'Work', autopopulate: true }],
     required: true,
     default: [],
   })
   works_ids: Types.ObjectId[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Shop' }],
+    type: [{ type: Types.ObjectId, ref: 'Shop', autopopulate: true }],
     required: true,
     default: [],
   })

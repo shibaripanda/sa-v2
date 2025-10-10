@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Service, ServiceDocument } from './service.schema';
-import { Model, Types } from 'mongoose';
+import { ClientSession, Model, Types } from 'mongoose';
 
 @Injectable()
 export class ServiceService {
@@ -13,10 +13,24 @@ export class ServiceService {
     @InjectModel(Service.name) private serviceModel: Model<ServiceDocument>,
   ) {}
 
-  async createNewService(staffUser_id: Types.ObjectId) {
-    const res = await this.serviceModel.create({
-      users_staff_ids: [staffUser_id],
+  async getServiceWhereAamStaff(users_staff_id: Types.ObjectId) {
+    return await this.serviceModel.find({
+      users_staff_ids: { $in: [users_staff_id] },
     });
-    return res._id;
+  }
+
+  async createNewService(
+    staffUser_id: Types.ObjectId,
+    session?: ClientSession,
+  ): Promise<Types.ObjectId> {
+    const res = await this.serviceModel.create(
+      [
+        {
+          users_staff_ids: [staffUser_id],
+        },
+      ],
+      { session },
+    );
+    return res[0]._id;
   }
 }

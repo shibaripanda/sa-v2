@@ -13,11 +13,6 @@ export class StatusService {
     @InjectModel(Status.name) private statusModel: Model<StatusDocument>,
   ) {}
 
-  async createNewDevice(session?: ClientSession): Promise<Types.ObjectId> {
-    const device = await this.statusModel.create([{}], { session }); // массив, чтобы поддерживать session
-    return device[0]._id;
-  }
-
   async createNewStatus(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.statusModel.create([{ freez: true }], { session });
     return res[0]._id;
