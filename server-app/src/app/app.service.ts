@@ -40,16 +40,18 @@ export class AppService implements OnModuleInit {
     });
   }
 
-  async getAllMyCompanysAndSrvices(user_id: string) {
-    const owner = await this.companyService.getCompanyWhereOwner(user_id);
-    console.log(owner ? 'ОК' : 'BAD');
-    const myStaffUsers = await this.staffUserService.getMyStaffUssers(user_id);
-    console.log(myStaffUsers ? myStaffUsers.map((su) => su._id) : 'BAD');
+  async getAllMyComps(user_id: string) {
+    const compsOwner = await this.companyService.getCompanyWhereOwner(user_id);
 
-    for (const su of myStaffUsers.map((su) => su._id)) {
-      const myService = await this.serviceService.getServiceWhereAamStaff(su);
-      console.log(myService[0]._id);
-    }
+    const myStaffUsers_ids =
+      await this.staffUserService.getMyStaffUsers_ids(user_id);
+
+    const compsStaff = await this.companyService.getCompanyesWhereIamStaff(
+      myStaffUsers_ids,
+      compsOwner.map((c) => c._id),
+    );
+    console.log(compsOwner.length, compsStaff.length);
+    return { compsOwner, compsStaff };
   }
 
   async createNewCompany(user_owner_id: string) {
@@ -62,6 +64,7 @@ export class AppService implements OnModuleInit {
       const device_id = await this.deviceService.createNewDevice(session);
       const status_id = await this.statusService.createNewStatus(session);
       const work_id = await this.workService.createNewWork(session);
+      const service_id = await this.serviceService.createNewService(session);
 
       const staffUser_id = await this.staffUserService.createNewStaffUser(
         user_owner_id,
@@ -69,10 +72,6 @@ export class AppService implements OnModuleInit {
         session,
       );
 
-      const service_id = await this.serviceService.createNewService(
-        staffUser_id,
-        session,
-      );
       const part_id = await this.partService.createNewPart(
         shop_id,
         service_id,
@@ -81,6 +80,7 @@ export class AppService implements OnModuleInit {
 
       const company = await this.companyService.createNewCompany(
         user_owner_id,
+        staffUser_id,
         shop_id,
         role_id,
         device_id,

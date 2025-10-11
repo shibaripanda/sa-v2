@@ -45,9 +45,9 @@ export function ActivUsersBlock(props: AuthScreenInterface) {
                 mt="xs" 
                 size="md"
                 onClick={async () => {
-                props.setActivUserId(item._id)
-                sessionStorage.setItem('activeUserId', item._id)
-                setServiseModal.open()
+                    props.setActivUserId(item._id)
+                    sessionStorage.setItem('activeUserId', item._id)
+                    setServiseModal.open()
                 }}
                 >
                 {item.name ? item.name : item.email}

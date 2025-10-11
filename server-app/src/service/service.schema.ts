@@ -24,20 +24,6 @@ export class Service {
   @Prop({ required: true, default: '9:00 - 10:00, weekend: 8:00 - 10:00' })
   workTime: string;
 
-  // @Prop({
-  //   type: [{ type: Types.ObjectId, ref: 'Part' }],
-  //   required: true,
-  //   default: [],
-  // })
-  // parts_ids: Types.ObjectId[];
-
-  @Prop({
-    type: [{ type: Types.ObjectId, ref: 'StaffUser', autopopulate: true }],
-    required: true,
-    default: [],
-  })
-  users_staff_ids: Types.ObjectId[];
-
   @Prop({ required: true, default: [] })
   historyServiceLogin: HistoryServiceLogin[];
 }

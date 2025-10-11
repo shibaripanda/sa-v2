@@ -7,7 +7,6 @@ interface HistoryServiceLogin {
 
 export interface Service {
     _id: string;
-    company_owner_id: string;
     name: string;
     address: string;
     contacts: string;

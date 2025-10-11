@@ -36,6 +36,7 @@ export default function App() {
     {activeUserId && activeServiceId ? 
     <div>Dashboard {user?.name}</div> : 
     <AuthScreen
+      setUser={setUser}
       user={user} 
       setLeng={setLeng} 
       leng={leng} 

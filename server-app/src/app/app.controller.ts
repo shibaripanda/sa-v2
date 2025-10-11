@@ -9,13 +9,13 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @UseGuards(UniversalJwtGuard)
-  @Post('/get-all-my-companys-and-services')
-  getAllMyCompanysAndSrvices(
+  @Post('/get-all-my-comps')
+  getAllMyComps(
     @Body() data: any,
     @CurrentUser() user: User,
     // @Ip() ip: string,
   ) {
-    return this.appService.getAllMyCompanysAndSrvices(user._id);
+    return this.appService.getAllMyComps(user._id);
   }
 
   @UseGuards(UniversalJwtGuard)

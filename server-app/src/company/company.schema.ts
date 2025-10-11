@@ -31,6 +31,13 @@ export class Company {
   defaulTaxProcent: number;
 
   @Prop({
+    type: [{ type: Types.ObjectId, ref: 'StaffUser', autopopulate: true }],
+    required: true,
+    default: [],
+  })
+  staff_users_ids: Types.ObjectId[];
+
+  @Prop({
     type: [{ type: Types.ObjectId, ref: 'Service', autopopulate: true }],
     required: true,
     default: [],

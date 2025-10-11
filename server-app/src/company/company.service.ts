@@ -13,8 +13,22 @@ export class CompanyService {
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
   ) {}
 
+  async getCompanyesWhereIamStaff(
+    user_staff_ids: Types.ObjectId[],
+    comp_ids: Types.ObjectId[],
+  ) {
+    return this.companyModel.find({
+      staff_users_ids: { $in: user_staff_ids },
+      _id: { $nin: comp_ids },
+    });
+  }
+
+  async getMyStaffUsers(origin_user_id: string) {
+    return await this.companyModel.find({ origin_user_id });
+  }
+
   async getCompanyWhereOwner(user_id: string) {
-    return await this.companyModel.find({ user_id });
+    return await this.companyModel.find({ user_owner_id: user_id });
   }
 
   async getCompanyWithRelations(companyId: Types.ObjectId) {
@@ -23,6 +37,7 @@ export class CompanyService {
 
   async createNewCompany(
     user_owner_id: string,
+    staffUser_id: Types.ObjectId,
     shop_id: Types.ObjectId,
     role_id: Types.ObjectId,
     device_id: Types.ObjectId,
@@ -36,6 +51,7 @@ export class CompanyService {
       [
         {
           user_owner_id,
+          staff_users_ids: [staffUser_id],
           shops_ids: [shop_id],
           roles_ids: [role_id],
           devices_ids: [device_id],

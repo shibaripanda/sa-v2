@@ -13,24 +13,14 @@ export class ServiceService {
     @InjectModel(Service.name) private serviceModel: Model<ServiceDocument>,
   ) {}
 
-  async getServiceWhereAamStaff(users_staff_id: Types.ObjectId) {
-    return await this.serviceModel.find({
-      users_staff_ids: { $in: [users_staff_id] },
-    });
-  }
+  // async getServiceWhereAamStaff(users_staff_id: Types.ObjectId) {
+  //   return await this.serviceModel.find({
+  //     users_staff_ids: { $in: [users_staff_id] },
+  //   });
+  // }
 
-  async createNewService(
-    staffUser_id: Types.ObjectId,
-    session?: ClientSession,
-  ): Promise<Types.ObjectId> {
-    const res = await this.serviceModel.create(
-      [
-        {
-          users_staff_ids: [staffUser_id],
-        },
-      ],
-      { session },
-    );
+  async createNewService(session?: ClientSession): Promise<Types.ObjectId> {
+    const res = await this.serviceModel.create([{}], { session });
     return res[0]._id;
   }
 }

@@ -14,8 +14,9 @@ export class StaffUserService {
     private staffUserModel: Model<StaffUserDocument>,
   ) {}
 
-  async getMyStaffUssers(origin_user_id: string) {
-    return await this.staffUserModel.find({ origin_user_id });
+  async getMyStaffUsers_ids(origin_user_id: string) {
+    const res = await this.staffUserModel.find({ origin_user_id }, { _id: 1 });
+    return res.map((u) => u._id);
   }
 
   async createNewStaffUser(

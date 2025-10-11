@@ -24,6 +24,13 @@ export class StaffUser {
   role_ids: Types.ObjectId[];
 
   @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Service', autopopulate: true }],
+    required: true,
+    default: [],
+  })
+  filterServices: Types.ObjectId[];
+
+  @Prop({
     type: [{ type: Types.ObjectId, ref: 'Status', autopopulate: true }],
     required: true,
     default: [],

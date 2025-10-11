@@ -1,20 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Button, Grid, Modal, Space } from '@mantine/core'
+import { Button, Grid, Group, Modal, Space } from '@mantine/core'
 import { AuthScreenInterface } from '../mainScreen/AuthScreen'
 import axios from 'axios';
+import { Company } from '../../../interfaces/company';
 
 interface ServiceModalInterface extends AuthScreenInterface {
     serviseModal: boolean;
     setServiseModal: any;
 }
 
+interface CompsData {
+    compsOwner: Company[];
+    compsStaff: Company[];
+}
+
 export function ServiceModal(props: ServiceModalInterface) {
 
-    const [avaliableServices, setAvaliableServices] = useState<{}[]>([])
-    // const [services, setServices] = useState<Service[]>([])
+    const [avaliableServices, setAvaliableServices] = useState<CompsData>({compsOwner: [], compsStaff: []})
     
-
     useEffect(() => {
+        console.log('dddddd', props.serviseModal, props.user)
         if(props.serviseModal && props.user) {
             getUserServices()
         }
@@ -23,8 +28,8 @@ export function ServiceModal(props: ServiceModalInterface) {
     const getUserServices = async () => {
         await axios({
             method: 'POST',
-            url: import.meta.env.VITE_API_APP_LINK + '/app/get-all-my-companys-and-services',
-            data: {token: props.user?.token},
+            url: import.meta.env.VITE_API_APP_LINK + '/app/get-all-my-comps',
+            data: {},
             headers: {
                 "Authorization": `Bearer ${props.user?.token}`
             },
@@ -43,7 +48,7 @@ export function ServiceModal(props: ServiceModalInterface) {
         await axios({
             method: 'POST',
             url: import.meta.env.VITE_API_APP_LINK + '/app/create-new-company',
-            data: {token: props.user?.token},
+            data: {},
             headers: {
                 "Authorization": `Bearer ${props.user?.token}`
             },
@@ -51,11 +56,42 @@ export function ServiceModal(props: ServiceModalInterface) {
         })
         .then(async (res) => {
             console.log(res)
-            setAvaliableServices(ex => {return [res.data, ...ex]})
+            getUserServices()
         })
         .catch((er) => {
             console.log(er)
         })
+    }
+
+    const listOfCampsAndServices = (comps: Company[]) => {
+        const items = comps.map(item1 => 
+            <Grid.Col key={item1._id} span={12}>
+                {item1.name}
+                <Space h='sm'/>
+                <Grid>
+                    {item1.services_ids
+                    .map(item =>
+                    <Grid.Col key={item._id.toString()} span={12}> 
+                        <Button
+                        variant='default'
+                        onClick={async () => {
+                            console.log('fffff')
+                        }} 
+                        fullWidth
+                        >
+                        {item.name}
+                        </Button>
+                    </Grid.Col>
+                    )}  
+                </Grid>
+                <Space h='sm'/>
+                <Group justify="flex-end"><Button size='xs' variant='default'>{props.text?.crateNewService}</Button></Group>
+                <Space h='sm'/>
+                <hr></hr>
+            </Grid.Col>)
+        return (
+            <>{items}</>
+        )
     }
 
   
@@ -63,41 +99,13 @@ export function ServiceModal(props: ServiceModalInterface) {
         <>
             <Modal radius={'10px'} opened={props.serviseModal} title={props.text?.services}
                 onClose={() => {
+                    setAvaliableServices({compsOwner: [], compsStaff: []})
+                    props.setUser(null)
                     props.setServiseModal.close()
                 }}>
             
             <Grid>
-                {/* {services.map(item1 => 
-                <Grid.Col key={item1._id} span={12}>
-                    <>
-                        {item1.name}
-                        <Space h='sm'/>
-                        <Grid>
-                            {item1.subServices
-                            .filter(subServ => roles.map(role => role.subServices).flat().map(subs => subs.subServiceId).includes(subServ.subServiceId))
-                            .map(item =>
-                            <Grid.Col key={item.subServiceId} span={12}> 
-                            <Button
-                            variant='default'
-                            onClick={async () => {
-                                sessionStorage.setItem('leng', props.leng)
-                                sessionStorage.setItem('text', JSON.stringify(props.text))
-                                sessionStorage.setItem('serviceId', item1._id)
-                                sessionStorage.setItem('subServiceId', item.subServiceId)
-                                // @ts-ignore
-                                setTimeout(() => navigate('/service'), 1000)
-                            }} 
-                            fullWidth
-                            >
-                            {item.name}
-                            </Button>
-                        </Grid.Col>
-                            )}  
-                        </Grid>
-                        <Space h='sm'/>
-                        <hr></hr>          
-                    </>
-                </Grid.Col>)} */}
+                {listOfCampsAndServices(avaliableServices.compsOwner)}
 
                 <Grid.Col span={12}>
 
@@ -108,7 +116,7 @@ export function ServiceModal(props: ServiceModalInterface) {
                     onClick={() => {
                         createNewService()
                     }}>
-                    {props.text?.crateNewService}
+                    {props.text?.addNewCompany}
                     </Button>
                 </Grid.Col>
             </Grid>

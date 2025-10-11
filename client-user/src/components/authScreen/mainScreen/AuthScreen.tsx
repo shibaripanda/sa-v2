@@ -28,6 +28,7 @@ export interface AuthScreenInterface {
   setText: any;
   leng: string;
   setLeng: any;
+  setUser: any;
 }
 
   export function AuthScreen(props: AuthScreenInterface) {
