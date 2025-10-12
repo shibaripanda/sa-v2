@@ -17,23 +17,27 @@ import { User } from '../../../interfaces/user.ts';
 import { TelegramButton } from '../subAuthScreen/TelegramButton.tsx';
 import { LanguagePicker } from '../../subComponents/languagePicker/LanguagePicker.tsx';
 import { TextLib } from '../../../interfaces/textLib.ts';
+import { useDisclosure } from '@mantine/hooks';
+import { ServiceModal } from '../subAuthScreen/ServiceModal.tsx';
 
 export interface AuthScreenInterface {
   user: User | null;
   loginedUsers: User[];
   setLoginedUsers: any;
-  setActivUserId: any;
   setActiveServiceId: any;
   text: TextLib | null;
   setText: any;
   leng: string;
   setLeng: any;
   setUser: any;
+  setLoaderShow: any;
+  setLoadingText: any;
 }
 
   export function AuthScreen(props: AuthScreenInterface) {
 
     const [agreement, setAgreement] = useState(false)
+    const [serviseModal, setServiseModal] = useDisclosure(false)
 
     return (
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_TOKEN}>
@@ -47,7 +51,7 @@ export interface AuthScreenInterface {
           <Title order={3} className={classes.title} ta="center" mt="md" mb={25}>
             {props.text?.hello}
           </Title>
-          <ActivUsersBlock {...props}/>
+          <ActivUsersBlock {...props} setServiseModal={setServiseModal}/>
           <Space h='md'/>
           <Checkbox
           checked={agreement}
@@ -55,12 +59,13 @@ export interface AuthScreenInterface {
           onChange={(event) => setAgreement(event.currentTarget.checked)}
           />
           <Grid justify="space-between" align="center">
-            <Grid.Col span={6}><GoogleButton {...props} title={'Google'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
-            <Grid.Col span={6}><TelegramButton {...props} title={'Telegram'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
+            <Grid.Col span={6}><GoogleButton {...props} setServiseModal={setServiseModal} title={'Google'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
+            <Grid.Col span={6}><TelegramButton {...props} setServiseModal={setServiseModal} title={'Telegram'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
           </Grid>
 
         </Paper>
       </div>
+      <ServiceModal {...props} serviseModal={serviseModal} setServiseModal={setServiseModal}/>
       </GoogleOAuthProvider>
     )
   }

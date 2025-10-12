@@ -7,6 +7,8 @@ import { Company } from '../../../interfaces/company';
 interface ServiceModalInterface extends AuthScreenInterface {
     serviseModal: boolean;
     setServiseModal: any;
+    setLoaderShow: any;
+    setLoadingText: any;
 }
 
 interface CompsData {
@@ -26,6 +28,8 @@ export function ServiceModal(props: ServiceModalInterface) {
     }, [props.serviseModal])
 
     const getUserServices = async () => {
+        props.setLoadingText('Получение компаний и сервисов...')
+        props.setLoaderShow.open()
         await axios({
             method: 'POST',
             url: import.meta.env.VITE_API_APP_LINK + '/app/get-all-my-comps',
@@ -36,15 +40,21 @@ export function ServiceModal(props: ServiceModalInterface) {
             timeout: 10000
         })
         .then(async (res) => {
+            props.setLoadingText('Данные успешно получены!')
             console.log(res)
             setAvaliableServices(res.data)
         })
         .catch((er) => {
             console.log(er)
+            props.setLoadingText('Ошибка получения данных :-/')
+        })
+        .finally(() => {
+            props.setLoaderShow.close()
         })
     }
 
     const createNewService = async () => {
+        props.setLoaderShow.open()
         await axios({
             method: 'POST',
             url: import.meta.env.VITE_API_APP_LINK + '/app/create-new-company',
@@ -60,6 +70,9 @@ export function ServiceModal(props: ServiceModalInterface) {
         })
         .catch((er) => {
             console.log(er)
+        })
+        .finally(() => {
+            props.setLoaderShow.close()
         })
     }
 
@@ -94,14 +107,14 @@ export function ServiceModal(props: ServiceModalInterface) {
         )
     }
 
-  
     return (
         <>
             <Modal radius={'10px'} opened={props.serviseModal} title={props.text?.services}
                 onClose={() => {
                     setAvaliableServices({compsOwner: [], compsStaff: []})
-                    props.setUser(null)
                     props.setServiseModal.close()
+                    sessionStorage.removeItem('user')
+                    props.setUser(null)
                 }}>
             
             <Grid>

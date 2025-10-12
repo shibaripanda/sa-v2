@@ -3,12 +3,12 @@ import { googleLogout } from "@react-oauth/google";
 import { AuthScreenInterface } from "../mainScreen/AuthScreen";
 import { IconLogout } from "@tabler/icons-react";
 import { User } from "../../../interfaces/user";
-import { ServiceModal } from "./ServiceModal";
-import { useDisclosure } from "@mantine/hooks";
 
-export function ActivUsersBlock(props: AuthScreenInterface) {
+interface ServiceMod extends AuthScreenInterface {
+    setServiseModal: any;
+}
 
-    const [serviseModal, setServiseModal] = useDisclosure(false)
+export function ActivUsersBlock(props: ServiceMod) {
 
     const showIndividualButExit = (item: User) => {
         if (props.loginedUsers.length > 1) {
@@ -45,9 +45,9 @@ export function ActivUsersBlock(props: AuthScreenInterface) {
                 mt="xs" 
                 size="md"
                 onClick={async () => {
-                    props.setActivUserId(item._id)
-                    sessionStorage.setItem('activeUserId', item._id)
-                    setServiseModal.open()
+                    sessionStorage.setItem('user', JSON.stringify(item))
+                    props.setUser(item)
+                    props.setServiseModal.open()
                 }}
                 >
                 {item.name ? item.name : item.email}
@@ -63,7 +63,6 @@ export function ActivUsersBlock(props: AuthScreenInterface) {
                 onClick={async () => {
                     sessionStorage.clear()
                     props.setLoginedUsers([])
-                    props.setActivUserId('')
                     props.setActiveServiceId('')
                     googleLogout()
                 }}
@@ -72,7 +71,6 @@ export function ActivUsersBlock(props: AuthScreenInterface) {
             </Button>
             <Space h='lg'/>
             <Divider/>
-            <ServiceModal {...props} serviseModal={serviseModal} setServiseModal={setServiseModal}/>
             </div>
         )
 }

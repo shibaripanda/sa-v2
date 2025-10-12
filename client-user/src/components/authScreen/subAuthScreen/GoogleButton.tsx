@@ -10,6 +10,7 @@ interface GoogleButtonInterface extends AuthScreenInterface {
     title: string;
     agreement: boolean;
     setAgreement: any;
+    setServiseModal: any;
 }
 
 export function GoogleButton(props: GoogleButtonInterface) {
@@ -37,6 +38,9 @@ export function GoogleButton(props: GoogleButtonInterface) {
             }
             props.setAgreement(false)
             props.setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
+            sessionStorage.setItem('user', JSON.stringify(newUser))
+            props.setUser(newUser)
+            props.setServiseModal.open()
         })
         .catch((er) => {
             console.log(er)
