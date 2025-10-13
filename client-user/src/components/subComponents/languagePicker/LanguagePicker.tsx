@@ -3,9 +3,8 @@ import { Popover, Grid, ActionIcon } from '@mantine/core'
 import { IconWorld } from '@tabler/icons-react'
 import classes from './LanguagePicker.module.css'
 import axios from 'axios'
-import { AuthScreenInterface } from '../../authScreen/mainScreen/AuthScreen'
 
-export function LanguagePicker(props: AuthScreenInterface) {
+export function LanguagePicker(props: {leng: string; setText: any; setLeng: any}) {
   const [opened, setOpened] = useState(false)
   const [availableLengs, setAvailableLengs] = useState<{index: string; title: string}[]>([])
 

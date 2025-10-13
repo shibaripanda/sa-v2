@@ -10,24 +10,10 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { ActionIcon, Center, Divider, Stack, Tooltip, UnstyledButton } from '@mantine/core';
-// import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './NavBar.module.css';
-import { User } from '../../../../interfaces/user';
-import { TextLib } from '../../../../interfaces/textLib';
 import { LanguagePicker } from '../../../subComponents/languagePicker/LanguagePicker';
 import { ColorShema } from '../../../subComponents/colorShema/ColorShema';
-
-// export interface DashScreenInterface {
-//   user: User;
-//   loginedUsers: User[];
-//   text: TextLib | null;
-//   setText: any;
-//   leng: string;
-//   setLeng: any;
-//   setUser: any;
-//   setLoaderShow: any;
-//   setLoadingText: any;
-// }
+import { DashScreenInterface } from '../../mainScreen/Dashboard';
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -56,15 +42,18 @@ const mockdata = [
   { icon: IconSettings, label: 'Settings' },
 ];
 
-export function NavBar(props: any) {
-  const [active, setActive] = useState(2);
+export function NavBar(props: DashScreenInterface) {
+  const [active, setActive] = useState(sessionStorage.getItem('navlink') ? Number(sessionStorage.getItem('navlink')) : 0);
 
   const links = mockdata.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
       active={index === active}
-      onClick={() => setActive(index)}
+      onClick={() => {
+        setActive(index)
+        sessionStorage.setItem('navlink', index.toString())
+      }}
     />
   ));
 
@@ -74,10 +63,11 @@ export function NavBar(props: any) {
         <LanguagePicker {...props}/>
         <ColorShema/>
       </Center>
-      <Divider  my="xs"/>
+      <Divider my="xs"/>
       <Center>
         <ActionIcon
             onClick={() => {
+                sessionStorage.removeItem('navlink')
                 props.pickService(null)
                 props.pickUser(null)
             }}

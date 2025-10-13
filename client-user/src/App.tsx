@@ -21,7 +21,6 @@ export default function App() {
   const [service, setService] = useState<Service | null>(JSON.parse(sessionStorage.getItem('service')!) ?? null)
 
   const [loadingText, setLoadingText] = useState<string>(text?.loading ?? 'Loading')
-
   const [loaderShow, setLoaderShow] = useDisclosure(false)
 
   const onIdle = () => {

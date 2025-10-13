@@ -1,4 +1,4 @@
-import { AppShell, Burger } from '@mantine/core';
+import { AppShell, Burger, Center, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from '../subDashScreen/navBar/NavBar';
 import { User } from '../../../interfaces/user';
@@ -30,14 +30,17 @@ export function Dashboard(props: DashScreenInterface) {
       }}
     >
         <AppShell.Header>
-        <Burger
-            opened={opened}
-            onClick={toggle}
-            hiddenFrom="sm"
-            size="sm"
-        />
-
-        <div>{props.user.name} {props.service.name}</div>
+            <Group>
+                <Burger
+                    mt={20}
+                    opened={opened}
+                    onClick={toggle}
+                    hiddenFrom="sm"
+                    size="sm"
+                />
+                {props.user.name} 
+                {props.service.name}
+            </Group>
         </AppShell.Header>
 
         <AppShell.Navbar>
