@@ -24,12 +24,12 @@ export interface AuthScreenInterface {
   user: User | null;
   loginedUsers: User[];
   setLoginedUsers: any;
-  setActiveServiceId: any;
+  pickService: any;
   text: TextLib | null;
   setText: any;
   leng: string;
   setLeng: any;
-  setUser: any;
+  pickUser: any;
   setLoaderShow: any;
   setLoadingText: any;
 }

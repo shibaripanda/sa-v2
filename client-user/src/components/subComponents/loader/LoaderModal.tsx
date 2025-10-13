@@ -5,7 +5,7 @@ export function LoaderModal(props: {text: string; loaderShow: boolean; setLoader
 
     return (
         <>
-            <Modal size="xs" radius={'10px'} opened={props.loaderShow} title={props.text}
+            <Modal radius={'10px'} opened={props.loaderShow} title={props.text} withCloseButton={false}
                 onClose={() => {
                     props.setLoaderShow.close()
                 }}>

@@ -28,7 +28,7 @@ export function ServiceModal(props: ServiceModalInterface) {
     }, [props.serviseModal])
 
     const getUserServices = async () => {
-        props.setLoadingText('Получение компаний и сервисов...')
+        props.setLoadingText(props.text?.getUserServices)
         props.setLoaderShow.open()
         await axios({
             method: 'POST',
@@ -40,20 +40,19 @@ export function ServiceModal(props: ServiceModalInterface) {
             timeout: 10000
         })
         .then(async (res) => {
-            props.setLoadingText('Данные успешно получены!')
             console.log(res)
             setAvaliableServices(res.data)
         })
         .catch((er) => {
             console.log(er)
-            props.setLoadingText('Ошибка получения данных :-/')
         })
         .finally(() => {
             props.setLoaderShow.close()
         })
     }
 
-    const createNewService = async () => {
+    const createNewCompany = async () => {
+        props.setLoadingText(props.text?.createNewCompany)
         props.setLoaderShow.open()
         await axios({
             method: 'POST',
@@ -88,7 +87,7 @@ export function ServiceModal(props: ServiceModalInterface) {
                         <Button
                         variant='default'
                         onClick={async () => {
-                            console.log('fffff')
+                            props.pickService(item)
                         }} 
                         fullWidth
                         >
@@ -112,9 +111,8 @@ export function ServiceModal(props: ServiceModalInterface) {
             <Modal radius={'10px'} opened={props.serviseModal} title={props.text?.services}
                 onClose={() => {
                     setAvaliableServices({compsOwner: [], compsStaff: []})
+                    props.pickUser(null)
                     props.setServiseModal.close()
-                    sessionStorage.removeItem('user')
-                    props.setUser(null)
                 }}>
             
             <Grid>
@@ -127,7 +125,7 @@ export function ServiceModal(props: ServiceModalInterface) {
                 <Grid.Col span={12}>
                     <Button size='xs' variant='default'
                     onClick={() => {
-                        createNewService()
+                        createNewCompany()
                     }}>
                     {props.text?.addNewCompany}
                     </Button>

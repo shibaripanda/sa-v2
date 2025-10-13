@@ -45,8 +45,7 @@ export function ActivUsersBlock(props: ServiceMod) {
                 mt="xs" 
                 size="md"
                 onClick={async () => {
-                    sessionStorage.setItem('user', JSON.stringify(item))
-                    props.setUser(item)
+                    props.pickUser(item)
                     props.setServiseModal.open()
                 }}
                 >
@@ -63,7 +62,7 @@ export function ActivUsersBlock(props: ServiceMod) {
                 onClick={async () => {
                     sessionStorage.clear()
                     props.setLoginedUsers([])
-                    props.setActiveServiceId('')
+                    props.pickService(null)
                     googleLogout()
                 }}
                 >

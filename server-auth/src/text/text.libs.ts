@@ -34,6 +34,16 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Создаем новую компанию',
+    index: 'createNewCompany',
+    update: false,
+  },
+  {
+    rutext: 'Получение данных с сервера',
+    index: 'getUserServices',
+    update: false,
+  },
+  {
     rutext: 'Загрузка...',
     index: 'loading',
     update: false,
