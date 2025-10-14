@@ -38,8 +38,8 @@ export function GoogleButton(props: GoogleButtonInterface) {
             }
             props.setAgreement(false)
             props.setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
-            sessionStorage.setItem('user', JSON.stringify(newUser))
-            props.setUser(newUser)
+            // sessionStorage.setItem('user', JSON.stringify(newUser))
+            props.pickUser(newUser)
             props.setServiseModal.open()
         })
         .catch((er) => {

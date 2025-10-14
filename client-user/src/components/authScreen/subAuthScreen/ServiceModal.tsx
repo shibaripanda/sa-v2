@@ -87,7 +87,9 @@ export function ServiceModal(props: ServiceModalInterface) {
                         <Button
                         variant='default'
                         onClick={async () => {
+                            setAvaliableServices({compsOwner: [], compsStaff: []})
                             props.pickService(item)
+                            props.setServiseModal.close()
                         }} 
                         fullWidth
                         >
@@ -108,7 +110,7 @@ export function ServiceModal(props: ServiceModalInterface) {
 
     return (
         <>
-            <Modal radius={'10px'} opened={props.serviseModal} title={props.text?.services}
+            <Modal radius={'10px'} opened={props.serviseModal} title={props.user?.name}
                 onClose={() => {
                     setAvaliableServices({compsOwner: [], compsStaff: []})
                     props.pickUser(null)
@@ -117,10 +119,6 @@ export function ServiceModal(props: ServiceModalInterface) {
             
             <Grid>
                 {listOfCampsAndServices(avaliableServices.compsOwner)}
-
-                <Grid.Col span={12}>
-
-                </Grid.Col>
 
                 <Grid.Col span={12}>
                     <Button size='xs' variant='default'

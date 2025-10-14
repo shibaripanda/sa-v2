@@ -8,7 +8,9 @@ export function LoaderModal(props: {text: string; loaderShow: boolean; setLoader
             <Modal radius={'10px'} opened={props.loaderShow} title={props.text} withCloseButton={false}
                 onClose={() => {
                     props.setLoaderShow.close()
-                }}>
+                }}
+                zIndex={9999}
+                >
             
                 <Center style={{marginTop: '1vmax'}}>
                     <Loader size={45} color="blue" type="dots" />

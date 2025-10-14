@@ -13,9 +13,9 @@ import { Dashboard } from "./components/dashboardScreen/mainScreen/Dashboard";
 
 export default function App() {
 
-  const [leng, setLeng] = useState<string>(sessionStorage.getItem('leng') ? sessionStorage.getItem('leng')! : window.navigator.language.substring(0,2) ? window.navigator.language.substring(0,2) : 'en')
-  const [text, setText] = useState<TextLib | null>(null)
-  const [loginedUsers, setLoginedUsers] = useState<User[]>(sessionStorage.getItem('loginedUsers') ? JSON.parse(sessionStorage.getItem('loginedUsers')!) : [])
+  const [leng, setLeng] = useState<string>(sessionStorage.getItem('leng') ?? window.navigator.language.substring(0,2) ?? 'en')
+  const [text, setText] = useState<TextLib | null>(JSON.parse(sessionStorage.getItem('text')!) ?? null)
+  const [loginedUsers, setLoginedUsers] = useState<User[]>(JSON.parse(sessionStorage.getItem('loginedUsers')!) ?? [])
 
   const [user, setUser] = useState<User | null>(JSON.parse(sessionStorage.getItem('user')!) ?? null)
   const [service, setService] = useState<Service | null>(JSON.parse(sessionStorage.getItem('service')!) ?? null)
@@ -44,7 +44,7 @@ export default function App() {
   }
 
   const screenActiv = () => {
-    if(user && service && text && leng) {
+    if(user && service) {
       return (
         <Dashboard
         user={user}

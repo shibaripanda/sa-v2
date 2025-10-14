@@ -3,14 +3,15 @@ import { Popover, Grid, ActionIcon } from '@mantine/core'
 import { IconWorld } from '@tabler/icons-react'
 import classes from './LanguagePicker.module.css'
 import axios from 'axios'
+import { TextLib } from '../../../interfaces/textLib'
 
-export function LanguagePicker(props: {leng: string; setText: any; setLeng: any}) {
+export function LanguagePicker(props: {leng: string; setText: any; setLeng: any; text: TextLib | null}) {
   const [opened, setOpened] = useState(false)
   const [availableLengs, setAvailableLengs] = useState<{index: string; title: string}[]>([])
 
   useEffect(() => {
-    getTextAvailable()
-    getTextLib()
+      getTextAvailable()
+      getTextLib()
   }, [props.leng])
 
   const getTextAvailable = async () => {
@@ -40,6 +41,7 @@ export function LanguagePicker(props: {leng: string; setText: any; setLeng: any}
       })
       .then(async (res) => {
         console.log(res)
+        sessionStorage.setItem('text', JSON.stringify(res.data))
         props.setText(res.data)
       })
       .catch((er) => {

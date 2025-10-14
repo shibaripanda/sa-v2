@@ -60,12 +60,7 @@ export function NavBar(props: DashScreenInterface) {
   return (
     <nav className={classes.navbar}>
       <Center>
-        <LanguagePicker {...props}/>
-        <ColorShema/>
-      </Center>
-      <Divider my="xs"/>
-      <Center>
-        <ActionIcon
+        {/* <ActionIcon
             onClick={() => {
                 sessionStorage.removeItem('navlink')
                 props.pickService(null)
@@ -76,21 +71,23 @@ export function NavBar(props: DashScreenInterface) {
             aria-label="Toggle color scheme"
         >
             <IconLogout stroke={1.5} />
-        </ActionIcon>
+        </ActionIcon> */}
       </Center>
 
       <div className={classes.navbarMain}>
-        <Stack justify="center" gap={11}>
+        <Stack justify="center" gap={15}>
           {links}
         </Stack>
       </div>
 
       <Stack justify="center" gap={0}>
-        <NavbarLink icon={IconLogout} label="Logout" 
-        onClick={() => {
-            props.pickService(null)
-            props.pickUser(null)
-        }}/>
+        <Center>
+          <ColorShema/>
+        </Center>
+        <Divider my="xs"/>
+        <Center>
+          <LanguagePicker {...props}/>
+        </Center>
       </Stack>
     </nav>
   );
