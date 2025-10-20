@@ -1,10 +1,10 @@
-import { ActionIcon, AppShell, Burger, Button, Center, Group, Text } from '@mantine/core';
+import { ActionIcon, AppShell, Burger, Button, Group, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from '../subDashScreen/navBar/NavBar';
 import { User } from '../../../interfaces/user';
 import { Service } from '../../../interfaces/service';
 import { TextLib } from '../../../interfaces/textLib';
-import { IconLogout } from '@tabler/icons-react';
+import { IconFilter, IconSquareRoundedPlus } from '@tabler/icons-react';
 
 export interface DashScreenInterface {
     user: User;
@@ -43,28 +43,30 @@ export function Dashboard(props: DashScreenInterface) {
                 <Text size='sm'>{props.service.name}</Text>
                 <Text size='sm'>{props.user.name}</Text>
               </div>
-              <Button >Создать заказ</Button>
-              <ActionIcon
-                  onClick={() => {
-                      sessionStorage.removeItem('navlink')
-                      props.pickService(null)
-                      props.pickUser(null)
-                  }}
-                  variant="transparent"
-                  color="grey"
-                  aria-label="Toggle color scheme"
-              >
-                <IconLogout stroke={1.5}/>
-              </ActionIcon>
-              
-                {/* {props.user.name} 
-                {props.service.name} */}
+              <Group hiddenFrom="sm">
+                <ActionIcon
+                    onClick={() => {}}
+                    variant="transparent"
+                    color="grey"
+                    aria-label="Toggle color scheme"
+                >
+                  <IconSquareRoundedPlus stroke={2}/>
+                </ActionIcon>
+                <ActionIcon
+                    onClick={() => {}}
+                    variant="transparent"
+                    color="grey"
+                    aria-label="Toggle color scheme"
+                >
+                  <IconFilter stroke={2}/>
+                </ActionIcon>
+              </Group>
+              <Group visibleFrom="sm">
+                <Button variant='default'>Создать заказ</Button>
+                <Button variant='default'>Фильтр</Button>
+              </Group>
             </Group>
         </AppShell.Header>
-
-        {/* <AppShell.Header>
-              <Button >Создать заказ</Button>
-        </AppShell.Header> */}
 
         <AppShell.Navbar>
             <NavBar {...props}/>

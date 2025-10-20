@@ -88,6 +88,22 @@ export function NavBar(props: DashScreenInterface) {
         <Center>
           <LanguagePicker {...props}/>
         </Center>
+        <Divider my="xs"/>
+        <Center>
+          <ActionIcon
+              ml='5px'
+              onClick={() => {
+                  sessionStorage.removeItem('navlink')
+                  props.pickService(null)
+                  props.pickUser(null)
+              }}
+              variant="transparent"
+              color="grey"
+              aria-label="Toggle color scheme"
+          >
+            <IconLogout stroke={1.5}/>
+          </ActionIcon>
+        </Center>
       </Stack>
     </nav>
   );
