@@ -1,14 +1,4 @@
-import { useState } from 'react';
-import {
-  IconCalendarStats,
-  IconDeviceDesktopAnalytics,
-  IconFingerprint,
-  IconGauge,
-  IconHome2,
-  IconLogout,
-  IconSettings,
-  IconUser,
-} from '@tabler/icons-react';
+import { IconHome2, IconLogout } from '@tabler/icons-react';
 import { ActionIcon, Center, Divider, Stack, Tooltip, UnstyledButton } from '@mantine/core';
 import classes from './NavBar.module.css';
 import { LanguagePicker } from '../../../subComponents/languagePicker/LanguagePicker';
@@ -22,7 +12,7 @@ interface NavbarLinkProps {
   onClick?: () => void;
 }
 
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+function NavbarLink({ icon: Icon, label, active, onClick}: NavbarLinkProps) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
@@ -32,27 +22,22 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
-const mockdata = [
-  { icon: IconHome2, label: 'Home' },
-  { icon: IconGauge, label: 'Dashboard' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  { icon: IconCalendarStats, label: 'Releases' },
-  { icon: IconUser, label: 'Account' },
-  { icon: IconFingerprint, label: 'Security' },
-  { icon: IconSettings, label: 'Settings' },
-];
+interface NavBarInterface extends DashScreenInterface {
+  navBarData: { icon: typeof IconHome2, label: string }[];
+  activeNavBar: number;
+  setActiveNavBar: (index: number) => void;
+}
 
-export function NavBar(props: DashScreenInterface) {
-  const [active, setActive] = useState(sessionStorage.getItem('navlink') ? Number(sessionStorage.getItem('navlink')) : 0);
-
-  const links = mockdata.map((link, index) => (
+export function NavBar(props: NavBarInterface) {
+  
+  const links = props.navBarData.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
-      active={index === active}
+      active={index === props.activeNavBar}
       onClick={() => {
-        setActive(index)
-        sessionStorage.setItem('navlink', index.toString())
+        props.setActiveNavBar(index)
+        sessionStorage.setItem('activeNavBar', index.toString())
       }}
     />
   ));
@@ -60,7 +45,7 @@ export function NavBar(props: DashScreenInterface) {
   return (
     <nav className={classes.navbar}>
       <Center>
-        {/* <ActionIcon
+        <ActionIcon
             onClick={() => {
                 sessionStorage.removeItem('navlink')
                 props.pickService(null)
@@ -69,9 +54,10 @@ export function NavBar(props: DashScreenInterface) {
             variant="transparent"
             color="grey"
             aria-label="Toggle color scheme"
+            ml='5px'
         >
             <IconLogout stroke={1.5} />
-        </ActionIcon> */}
+        </ActionIcon>
       </Center>
 
       <div className={classes.navbarMain}>
