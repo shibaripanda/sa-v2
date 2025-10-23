@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mantine/core": "8.3.3",
+    "@mantine/core": "^8.3.3",
     "@mantine/form": "^8.3.3",
     "@mantine/hooks": "8.3.3",
     "@mantinex/dev-icons": "^2.0.0",

@@ -1,4 +1,4 @@
-import { AppShell, Center } from '@mantine/core';
+import { AppShell, Center, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from '../subDashScreen/navBar/NavBar';
 import { User } from '../../../interfaces/user';
@@ -8,6 +8,11 @@ import { IconCalendarStats, IconDeviceDesktopAnalytics, IconFingerprint, IconGau
 import { Header } from '../subDashScreen/header/Header';
 import { useEffect, useState } from 'react';
 import { Main } from '../subDashScreen/main/Main';
+import { OrdersList_1 } from '../subDashScreen/main/orders/ordersListsVariants/ordersListVariant-1/OrdersList_1';
+import { OrdersList_2 } from '../subDashScreen/main/orders/ordersListsVariants/ordersListVariant-2/OrdersList_2';
+import { useMediaQuery } from '@mantine/hooks'
+
+const orderViewVariants = [OrdersList_1.name, OrdersList_2.name]
 
  const orders_Test = [
     {
@@ -170,58 +175,17 @@ const navBarData_Test = [
     { icon: IconFingerprint, label: 'Security' },
     { icon: IconSettings, label: 'Settings' },
 ];
-const headerMenuData_Test = [
+
+type DropHeadMenu = 
   {
-    link: '#1',
-    label: 'Learn 1',
-    links: [
-      { link: '/docs', label: 'Documentation' },
-      { link: '/resources', label: 'Resources' },
-      { link: '/community', label: 'Community' },
-      { link: '/blog', label: 'Blog' },
-    ],
-    },
-    {
-      link: '#2',
-      label: 'Learn 2',
-      links: [
-        { link: '/docs', label: 'Documentation' },
-        { link: '/resources', label: 'Resources' },
-        { link: '/community', label: 'Community' },
-        { link: '/blog', label: 'Blog' },
-      ],
-    },
-    {
-      link: '#3',
-      label: 'Learn 3',
-      links: [
-        { link: '/docs', label: 'Documentation' },
-        { link: '/resources', label: 'Resources' },
-        { link: '/community', label: 'Community' },
-        { link: '/blog', label: 'Blog' },
-      ],
-    },
-    {
-      link: '#4',
-      label: 'Learn 4',
-      links: [
-        { link: '/docs', label: 'Documentation' },
-        { link: '/resources', label: 'Resources' },
-        { link: '/community', label: 'Community' },
-        { link: '/blog', label: 'Blog' },
-      ],
-    },
-    {
-      link: '#5',
-      label: 'Learn 5',
-      links: [
-        { link: '/docs', label: 'Documentation' },
-        { link: '/resources', label: 'Resources' },
-        { link: '/community', label: 'Community' },
-        { link: '/blog', label: 'Blog' },
-      ],
-    },
-];
+    link: string;
+    label: string;
+    links: {
+        name: string;
+        action: () => void;
+    }[];
+}[]
+
 
 export interface DashScreenInterface {
     user: User;
@@ -235,29 +199,43 @@ export interface DashScreenInterface {
 }
 
 export function Dashboard(props: DashScreenInterface) {
+  const isMobile = useMediaQuery('(max-width: 48em)')
   const [openedBurgerMainMenu, toggleOpenedBurgerMainMenu ] = useDisclosure();
   const [activeNavBar, setActiveNavBar] = useState(sessionStorage.getItem('activeNavBar') ? Number(sessionStorage.getItem('activeNavBar')) : 0);
 
   const [orders, setOrders] = useState(orders_Test)
   const [navBarData, setnavBarData] = useState(navBarData_Test)
-  const [headerMenuData, setHeaderMenuData] = useState(headerMenuData_Test)
+  const [headerMenuData, setHeaderMenuData] = useState<DropHeadMenu>([])
+
+  const [activOrderView, setActivOrderView] = useState(0)
+
+  const headerMenuData_Test = [
+    {
+      link: '#1',
+      label: 'Orders view',
+      links: orderViewVariants.map((v, index) => ({name: activOrderView === index ? v + ' *' : v, action: () => setActivOrderView(index)}))
+    },
+  ];
+
+  useEffect(() => {
+    setHeaderMenuData(headerMenuData_Test)
+  }, [activOrderView])
 
   useEffect(() => {
     setOrders(orders_Test)
     setnavBarData(navBarData_Test)
-    setHeaderMenuData(headerMenuData_Test)
   }, [])
 
   return (
     <AppShell
-      padding="3px"
-      header={{ height: 50 }}
+      padding="15px"
+      header={{ height: 45 }}
+      footer={{ height: 30 }}
       navbar={{
         width: 50,
         breakpoint: 'sm',
         collapsed: { mobile: !openedBurgerMainMenu },
       }}
-      
     >
         <AppShell.Header>
             <Header {...props} headerMenuData={headerMenuData} openedBurger={openedBurgerMainMenu} toggle={toggleOpenedBurgerMainMenu.toggle}/>
@@ -268,11 +246,16 @@ export function Dashboard(props: DashScreenInterface) {
         </AppShell.Navbar>
 
         <AppShell.Main>
-            <Main {...props} orders={orders}/>
+            <Main {...props} orders={orders} orderView={orderViewVariants[activOrderView]} isMobile={isMobile}/>
         </AppShell.Main>
 
         <AppShell.Footer>
-            <Center>{props.user?.email}</Center>
+            <Center>
+              <Group justify="space-between">
+                <div>{props.user?.email}</div>
+                <div>{orders.length}</div>
+              </Group>
+            </Center>
         </AppShell.Footer>
 
     </AppShell>

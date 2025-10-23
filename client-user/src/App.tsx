@@ -30,6 +30,7 @@ export default function App() {
       pickUser(null)
     }
   };
+
   useIdleTimer({ timeout: 1000 * 5, onIdle });
 
   const pickService = (service: Service | null) => {
@@ -42,7 +43,6 @@ export default function App() {
     else sessionStorage.removeItem('user')
     setUser(user)
   }
-
   const screenActiv = () => {
     if(user && service) {
       return (
@@ -76,7 +76,6 @@ export default function App() {
     }
   }
   
-
   return (
   <MantineProvider theme={theme}>
     {screenActiv()}

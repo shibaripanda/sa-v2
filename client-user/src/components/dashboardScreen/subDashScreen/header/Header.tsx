@@ -5,9 +5,9 @@ import { DashScreenInterface } from '../../mainScreen/Dashboard';
 
 interface HeaderInterface extends DashScreenInterface {
     headerMenuData: {
-        link: string,
-        label: string,
-        links: { link: string, label: string }[],
+      link: string,
+      label: string,
+      links: { name: string, action: () => void }[]
     }[];
     openedBurger: boolean;
     toggle: () => void;
@@ -17,12 +17,12 @@ export function Header(props: HeaderInterface) {
 
   const items = props.headerMenuData.map((link) => {
     const menuItems = link.links?.map((item) => (
-      <Menu.Item key={item.link}>{item.label}</Menu.Item>
+      <Menu.Item key={item.name} onClick={item.action}>{item.name}</Menu.Item>
     ));
 
     if (menuItems) {
       return (
-        <Menu key={link.label} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+        <Menu key={link.label} trigger="hover" openDelay={100} closeDelay={400}>
           <Menu.Target>
             <a
               href={link.link}
