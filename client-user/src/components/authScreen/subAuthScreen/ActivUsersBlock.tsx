@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Space } from "@mantine/core"
+import { Button, Divider, Grid, Space } from "@mantine/core"
 import { googleLogout } from "@react-oauth/google";
 import { AuthScreenInterface } from "../mainScreen/AuthScreen";
 import { IconLogout } from "@tabler/icons-react";

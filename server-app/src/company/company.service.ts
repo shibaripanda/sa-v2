@@ -16,19 +16,28 @@ export class CompanyService {
   async getCompanyesWhereIamStaff(
     user_staff_ids: Types.ObjectId[],
     comp_ids: Types.ObjectId[],
+    user_id: string,
   ) {
-    return this.companyModel.find({
-      staff_users_ids: { $in: user_staff_ids },
-      _id: { $nin: comp_ids },
-    });
+    // const res = await this.companyModel.find({
+    //   staff_users_ids: { $in: user_staff_ids },
+    //   _id: { $nin: comp_ids },
+    // });
+    const res = await this.companyModel.find({ user_owner_id: user_id });
+    if (!res.length) return [];
+    for (const c of res) {
+      c.staff_users_ids = c.staff_users_ids.filter(
+        (el) => el.origin_user_id === user_id,
+      );
+    }
+    return res;
   }
 
   async getMyStaffUsers(origin_user_id: string) {
     return await this.companyModel.find({ origin_user_id });
   }
 
-  async getCompanyWhereOwner(user_id: string) {
-    return await this.companyModel.find({ user_owner_id: user_id });
+  async getCompanyWhereOwner(user_owner_id: string) {
+    return await this.companyModel.find({ user_owner_id });
   }
 
   async getCompanyWithRelations(companyId: Types.ObjectId) {

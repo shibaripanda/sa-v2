@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { Service } from 'src/service/service.schema';
+import { StaffUser } from 'src/staff-user/staff-user.schema';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
@@ -35,14 +37,14 @@ export class Company {
     required: true,
     default: [],
   })
-  staff_users_ids: Types.ObjectId[];
+  staff_users_ids: StaffUser[]; //Types.ObjectId[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Service', autopopulate: true }],
     required: true,
     default: [],
   })
-  services_ids: Types.ObjectId[];
+  services_ids: Service[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Role', autopopulate: true }],

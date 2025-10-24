@@ -8,10 +8,10 @@ interface OrderVar2 extends MainInterface {
 
 export function OrdersList_2(props: OrderVar2) {
 
-  const orders = props.orders.map((row) => (
-    <Grid.Col span={props.isMobile ? 12 : 3}>
-      <Paper shadow="xl" color='green' radius="md" withBorder p="xl">
-        <Text>{row.company}</Text>
+  const orders = props.orders.map((order) => (
+    <Grid.Col key={order._id} span={props.isMobile ? 12 : 3}>
+      <Paper shadow="xl" color='green' radius="md" withBorder p="md">
+        <Text>{order.device_id}</Text>
         <Text>
           Use it to create cards, dropdowns, modals and other components that require background
           with shadow

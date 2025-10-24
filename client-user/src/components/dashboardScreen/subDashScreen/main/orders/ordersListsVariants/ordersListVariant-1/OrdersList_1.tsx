@@ -10,12 +10,12 @@ interface OrderVar1 extends MainInterface {
 
 export function OrdersList_1(props: OrderVar1) {
 
-  const rows = props.orders.map((row) => (
-    <Table.Tr key={row.name}>
-      <Table.Td>{row.name}</Table.Td>
-      <Table.Td>{row.email}</Table.Td>
-      <Table.Td>{row.email}</Table.Td>
-      <Table.Td>{row.company}</Table.Td>
+  const rows = props.orders.map((order) => (
+    <Table.Tr key={order._id}>
+      <Table.Td>{order.device}</Table.Td>
+      <Table.Td>{order.device} {order.brend} {order.model}</Table.Td>
+      <Table.Td>{order.problem}</Table.Td>
+      <Table.Td>{order.serial_number}</Table.Td>
     </Table.Tr>
   ));
 

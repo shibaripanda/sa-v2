@@ -1,5 +1,5 @@
 import { IconChevronDown, IconFilter, IconSquareRoundedPlus } from '@tabler/icons-react';
-import { ActionIcon, Box, Burger, Button, Center, Group, Menu, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Burger, Button, Center, Group, Menu, Text, TextInput } from '@mantine/core';
 import classes from './Header.module.css';
 import { DashScreenInterface } from '../../mainScreen/Dashboard';
 
@@ -69,6 +69,7 @@ export function Header(props: HeaderInterface) {
             <Button size='xs' visibleFrom="sm" c='green' variant='default'>Создать заказ</Button>
         </Group>
 
+        <Avatar radius="sm" alt={props.user.name} size='sm' name={props.user.name} color="initials" hiddenFrom="sm"/>
         <ActionIcon
                 onClick={() => {}}
                 variant="transparent"

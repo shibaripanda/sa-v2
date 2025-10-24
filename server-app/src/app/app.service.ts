@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
-import { CompanyDocument } from 'src/company/company.schema';
 import { CompanyService } from 'src/company/company.service';
 import { DeviceService } from 'src/device/device.service';
 import { PartService } from 'src/part/part.service';
@@ -49,8 +48,9 @@ export class AppService implements OnModuleInit {
     const compsStaff = await this.companyService.getCompanyesWhereIamStaff(
       myStaffUsers_ids,
       compsOwner.map((c) => c._id),
+      user_id,
     );
-    console.log(compsOwner.length, compsStaff.length);
+    console.log(compsOwner, compsStaff.length);
     return { compsOwner, compsStaff };
   }
 
