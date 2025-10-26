@@ -22,12 +22,14 @@ export class StaffUserService {
   async createNewStaffUser(
     origin_user_id: string,
     role_id: Types.ObjectId,
+    service_id: Types.ObjectId,
     session?: ClientSession,
   ): Promise<Types.ObjectId> {
     const res = await this.staffUserModel.create(
       [
         {
           origin_user_id,
+          userStaffServices: [service_id],
           role_ids: [role_id],
         },
       ],

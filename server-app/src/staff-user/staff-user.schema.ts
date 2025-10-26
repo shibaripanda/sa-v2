@@ -28,21 +28,21 @@ export class StaffUser {
     required: true,
     default: [],
   })
-  filterServices: Types.ObjectId[];
+  userStaffServices: Types.ObjectId[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Status', autopopulate: true }],
     required: true,
     default: [],
   })
-  filterStatuses: Types.ObjectId[];
+  filterStatusesHiden: Types.ObjectId[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Device', autopopulate: true }],
     required: true,
     default: [],
   })
-  filterDevices: Types.ObjectId[];
+  filterDevicesHiden: Types.ObjectId[];
 
   @Prop()
   startTime: number;

@@ -10,6 +10,8 @@ import { LoaderModal } from "./components/subComponents/loader/LoaderModal";
 import { useIdleTimer } from 'react-idle-timer';
 import { Service } from "./interfaces/service";
 import { Dashboard } from "./components/dashboardScreen/mainScreen/Dashboard";
+import { StaffUser } from "./interfaces/staffUser";
+import { Company } from "./interfaces/company";
 
 export default function App() {
 
@@ -19,6 +21,9 @@ export default function App() {
 
   const [user, setUser] = useState<User | null>(JSON.parse(sessionStorage.getItem('user')!) ?? null)
   const [service, setService] = useState<Service | null>(JSON.parse(sessionStorage.getItem('service')!) ?? null)
+
+  const [staffUser, setStaffUser] = useState<StaffUser | null>(JSON.parse(sessionStorage.getItem('staffUser')!) ?? null)
+  const [comp, setComp] = useState<Company | null>(JSON.parse(sessionStorage.getItem('comp')!) ?? null)
 
   const [loadingText, setLoadingText] = useState<string>(text?.loading ?? 'Loading')
   const [loaderShow, setLoaderShow] = useDisclosure(false)
@@ -33,6 +38,16 @@ export default function App() {
 
   useIdleTimer({ timeout: 1000 * 5, onIdle });
 
+  const pickStaffUser = (staffUser: StaffUser | null) => {
+    if(staffUser) sessionStorage.setItem('staffUser', JSON.stringify(staffUser))
+    else sessionStorage.removeItem('staffUser')
+    setStaffUser(staffUser)
+  }
+  const pickComp = (comp: Company | null) => {
+    if(comp) sessionStorage.setItem('comp', JSON.stringify(comp))
+    else sessionStorage.removeItem('comp')
+    setComp(comp)
+  }
   const pickService = (service: Service | null) => {
     if(service) sessionStorage.setItem('service', JSON.stringify(service))
     else sessionStorage.removeItem('service')
@@ -44,11 +59,13 @@ export default function App() {
     setUser(user)
   }
   const screenActiv = () => {
-    if(user && service) {
+    if(user && service && comp && staffUser) {
       return (
         <Dashboard
         user={user}
         service={service}
+        comp={comp}
+        staffUser={staffUser}
         pickService={pickService}
         pickUser={pickUser}
         text={text}
@@ -64,6 +81,8 @@ export default function App() {
         setLoadingText={setLoadingText}
         setLoaderShow={setLoaderShow}
         pickUser={pickUser}
+        pickStaffUser={pickStaffUser}
+        pickComp={pickComp}
         user={user} 
         setLeng={setLeng} 
         leng={leng} 

@@ -13,20 +13,23 @@ export class CompanyService {
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
   ) {}
 
-  async getCompanyesWhereIamStaff(
+  async getCompanyesWhereStaff(
     user_staff_ids: Types.ObjectId[],
     comp_ids: Types.ObjectId[],
     user_id: string,
   ) {
-    // const res = await this.companyModel.find({
-    //   staff_users_ids: { $in: user_staff_ids },
-    //   _id: { $nin: comp_ids },
-    // });
-    const res = await this.companyModel.find({ user_owner_id: user_id });
+    const res = await this.companyModel.find({
+      staff_users_ids: { $in: user_staff_ids },
+      _id: { $nin: comp_ids },
+    });
+    // const res = await this.companyModel.find({ user_owner_id: user_id });
     if (!res.length) return [];
     for (const c of res) {
       c.staff_users_ids = c.staff_users_ids.filter(
-        (el) => el.origin_user_id === user_id,
+        (us) => us.origin_user_id === user_id,
+      );
+      c.services_ids = c.services_ids.filter(
+        (ser) => !c.staff_users_ids[0].userStaffServices.includes(ser._id),
       );
     }
     return res;

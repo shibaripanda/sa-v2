@@ -25,6 +25,8 @@ export interface AuthScreenInterface {
   loginedUsers: User[];
   setLoginedUsers: any;
   pickService: any;
+  pickStaffUser: any;
+  pickComp: any;
   text: TextLib | null;
   setText: any;
   leng: string;

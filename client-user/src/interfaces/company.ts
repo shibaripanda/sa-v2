@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import { Service } from "./service";
+import { StaffUser } from "./staffUser";
 
 export interface Company {
     _id: string;
@@ -9,7 +10,7 @@ export interface Company {
     mainOfficeContacts: string;
     defaultProfitPartProcent: number;
     defaulTaxProcent: number;
-    staff_users_ids: Types.ObjectId[];
+    staff_users_ids: StaffUser[];
     services_ids: Service[];
     roles_ids: Types.ObjectId[];
     statuses_ids: Types.ObjectId[];

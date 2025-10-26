@@ -45,12 +45,13 @@ export class AppService implements OnModuleInit {
     const myStaffUsers_ids =
       await this.staffUserService.getMyStaffUsers_ids(user_id);
 
-    const compsStaff = await this.companyService.getCompanyesWhereIamStaff(
+    const compsStaff = await this.companyService.getCompanyesWhereStaff(
       myStaffUsers_ids,
       compsOwner.map((c) => c._id),
       user_id,
     );
-    console.log(compsOwner, compsStaff.length);
+    console.log(compsOwner);
+    console.log(compsStaff);
     return { compsOwner, compsStaff };
   }
 
@@ -69,6 +70,7 @@ export class AppService implements OnModuleInit {
       const staffUser_id = await this.staffUserService.createNewStaffUser(
         user_owner_id,
         role_id,
+        service_id,
         session,
       );
 

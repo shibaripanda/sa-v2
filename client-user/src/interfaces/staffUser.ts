@@ -1,7 +1,7 @@
 
 type ProfitMode = 'fullProcent' | 'procentWork' | 'fix'
 
-export interface staffUser {
+export interface StaffUser {
     _id: string;
     origin_user_id: string;
     service_owner_id: string;

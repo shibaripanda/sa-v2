@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Grid, Group, Modal, Space } from '@mantine/core'
+import { Button, Divider, Grid, Group, Modal, Paper, Space, Text } from '@mantine/core'
 import { AuthScreenInterface } from '../mainScreen/AuthScreen'
 import axios from 'axios';
 import { Company } from '../../../interfaces/company';
@@ -75,10 +75,11 @@ export function ServiceModal(props: ServiceModalInterface) {
         })
     }
 
-    const listOfCampsAndServices = (comps: Company[]) => {
-        const items = comps.map(item1 => 
+    const listOfCampsAndServices = (comps: Company[], isOwner: boolean) => {
+        const items = comps.map(item1 =>
             <Grid.Col key={item1._id} span={12}>
-                {item1.name}
+                <Text>{item1.name}</Text>
+                {isOwner ? (<Text size='xs' c='green'>{props.text?.youOwner}</Text>) : ''}
                 <Space h='sm'/>
                 <Grid>
                     {item1.services_ids
@@ -89,6 +90,8 @@ export function ServiceModal(props: ServiceModalInterface) {
                         onClick={async () => {
                             setAvaliableServices({compsOwner: [], compsStaff: []})
                             props.pickService(item)
+                            props.pickStaffUser(item1.staff_users_ids.find(u => u.origin_user_id === props.user?._id))
+                            props.pickComp(item1)
                             props.setServiseModal.close()
                         }} 
                         fullWidth
@@ -99,10 +102,15 @@ export function ServiceModal(props: ServiceModalInterface) {
                     )}  
                 </Grid>
                 <Space h='sm'/>
-                <Group justify="flex-end"><Button size='xs' variant='default'>{props.text?.crateNewService}</Button></Group>
-                <Space h='sm'/>
+                {isOwner ?
+                <div>
+                    
+                    <Group justify="flex-end"><Button size='xs' variant='default'>{props.text?.crateNewService}</Button></Group>
+                    <Space h='sm'/>
+                </div> : ''}
                 <hr></hr>
-            </Grid.Col>)
+            </Grid.Col>
+            )
         return (
             <>{items}</>
         )
@@ -118,7 +126,8 @@ export function ServiceModal(props: ServiceModalInterface) {
                 }}>
             
             <Grid>
-                {listOfCampsAndServices(avaliableServices.compsOwner)}
+                {listOfCampsAndServices(avaliableServices.compsOwner, true)}
+                {listOfCampsAndServices(avaliableServices.compsStaff, false)}
 
                 <Grid.Col span={12}>
                     <Button size='xs' variant='default'

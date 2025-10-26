@@ -11,6 +11,8 @@ import { Main } from '../subDashScreen/main/Main';
 import { OrdersList_1 } from '../subDashScreen/main/orders/ordersListsVariants/ordersListVariant-1/OrdersList_1';
 import { OrdersList_2 } from '../subDashScreen/main/orders/ordersListsVariants/ordersListVariant-2/OrdersList_2';
 import { useMediaQuery } from '@mantine/hooks'
+import { Company } from '../../../interfaces/company';
+import { StaffUser } from '../../../interfaces/staffUser';
 
 const orderViewVariants = [OrdersList_1.name, OrdersList_2.name]
 
@@ -105,6 +107,8 @@ export interface Order {
 export interface DashScreenInterface {
     user: User;
     service: Service;
+    comp: Company;
+    staffUser: StaffUser;
     pickService: any;
     pickUser: any;
     text: TextLib | null;
@@ -133,6 +137,9 @@ export function Dashboard(props: DashScreenInterface) {
   ];
 
   console.log(props.service)
+  console.log(props.comp)
+  console.log(props.user)
+  console.log(props.staffUser)
 
   useEffect(() => {
     setHeaderMenuData(headerMenuData_Test)
