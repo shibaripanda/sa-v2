@@ -58,6 +58,7 @@ export default function App() {
     else sessionStorage.removeItem('user')
     setUser(user)
   }
+  
   const screenActiv = () => {
     if(user && service && comp && staffUser) {
       return (
