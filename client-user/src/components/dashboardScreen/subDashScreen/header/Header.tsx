@@ -54,12 +54,12 @@ export function Header(props: HeaderInterface) {
 
   return (
     <Group h="100%" px="sm" justify="space-between">
-        <Burger 
+        {/* <Burger 
             opened={props.openedBurger}
             onClick={props.toggle}
             hiddenFrom="sm"
             lineSize={1}
-        />
+        /> */}
 
         <Group gap={25} visibleFrom="sm">
             <Box visibleFrom="sm">

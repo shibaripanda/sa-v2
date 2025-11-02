@@ -29,10 +29,12 @@ export default function App() {
   const [loaderShow, setLoaderShow] = useDisclosure(false)
 
   const onIdle = () => {
-    console.log('sss')
+    console.log('onIdle')
     if(service && loginedUsers.length > 1) {
       pickService(null)
       pickUser(null)
+      pickStaffUser(null)
+      pickComp(null)
     }
   };
 
@@ -58,7 +60,7 @@ export default function App() {
     else sessionStorage.removeItem('user')
     setUser(user)
   }
-  
+
   const screenActiv = () => {
     if(user && service && comp && staffUser) {
       return (
@@ -72,8 +74,7 @@ export default function App() {
         text={text}
         setText={setText}
         leng={leng}
-        setLeng={setLeng}
-        />
+        setLeng={setLeng}/>
       )
     }
     else{
