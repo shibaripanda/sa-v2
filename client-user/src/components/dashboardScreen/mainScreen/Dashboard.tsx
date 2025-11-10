@@ -1,4 +1,4 @@
-import { AppShell, Center, Group } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from '../subDashScreen/navBar/NavBar';
 import { User } from '../../../interfaces/user';
@@ -8,13 +8,13 @@ import { IconCalendarStats, IconDeviceDesktopAnalytics, IconFingerprint, IconGau
 import { Header } from '../subDashScreen/header/Header';
 import { useEffect, useState } from 'react';
 import { Main } from '../subDashScreen/main/Main';
-import { OrdersList_1 } from '../subDashScreen/main/orders/ordersListsVariants/ordersListVariant-1/OrdersList_1';
-import { OrdersList_2 } from '../subDashScreen/main/orders/ordersListsVariants/ordersListVariant-2/OrdersList_2';
 import { useMediaQuery } from '@mantine/hooks'
 import { Company } from '../../../interfaces/company';
 import { StaffUser } from '../../../interfaces/staffUser';
+import { FooterLine } from '../subDashScreen/footer/FooterLine';
 
-const orderViewVariants = [OrdersList_1.name, OrdersList_2.name]
+// const orderViewVariants = [OrdersList_1.name, OrdersList_2.name, OrdersList_3.name]
+const orderViewVariants = ['Varint 1', 'Varint 2', 'Varint 3', 'Varint 4', 'Varint 5', 'Varint 6', 'Varint 7']
 
 const orders_Test = [
     {
@@ -57,7 +57,59 @@ const orders_Test = [
       status: 'new',
     },
     {
-      _id: 'khhMI88yismss23233',
+      _id: 'khhMIfghf88yismss23233',
+      device_id: '8302_JLA',
+      device: 'Ноутбук',
+      brend: 'Asus',
+      model: 'X550',
+      serial_number: 'MSL9779SYEO79FE9FXXL',
+      problem: 'Не загружается',
+      look: 'бу',
+      info: 'установить фотошоп',
+      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+      status: 'new',
+    },
+    {
+      _id: 'khhMI848ywfsfismss23233',
+      device_id: '8302_JLA',
+      device: 'Ноутбук',
+      brend: 'Asus',
+      model: 'X550',
+      serial_number: 'MSL9779SYEO79FE9FXXL',
+      problem: 'Не загружается',
+      look: 'бу',
+      info: 'установить фотошоп',
+      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+      status: 'new',
+    },
+    {
+      _id: 'khhMI88yisssfsms6s23233',
+      device_id: '8302_JLA',
+      device: 'Ноутбук',
+      brend: 'Asus',
+      model: 'X550',
+      serial_number: 'MSL9779SYEO79FE9FXXL',
+      problem: 'Не загружается',
+      look: 'бу',
+      info: 'установить фотошоп',
+      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+      status: 'new',
+    },
+    {
+      _id: 'khhMI88yidgsm3ss23233',
+      device_id: '8302_JLA',
+      device: 'Ноутбук',
+      brend: 'Asus',
+      model: 'X550',
+      serial_number: 'MSL9779SYEO79FE9FXXL',
+      problem: 'Не загружается',
+      look: 'бу',
+      info: 'установить фотошоп',
+      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+      status: 'new',
+    },
+    {
+      _id: 'khhMI88yismss2323df3',
       device_id: '8302_JLA',
       device: 'Ноутбук',
       brend: 'Asus',
@@ -157,24 +209,37 @@ export function Dashboard(props: DashScreenInterface) {
       }}
     >
         <AppShell.Header>
-            <Header {...props} headerMenuData={headerMenuData} openedBurger={openedBurgerMainMenu} toggle={toggleOpenedBurgerMainMenu.toggle}/>
+            <Header {...props} 
+            headerMenuData={headerMenuData} 
+            openedBurger={openedBurgerMainMenu} 
+            toggle={toggleOpenedBurgerMainMenu.toggle}
+            navBarData={navBarData} 
+            activeNavBar={activeNavBar} 
+            setActiveNavBar={setActiveNavBar}
+            />
         </AppShell.Header>
 
         <AppShell.Navbar>
-            <NavBar {...props} navBarData={navBarData} activeNavBar={activeNavBar} setActiveNavBar={setActiveNavBar}/>
+            <NavBar {...props} 
+            navBarData={navBarData} 
+            activeNavBar={activeNavBar} 
+            setActiveNavBar={setActiveNavBar}
+            />
         </AppShell.Navbar>
 
         <AppShell.Main>
-            <Main {...props} orders={orders} orderView={orderViewVariants[activOrderView]} isMobile={isMobile}/>
+            <Main {...props}
+            activeNavBar={activeNavBar} 
+            orders={orders} 
+            orderView={orderViewVariants[activOrderView]} 
+            isMobile={isMobile}
+            />
         </AppShell.Main>
 
         <AppShell.Footer>
-            <Center>
-              <Group justify="space-between">
-                <div>{props.user?.email}</div>
-                <div>{orders.length}</div>
-              </Group>
-            </Center>
+            <FooterLine {...props} 
+            orders={orders}
+            />
         </AppShell.Footer>
 
     </AppShell>

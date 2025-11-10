@@ -4,8 +4,9 @@ import classes from './NavBar.module.css';
 import { LanguagePicker } from '../../../subComponents/languagePicker/LanguagePicker';
 import { ColorShema } from '../../../subComponents/colorShema/ColorShema';
 import { DashScreenInterface } from '../../mainScreen/Dashboard';
+import { Exit } from '../../../subComponents/exit/Exit';
 
-interface NavbarLinkProps {
+export interface NavbarLinkProps {
   icon: typeof IconHome2;
   label: string;
   active?: boolean;
@@ -45,19 +46,7 @@ export function NavBar(props: NavBarInterface) {
   return (
     <nav className={classes.navbar}>
       <Center>
-        <ActionIcon
-            onClick={() => {
-                sessionStorage.removeItem('navlink')
-                props.pickService(null)
-                props.pickUser(null)
-            }}
-            variant="transparent"
-            color="grey"
-            aria-label="Toggle color scheme"
-            ml='5px'
-        >
-            <IconLogout stroke={1.5} />
-        </ActionIcon>
+        <Exit {...props}/>
       </Center>
 
       <div className={classes.navbarMain}>
@@ -76,19 +65,7 @@ export function NavBar(props: NavBarInterface) {
         </Center>
         <Divider my="xs"/>
         <Center>
-          <ActionIcon
-              ml='5px'
-              onClick={() => {
-                  sessionStorage.removeItem('navlink')
-                  props.pickService(null)
-                  props.pickUser(null)
-              }}
-              variant="transparent"
-              color="grey"
-              aria-label="Toggle color scheme"
-          >
-            <IconLogout stroke={1.5}/>
-          </ActionIcon>
+          <Exit {...props}/>
         </Center>
       </Stack>
     </nav>

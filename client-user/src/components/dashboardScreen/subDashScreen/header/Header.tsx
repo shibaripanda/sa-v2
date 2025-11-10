@@ -1,7 +1,12 @@
-import { IconChevronDown, IconFilter, IconSquareRoundedPlus } from '@tabler/icons-react';
-import { ActionIcon, Avatar, Box, Burger, Button, Center, Group, Menu, Text, TextInput } from '@mantine/core';
+import { IconChevronDown, IconFilter, IconHome2, IconSquareRoundedPlus } from '@tabler/icons-react';
+import { ActionIcon, Avatar, Box, Burger, Button, Center, Divider, Group, Menu, Modal, Text, TextInput, Tooltip, UnstyledButton } from '@mantine/core';
 import classes from './Header.module.css';
 import { DashScreenInterface } from '../../mainScreen/Dashboard';
+import { useDisclosure } from '@mantine/hooks';
+import { NavbarLinkProps } from '../navBar/NavBar';
+import { Exit } from '../../../subComponents/exit/Exit';
+import { LanguagePicker } from '../../../subComponents/languagePicker/LanguagePicker';
+import { ColorShema } from '../../../subComponents/colorShema/ColorShema';
 
 interface HeaderInterface extends DashScreenInterface {
     headerMenuData: {
@@ -11,9 +16,23 @@ interface HeaderInterface extends DashScreenInterface {
     }[];
     openedBurger: boolean;
     toggle: () => void;
+    navBarData: { icon: typeof IconHome2, label: string }[];
+    activeNavBar: number;
+    setActiveNavBar: (index: number) => void;
+}
+
+function NavbarLink({ icon: Icon, label, active, onClick}: NavbarLinkProps) {
+  return (
+    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+      <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
+        <Icon size={20} stroke={1.5} />
+      </UnstyledButton>
+    </Tooltip>
+  );
 }
 
 export function Header(props: HeaderInterface) {
+  const [navbarMebu, {open, close} ] = useDisclosure();
 
   const items = props.headerMenuData.map((link) => {
     const menuItems = link.links?.map((item) => (
@@ -51,15 +70,25 @@ export function Header(props: HeaderInterface) {
       </a>
     );
   });
+  const navbarLinks = props.navBarData.map((link, index) => (
+    <NavbarLink
+      {...link}
+      key={link.label}
+      active={index === props.activeNavBar}
+      onClick={() => {
+        props.setActiveNavBar(index)
+        sessionStorage.setItem('activeNavBar', index.toString())
+      }}
+    />
+  ));
 
   return (
     <Group h="100%" px="sm" justify="space-between">
-        {/* <Burger 
-            opened={props.openedBurger}
-            onClick={props.toggle}
-            hiddenFrom="sm"
-            lineSize={1}
-        /> */}
+         <Burger
+          onClick={open}
+          hiddenFrom="sm"
+          lineSize={1}
+        />
 
         <Group gap={25} visibleFrom="sm">
             <Box visibleFrom="sm">
@@ -93,6 +122,20 @@ export function Header(props: HeaderInterface) {
         <Group gap={5} visibleFrom="sm">
             {items}
         </Group>
+        <Modal radius={'10px'} opened={navbarMebu} title={<Group><ColorShema/><LanguagePicker {...props}/><Exit {...props}/></Group>} withCloseButton={true}
+            size={'md'}
+            onClose={close}
+            >
+            <Center style={{marginTop: '1vmax'}}>
+              {navbarLinks}
+            </Center>
+            <Divider/>
+            <Center style={{marginTop: '1vmax'}}>
+              <Group gap={5}>
+                {items}
+              </Group>
+            </Center>
+        </Modal>
     </Group>
   );
 }
