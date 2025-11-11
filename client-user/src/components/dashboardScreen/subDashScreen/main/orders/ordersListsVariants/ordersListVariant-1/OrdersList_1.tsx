@@ -2,16 +2,18 @@ import cx from 'clsx';
 import { Table } from '@mantine/core';
 import classes from './OrderList_1.module.css';
 import { MainInterface } from '../../../Main';
+import { Order } from '../../../../../mainScreen/Dashboard';
 
 interface OrderVar1 extends MainInterface {
   scrolled: any;
   controlSize: string;
+  openOrderFullscreen: (order: Order) => void;
 }
 
 export function OrdersList_1(props: OrderVar1) {
 
   const rows = props.orders.map((order) => (
-    <Table.Tr key={order._id}>
+    <Table.Tr key={order._id} onClick={() => props.openOrderFullscreen(order)} style={{ cursor: 'pointer' }}>
       <Table.Td>{order.device}</Table.Td>
       <Table.Td>{order.device} {order.brend} {order.model}</Table.Td>
       <Table.Td>{order.problem}</Table.Td>
