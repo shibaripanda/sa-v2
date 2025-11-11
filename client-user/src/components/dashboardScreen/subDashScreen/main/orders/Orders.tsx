@@ -51,12 +51,22 @@ export function Orders(props: MainInterface) {
     }
     if(props.orderView === 'Varint 6') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={2} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={2.4} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
     if(props.orderView === 'Varint 7') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={1} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={2} scrolled={scrolled} controlSize={controlSize}/>
+      )
+    }
+    if(props.orderView === 'Varint 8') {
+      return (
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={1.5} scrolled={scrolled} controlSize={controlSize}/>
+      )
+    }
+    if(props.orderView === 'Varint 9') {
+      return (
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={1.2} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
     return (

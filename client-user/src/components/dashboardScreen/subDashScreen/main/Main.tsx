@@ -18,7 +18,6 @@ export function Main(props: MainInterface) {
     <div>hello4</div>,
     <div>hello5</div>,
     <div>hello6</div>,
-    <div>hello7</div>,
   ]
 
   const showDashboard = () => {

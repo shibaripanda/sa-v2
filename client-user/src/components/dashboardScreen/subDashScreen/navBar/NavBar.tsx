@@ -1,5 +1,5 @@
-import { IconHome2, IconLogout } from '@tabler/icons-react';
-import { ActionIcon, Center, Divider, Stack, Tooltip, UnstyledButton } from '@mantine/core';
+import { IconHome2 } from '@tabler/icons-react';
+import { Center, Divider, Stack, Tooltip, UnstyledButton } from '@mantine/core';
 import classes from './NavBar.module.css';
 import { LanguagePicker } from '../../../subComponents/languagePicker/LanguagePicker';
 import { ColorShema } from '../../../subComponents/colorShema/ColorShema';
