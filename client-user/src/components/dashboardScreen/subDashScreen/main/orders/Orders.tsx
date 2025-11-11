@@ -1,8 +1,8 @@
 import { Modal, ScrollArea } from '@mantine/core';
 import { useState } from 'react';
-import { OrdersList_1 } from './ordersListsVariants/ordersListVariant-1/OrdersList_1';
+import { OrdersListTable } from './ordersListsVariants/orderListITable/OrdersListTable';
 import { MainInterface } from '../Main';
-import { OrderListItem } from './ordersListsVariants/OrderListItem';
+import { OrderListItem } from './ordersListsVariants/orderListCards/OrderListItem';
 import { useDisclosure } from '@mantine/hooks';
 import { Order } from '../../../mainScreen/Dashboard';
 
@@ -24,53 +24,48 @@ export function Orders(props: MainInterface) {
   const controlSize = props.isMobile ? '' : `calc(100vw - 100px)`
 
   const activOrderView = () => {
-    if(props.orderView === 'Varint 1') {
+    if(props.orderView === 'Cards (1 line)') {
       return (
-        <OrdersList_1 {...props} openOrderFullscreen={openOrderFullscreen} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 1} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
-    if(props.orderView === 'Varint 2') {
+    if(props.orderView === 'Cards (2 line)') {
       return (
-        <OrderListItem {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 2} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
-    if(props.orderView === 'Varint 3') {
+    if(props.orderView === 'Cards (3 line)') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={6} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 3} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
-    if(props.orderView === 'Varint 4') {
+    if(props.orderView === 'Cards (4 line)') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={4} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 4} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
-    if(props.orderView === 'Varint 5') {
+    if(props.orderView === 'Cards (5 line)') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={3} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 5} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
-    if(props.orderView === 'Varint 6') {
+    if(props.orderView === 'Cards (6 line)') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={2.4} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 6} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
-    if(props.orderView === 'Varint 7') {
+    if(props.orderView === 'Cards (8 line)') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={2} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 8} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
-    if(props.orderView === 'Varint 8') {
+    if(props.orderView === 'Cards (10 line)') {
       return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={1.5} scrolled={scrolled} controlSize={controlSize}/>
-      )
-    }
-    if(props.orderView === 'Varint 9') {
-      return (
-        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={1.2} scrolled={scrolled} controlSize={controlSize}/>
+        <OrderListItem  {...props} openOrderFullscreen={openOrderFullscreen} countItemsLime={12 / 10} scrolled={scrolled} controlSize={controlSize}/>
       )
     }
     return (
-        <OrdersList_1 {...props} openOrderFullscreen={openOrderFullscreen} scrolled={scrolled} controlSize={controlSize}/>
+        <OrdersListTable {...props} openOrderFullscreen={openOrderFullscreen} scrolled={scrolled} controlSize={controlSize}/>
       )
   }
 

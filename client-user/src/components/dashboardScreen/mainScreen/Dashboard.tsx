@@ -13,8 +13,7 @@ import { Company } from '../../../interfaces/company';
 import { StaffUser } from '../../../interfaces/staffUser';
 import { FooterLine } from '../subDashScreen/footer/FooterLine';
 
-// const orderViewVariants = [OrdersList_1.name, OrdersList_2.name, OrdersList_3.name]
-const orderViewVariants = ['Varint 1', 'Varint 2', 'Varint 3', 'Varint 4', 'Varint 5', 'Varint 6', 'Varint 7', 'Varint 8', 'Varint 9']
+const orderViewVariants = ['Table default', 'Cards (1 line)', 'Cards (2 line)', 'Cards (3 line)', 'Cards (4 line)', 'Cards (5 line)', 'Cards (6 line)', 'Cards (8 line)', 'Cards (10 line)']
 
 const orders_Test = [
     {
