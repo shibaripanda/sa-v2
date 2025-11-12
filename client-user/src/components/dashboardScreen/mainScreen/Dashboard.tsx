@@ -174,7 +174,7 @@ export function Dashboard(props: DashScreenInterface) {
   const [activeNavBar, setActiveNavBar] = useState(sessionStorage.getItem('activeNavBar') ? Number(sessionStorage.getItem('activeNavBar')) : 0);
 
   const [orders, setOrders] = useState<Order[]>(orders_Test)
-  const [navBarData, setnavBarData] = useState(navBarData_Test)
+  const [navBarData, setNavBarData] = useState(navBarData_Test)
   const [headerMenuData, setHeaderMenuData] = useState<DropHeadMenu>([])
 
   const [activOrderView, setActivOrderView] = useState(0)
@@ -191,6 +191,14 @@ export function Dashboard(props: DashScreenInterface) {
   console.log(props.comp)
   console.log(props.user)
   console.log(props.staffUser)
+
+  useEffect(() => {
+    setOrders(orders_Test)
+  }, [])
+
+  useEffect(() => {
+    setNavBarData(navBarData_Test)
+  }, [])
 
   useEffect(() => {
     setHeaderMenuData(headerMenuData_Test)
