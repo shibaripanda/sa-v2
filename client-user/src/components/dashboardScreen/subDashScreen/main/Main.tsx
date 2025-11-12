@@ -1,4 +1,5 @@
 import { DashScreenInterface, Order } from '../../mainScreen/Dashboard';
+import { MyUserSettings } from './myUserSettings/MyUserSettings';
 import { Orders } from './orders/Orders';
 
 export interface MainInterface extends DashScreenInterface {
@@ -12,7 +13,7 @@ export function Main(props: MainInterface) {
 
   const dashboards = [
     <Orders {...props}/>,
-    <div>hello1</div>,
+    <MyUserSettings {...props}/>,
     <div>hello2</div>,
     <div>hello3</div>,
     <div>hello4</div>,

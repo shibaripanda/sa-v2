@@ -1,4 +1,4 @@
-import { Card, Group, Image, RingProgress, Text } from '@mantine/core';
+import { Card, Group, Image, Text } from '@mantine/core';
 import { Order } from '../../../../../mainScreen/Dashboard';
 import classes from './OrderListItemCard.module.css';
 import mainPic from '../../../../../../../images/mainpic.png'
@@ -23,8 +23,8 @@ export function OrderListItemCard({...order}: Order) {
   ));
 
   return (
-    <Card withBorder padding="lg" radius="md" className={classes.card}>
-      {/* <Card.Section className={classes.footer}>{items}</Card.Section> */}
+    <Card withBorder padding="lg" radius="md" className={classes.card} style={{ borderWidth: 1, borderColor: 'var(--mantine-color-red-5)' }}>
+      <Card.Section className={classes.top}><Text className={classes.toptitle}>{order.device_id}</Text></Card.Section>
       <Card.Section>
         <Image
           src={mainPic}

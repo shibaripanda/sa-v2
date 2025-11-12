@@ -122,13 +122,14 @@ const orders_Test = [
     },
 ];
 const navBarData_Test = [
-    { icon: IconHome2, label: 'Home' },
-    { icon: IconGauge, label: 'Dashboard' },
-    { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-    { icon: IconCalendarStats, label: 'Releases' },
-    { icon: IconUser, label: 'Account' },
-    { icon: IconFingerprint, label: 'Security' },
-    { icon: IconSettings, label: 'Settings' },
+    { icon: IconHome2, label: 'Orders dashboard' },
+    { icon: IconUser, label: 'My user settings' },
+    // { icon: IconGauge, label: 'Dashboard' },
+    // { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
+    // { icon: IconCalendarStats, label: 'Releases' },
+    // { icon: IconUser, label: 'Account' },
+    // { icon: IconFingerprint, label: 'Security' },
+    // { icon: IconSettings, label: 'Settings' },
 ];
 
 type DropHeadMenu = 
