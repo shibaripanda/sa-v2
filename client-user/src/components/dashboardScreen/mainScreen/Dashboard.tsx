@@ -12,6 +12,7 @@ import { useMediaQuery } from '@mantine/hooks'
 import { Company } from '../../../interfaces/company';
 import { StaffUser } from '../../../interfaces/staffUser';
 import { FooterLine } from '../subDashScreen/footer/FooterLine';
+import { UserClass } from '../../../classes/UserClass';
 
 const orderViewVariants = ['Table default', 'Cards (1 line)', 'Cards (2 line)', 'Cards (3 line)', 'Cards (4 line)', 'Cards (5 line)', 'Cards (6 line)', 'Cards (8 line)', 'Cards (10 line)']
 
@@ -157,7 +158,7 @@ export interface Order {
 }
 
 export interface DashScreenInterface {
-    user: User;
+    user: UserClass;
     service: Service;
     comp: Company;
     staffUser: StaffUser;
@@ -188,10 +189,7 @@ export function Dashboard(props: DashScreenInterface) {
     },
   ];
 
-  console.log(props.service)
-  console.log(props.comp)
-  console.log(props.user)
-  console.log(props.staffUser)
+  
 
   useEffect(() => {
     setOrders(orders_Test)

@@ -12,6 +12,7 @@ import { Service } from "./interfaces/service";
 import { Dashboard } from "./components/dashboardScreen/mainScreen/Dashboard";
 import { StaffUser } from "./interfaces/staffUser";
 import { Company } from "./interfaces/company";
+import { UserClass } from "./classes/UserClass";
 
 export default function App() {
 
@@ -19,7 +20,7 @@ export default function App() {
   const [text, setText] = useState<TextLib | null>(JSON.parse(sessionStorage.getItem('text')!) ?? null)
   const [loginedUsers, setLoginedUsers] = useState<User[]>(JSON.parse(sessionStorage.getItem('loginedUsers')!) ?? [])
 
-  const [user, setUser] = useState<User | null>(JSON.parse(sessionStorage.getItem('user')!) ?? null)
+  const [user, setUser] = useState<UserClass | null>(new UserClass(JSON.parse(sessionStorage.getItem('user')!)) ?? null)
   const [service, setService] = useState<Service | null>(JSON.parse(sessionStorage.getItem('service')!) ?? null)
 
   const [staffUser, setStaffUser] = useState<StaffUser | null>(JSON.parse(sessionStorage.getItem('staffUser')!) ?? null)
@@ -58,7 +59,7 @@ export default function App() {
   const pickUser = (user: User | null) => {
     if(user) sessionStorage.setItem('user', JSON.stringify(user))
     else sessionStorage.removeItem('user')
-    setUser(user)
+    setUser(user && new UserClass(user))
   }
 
   const screenActiv = () => {

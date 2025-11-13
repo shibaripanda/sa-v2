@@ -19,9 +19,10 @@ import { LanguagePicker } from '../../subComponents/languagePicker/LanguagePicke
 import { TextLib } from '../../../interfaces/textLib.ts';
 import { useDisclosure } from '@mantine/hooks';
 import { ServiceModal } from '../subAuthScreen/ServiceModal.tsx';
+import { UserClass } from '../../../classes/UserClass.ts';
 
 export interface AuthScreenInterface {
-  user: User | null;
+  user: UserClass | null;
   loginedUsers: User[];
   setLoginedUsers: any;
   pickService: any;
