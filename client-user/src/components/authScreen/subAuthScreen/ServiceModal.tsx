@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Divider, Grid, Group, Modal, Paper, Space, Text } from '@mantine/core'
+import { Button, Grid, Group, Modal, Space, Text } from '@mantine/core'
 import { AuthScreenInterface } from '../mainScreen/AuthScreen'
 import axios from 'axios';
 import { Company } from '../../../interfaces/company';

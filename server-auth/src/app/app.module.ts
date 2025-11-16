@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserModule } from 'src/user/user.module';
 import { TextModule } from 'src/text/text.module';
+import { JwtConfigModule } from 'src/jwt/jwt.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { TextModule } from 'src/text/text.module';
     UserModule,
     AuthModule,
     TextModule,
+    JwtConfigModule,
   ],
   controllers: [KafkaController],
   providers: [KafkaService],

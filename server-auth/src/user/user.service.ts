@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { GoogleAuthUser } from './interfaces/GoogleAuthUser';
 import { TelegramAuthUser } from './interfaces/TelegramAuthUser';
 
@@ -9,6 +9,10 @@ import { TelegramAuthUser } from './interfaces/TelegramAuthUser';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
     console.log('UserService initialized');
+  }
+
+  async getUserById(_id: Types.ObjectId) {
+    return await this.userModel.findById(_id);
   }
 
   async getOrCreateTelegramUser(

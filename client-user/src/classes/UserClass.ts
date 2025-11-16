@@ -1,3 +1,4 @@
+import axios from "axios"
 import type { User } from "../interfaces/user"
 
 export class Model<T extends object> {
@@ -14,9 +15,22 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
   }
 
   async updateUserName(name: string) {
-    console.log(this.name)
+
+    await axios({
+        method: 'GET',
+        url: import.meta.env.VITE_API_AUTH_LINK + '/user/user',
+        data: {},
+        headers: {
+            "Authorization": `Bearer ${this.token}`
+        },
+        timeout: 10000
+    })
+    .then(async (res) => {
+        console.log(res.data)
+    })
+    // console.log(this.name)
     this.name = name
-    console.log(this.name)
+    console.log(this)
     return this.name
   }
 }
