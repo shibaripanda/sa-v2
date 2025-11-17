@@ -168,6 +168,7 @@ export interface DashScreenInterface {
     setText: any;
     leng: string;
     setLeng: any;
+    setLoginedUsers: any;
 }
 
 export function Dashboard(props: DashScreenInterface) {

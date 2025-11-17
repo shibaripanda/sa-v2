@@ -9,7 +9,7 @@ interface UpdateStringValue extends MainInterface {
 
 type Step =  0 | 1 | 2
 
-export function UpdateStringValue(props: {exist: string; func: any}) {
+export function UpdateStringValue(props: {exist: string; func: any, update: any, update2: any}) {
 
   const [value, setNewValue] = useState<string>('')
   const [step, setStep] = useState<Step>(0)
@@ -50,8 +50,9 @@ export function UpdateStringValue(props: {exist: string; func: any}) {
           <IconDeviceFloppy size={20} color={value ? 'red' : 'grey'} style={{ cursor: 'pointer' }} 
           onClick={async () => {
             if(value) {
-              const res = await props.func(value)
-              console.log(res)
+              const res = await props.func(value, props.update, props.update2)
+              // props.update(res)
+              // console.log(res)
               if(res) setStep(1)
             }
           }}

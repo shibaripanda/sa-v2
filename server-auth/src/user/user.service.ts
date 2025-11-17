@@ -15,6 +15,10 @@ export class UserService {
     return await this.userModel.findById(_id);
   }
 
+  async updateUserData(_id: Types.ObjectId, data: object) {
+    return await this.userModel.updateOne({ _id }, data);
+  }
+
   async getOrCreateTelegramUser(
     user: TelegramAuthUser,
   ): Promise<UserDocument | null> {

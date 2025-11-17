@@ -75,7 +75,8 @@ export default function App() {
         text={text}
         setText={setText}
         leng={leng}
-        setLeng={setLeng}/>
+        setLeng={setLeng}
+        setLoginedUsers={setLoginedUsers}/>
       )
     }
     else{
