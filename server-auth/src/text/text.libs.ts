@@ -34,6 +34,41 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Произошла ошибка, попробуйте еще раз...',
+    index: 'itWasErrorLate',
+    update: false,
+  },
+  {
+    rutext: 'Обновление информации',
+    index: 'updatingData',
+    update: false,
+  },
+  {
+    rutext: 'Примеры',
+    index: 'examples',
+    update: false,
+  },
+  {
+    rutext: 'Неразрешенные символы',
+    index: 'badsimvols',
+    update: false,
+  },
+  {
+    rutext: 'Пусто',
+    index: 'empty',
+    update: false,
+  },
+  {
+    rutext: 'Отмена',
+    index: 'cancel',
+    update: false,
+  },
+  {
+    rutext: 'Редактировать',
+    index: 'edit',
+    update: false,
+  },
+  {
     rutext: 'Сохранить',
     index: 'save',
     update: false,

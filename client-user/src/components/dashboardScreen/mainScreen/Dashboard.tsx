@@ -169,6 +169,9 @@ export interface DashScreenInterface {
     leng: string;
     setLeng: any;
     setLoginedUsers: any;
+    setLoadingText: any;
+    setLoaderShow: any;
+    setErrorStatus: any;
 }
 
 export function Dashboard(props: DashScreenInterface) {

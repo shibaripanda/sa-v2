@@ -19,7 +19,9 @@ export function MyUserSettings(props: MainInterface) {
     <Space h={'md'}/>
     <Space h={'md'}/>
     <Space h={'md'}/>
-    <UpdateStringValue exist={props.user.name} func={props.user.updateUserName.bind(props.user)} update={props.pickUser} update2={props.setLoginedUsers}/>
+    <UpdateStringValue {...props} dataName={'name'} func={props.user.updateUser.bind(props.user)}/>
+    <Space h={'md'}/>
+    <UpdateStringValue {...props} dataName={'timeLiveToken'} func={props.user.updateUser.bind(props.user)}/>
     </>
   );
 }

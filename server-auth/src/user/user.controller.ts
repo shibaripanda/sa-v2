@@ -19,7 +19,7 @@ export class UserController {
   }
 
   @UseGuards(UniversalJwtGuard, RequestGuard)
-  @Post('/user')
+  @Post('/update-user')
   async updateUserData(
     @CurrentUser() user: UserDocument,
     @Body() data: UpdateUserDataDto,

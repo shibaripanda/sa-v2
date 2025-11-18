@@ -28,6 +28,7 @@ export default function App() {
 
   const [loadingText, setLoadingText] = useState<string>(text?.loading ?? 'Loading')
   const [loaderShow, setLoaderShow] = useDisclosure(false)
+  const [errorStatus, setErrorStatus] = useState<boolean>(false)
 
   const onIdle = () => {
     console.log('onIdle')
@@ -76,7 +77,10 @@ export default function App() {
         setText={setText}
         leng={leng}
         setLeng={setLeng}
-        setLoginedUsers={setLoginedUsers}/>
+        setLoginedUsers={setLoginedUsers}
+        setLoadingText={setLoadingText}
+        setLoaderShow={setLoaderShow}
+        setErrorStatus={setErrorStatus}/>
       )
     }
     else{
@@ -102,7 +106,7 @@ export default function App() {
   return (
   <MantineProvider theme={theme}>
     {screenActiv()}
-    <LoaderModal text={loadingText} loaderShow={loaderShow} setLoaderShow={setLoaderShow}/>
+    <LoaderModal text={loadingText} loaderShow={loaderShow} setLoaderShow={setLoaderShow} errorStatus={errorStatus} setErrorStatus={setErrorStatus}/>
   </MantineProvider>
 );
 }
