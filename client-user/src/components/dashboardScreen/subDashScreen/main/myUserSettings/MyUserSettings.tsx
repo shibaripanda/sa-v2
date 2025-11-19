@@ -30,14 +30,11 @@ export function MyUserSettings(props: MainInterface) {
       </div>
       <div>
         {[
-          <>{props.user.location} ip: {props.user.ip}</>, 
-          <>{props.text?.sessionwillended}:</>, 
-          <>{props.user.getDateSessionEnd()}</>
+          `${props.user.location} ip: ${props.user.ip}`,
+          `${props.text?.sessionwillended}:`,
+          props.user.getDateSessionEnd()
         ].map(item => 
         <Center><Text>{item}</Text></Center>)}
-        {/* <Center><Text>{props.user.location} ip: {props.user.ip}</Text></Center>
-        <Center><Text>{props.text?.sessionwillended}:</Text></Center>
-        <Center><Text>{props.user.getDateSessionEnd()}</Text></Center> */}
       </div>
       <div></div>
     </Group>
