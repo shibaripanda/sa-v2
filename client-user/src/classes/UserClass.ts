@@ -11,6 +11,10 @@ type ModelWithData<T extends object> = Model<T> & T
 
 export class UserClass extends (Model as new (data: User) => ModelWithData<User>) {
 
+  getDateSessionEnd() {
+    return new Date(this.exp * 1000).toLocaleString()
+  }
+
   async updateUser(dataName: string, newValue: string, pickUser: (user: User) => void, setLoginedUsers: (user: User) => void) {
     const res = await this.axiosApi('POST', '/update-user', dataName, {[dataName]: newValue})
     if (!res) return false

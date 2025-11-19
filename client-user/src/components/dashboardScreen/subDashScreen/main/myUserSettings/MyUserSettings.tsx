@@ -1,6 +1,7 @@
-import { Button, Group, Space, Text } from '@mantine/core';
+import { Center, Divider, Group, Space, Text } from '@mantine/core';
 import { MainInterface } from '../Main';
 import { UpdateStringValue } from '../../../../subComponents/updateStringValue/UpdateStringValue';
+import { TableHistoryLocation } from './tableHistoryLocation/TableHistoryLocation';
 
 export function MyUserSettings(props: MainInterface) {
 
@@ -12,16 +13,34 @@ export function MyUserSettings(props: MainInterface) {
   return (
     <>
     <Group gap={7} justify='space-between'>
-      <Button>{props.text?.save}</Button>
+      <Text>{props.user.email}</Text>
       <Text>id: {props.user._id}</Text>
     </Group>
+    
+    <Space h={'md'}/>
+    <Divider/>
+    <Space h={'xl'}/>
 
-    <Space h={'md'}/>
-    <Space h={'md'}/>
-    <Space h={'md'}/>
-    <UpdateStringValue {...props} dataName={'name'} func={props.user.updateUser.bind(props.user)}/>
-    <Space h={'md'}/>
-    <UpdateStringValue {...props} dataName={'timeLiveToken'} func={props.user.updateUser.bind(props.user)}/>
+    <Group justify='space-between'>
+      <div></div>
+      <div>
+        <UpdateStringValue {...props} dataName={'name'} func={props.user.updateUser.bind(props.user)}/>
+        <Space h={'md'}/>
+        <UpdateStringValue {...props} dataName={'timeLiveToken'} func={props.user.updateUser.bind(props.user)}/>
+      </div>
+      <div>
+        <Center><Text>{props.user.location} ip: {props.user.ip}</Text></Center>
+        <Center><Text>{props.text?.sessionwillended}:</Text></Center>
+        <Center><Text>{props.user.getDateSessionEnd()}</Text></Center>
+      </div>
+      <div></div>
+    </Group>
+
+    <Space h={'xl'}/>
+    <Divider/>
+    <Space h={'xl'}/>
+
+    <TableHistoryLocation historyLogin={props.user.historyLogin} text={props.text}/>
     </>
   );
 }

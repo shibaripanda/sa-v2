@@ -1,10 +1,9 @@
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from '../subDashScreen/navBar/NavBar';
-import { User } from '../../../interfaces/user';
 import { Service } from '../../../interfaces/service';
 import { TextLib } from '../../../interfaces/textLib';
-import { IconCalendarStats, IconDeviceDesktopAnalytics, IconFingerprint, IconGauge, IconHome2, IconSettings, IconUser } from '@tabler/icons-react';
+import { IconHome2, IconUser } from '@tabler/icons-react';
 import { Header } from '../subDashScreen/header/Header';
 import { useEffect, useState } from 'react';
 import { Main } from '../subDashScreen/main/Main';
@@ -175,6 +174,7 @@ export interface DashScreenInterface {
 }
 
 export function Dashboard(props: DashScreenInterface) {
+  
   const isMobile = useMediaQuery('(max-width: 48em)')
   const [openedBurgerMainMenu, toggleOpenedBurgerMainMenu ] = useDisclosure();
   const [activeNavBar, setActiveNavBar] = useState(sessionStorage.getItem('activeNavBar') ? Number(sessionStorage.getItem('activeNavBar')) : 0);

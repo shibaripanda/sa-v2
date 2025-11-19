@@ -45,21 +45,22 @@ export function UpdateStringValue(props: UpdateStringValue) {
   const defaultItem = () => {
     return (
       <Group gap={7} align="flex-start">
-        <Text>{props.user[props.dataName]}</Text>
         <Tooltip fz="xs" label={props.text?.edit} position="top" transitionProps={{ duration: 0 }}>
           <IconEdit size={20} color='red'style={{ cursor: 'pointer' }} onClick={() => setStep(2)}/>
         </Tooltip>
+        <Text>{props.user[props.dataName]}</Text>
       </Group>
     )
   }
   const updatedtItem = () => {
     return (
       <Group gap={7} align="flex-start">
-      <IconCircleCheck size={20} color='green'/>
-      <Text>{props.user[props.dataName]}</Text>
+     
       <Tooltip fz="xs" label={props.text?.edit} position="top" transitionProps={{ duration: 0 }}>
         <IconEdit size={20} color='red'style={{ cursor: 'pointer' }} onClick={() => setStep(2)}/>
       </Tooltip>
+        <IconCircleCheck size={20} color='green'/>
+        <Text>{props.user[props.dataName]}</Text>
     </Group>
     )
   }

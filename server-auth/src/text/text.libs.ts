@@ -34,6 +34,21 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Текущая сессия будет завершена',
+    index: 'sessionwillended',
+    update: false,
+  },
+  {
+    rutext: 'Локация',
+    index: 'location',
+    update: false,
+  },
+  {
+    rutext: 'Дата',
+    index: 'date',
+    update: false,
+  },
+  {
     rutext: 'Произошла ошибка, попробуйте еще раз...',
     index: 'itWasErrorLate',
     update: false,
