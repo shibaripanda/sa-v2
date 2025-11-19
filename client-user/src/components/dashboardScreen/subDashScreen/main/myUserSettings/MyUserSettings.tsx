@@ -16,7 +16,7 @@ export function MyUserSettings(props: MainInterface) {
       <Text>{props.user.email}</Text>
       <Text>id: {props.user._id}</Text>
     </Group>
-    
+
     <Space h={'md'}/>
     <Divider/>
     <Space h={'xl'}/>
@@ -29,9 +29,15 @@ export function MyUserSettings(props: MainInterface) {
         <UpdateStringValue {...props} dataName={'timeLiveToken'} func={props.user.updateUser.bind(props.user)}/>
       </div>
       <div>
-        <Center><Text>{props.user.location} ip: {props.user.ip}</Text></Center>
+        {[
+          <>{props.user.location} ip: {props.user.ip}</>, 
+          <>{props.text?.sessionwillended}:</>, 
+          <>{props.user.getDateSessionEnd()}</>
+        ].map(item => 
+        <Center><Text>{item}</Text></Center>)}
+        {/* <Center><Text>{props.user.location} ip: {props.user.ip}</Text></Center>
         <Center><Text>{props.text?.sessionwillended}:</Text></Center>
-        <Center><Text>{props.user.getDateSessionEnd()}</Text></Center>
+        <Center><Text>{props.user.getDateSessionEnd()}</Text></Center> */}
       </div>
       <div></div>
     </Group>
