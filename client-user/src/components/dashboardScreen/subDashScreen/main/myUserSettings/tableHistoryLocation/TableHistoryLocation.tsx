@@ -26,14 +26,14 @@ export function TableHistoryLocation(props: TableHistoryLocationInterface) {
   ));
 
   return (
-    <ScrollArea h={300} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-      <Table miw={700}>
+    <ScrollArea h={150} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+      <Table miw={300}>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-          <Table.Tr>
+          {/* <Table.Tr>
             <Table.Th>{props.text?.date}</Table.Th>
             <Table.Th>{props.text?.location}</Table.Th>
             <Table.Th>IP</Table.Th>
-          </Table.Tr>
+          </Table.Tr> */}
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
