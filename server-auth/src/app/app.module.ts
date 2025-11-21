@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { KafkaController } from './kafka.controller';
@@ -10,6 +10,7 @@ import { UserModule } from 'src/user/user.module';
 import { TextModule } from 'src/text/text.module';
 import { JwtConfigModule } from 'src/jwt/jwt.module';
 
+@Global()
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -52,5 +53,6 @@ import { JwtConfigModule } from 'src/jwt/jwt.module';
   ],
   controllers: [KafkaController],
   providers: [KafkaService],
+  exports: [KafkaService],
 })
 export class AppModule {}

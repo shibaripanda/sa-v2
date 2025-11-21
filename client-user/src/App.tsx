@@ -13,6 +13,7 @@ import { Dashboard } from "./components/dashboardScreen/mainScreen/Dashboard";
 import { StaffUser } from "./interfaces/staffUser";
 import { Company } from "./interfaces/company";
 import { UserClass } from "./classes/UserClass";
+import { StaffUserClass } from "./classes/StaffUserClass";
 
 export default function App() {
 
@@ -23,7 +24,7 @@ export default function App() {
   const [user, setUser] = useState<UserClass | null>(new UserClass(JSON.parse(sessionStorage.getItem('user')!)) ?? null)
   const [service, setService] = useState<Service | null>(JSON.parse(sessionStorage.getItem('service')!) ?? null)
 
-  const [staffUser, setStaffUser] = useState<StaffUser | null>(JSON.parse(sessionStorage.getItem('staffUser')!) ?? null)
+  const [staffUser, setStaffUser] = useState<StaffUserClass | null>(new StaffUserClass(JSON.parse(sessionStorage.getItem('staffUser')!)) ?? null)
   const [comp, setComp] = useState<Company | null>(JSON.parse(sessionStorage.getItem('comp')!) ?? null)
 
   const [loadingText, setLoadingText] = useState<string>(text?.loading ?? 'Loading')
@@ -45,7 +46,7 @@ export default function App() {
   const pickStaffUser = (staffUser: StaffUser | null) => {
     if(staffUser) sessionStorage.setItem('staffUser', JSON.stringify(staffUser))
     else sessionStorage.removeItem('staffUser')
-    setStaffUser(staffUser)
+    setStaffUser(staffUser && new StaffUserClass(staffUser))
   }
   const pickComp = (comp: Company | null) => {
     if(comp) sessionStorage.setItem('comp', JSON.stringify(comp))
@@ -58,9 +59,22 @@ export default function App() {
     setService(service)
   }
   const pickUser = (user: User | null) => {
-    if(user) sessionStorage.setItem('user', JSON.stringify(user))
-    else sessionStorage.removeItem('user')
+    if(user) {
+      sessionStorage.setItem('user', JSON.stringify(user))
+      sessionStorage.setItem('token', user.token)
+    }
+    else{
+      sessionStorage.removeItem('user')
+      sessionStorage.removeItem('token')
+    } 
     setUser(user && new UserClass(user))
+  }
+
+  const exit = () => {
+    pickStaffUser(null)
+    pickComp(null)
+    pickService(null)
+    pickUser(null)
   }
 
   const screenActiv = () => {
@@ -73,6 +87,7 @@ export default function App() {
         staffUser={staffUser}
         pickService={pickService}
         pickUser={pickUser}
+        pickStaffUser={pickStaffUser}
         text={text}
         setText={setText}
         leng={leng}
@@ -80,7 +95,8 @@ export default function App() {
         setLoginedUsers={setLoginedUsers}
         setLoadingText={setLoadingText}
         setLoaderShow={setLoaderShow}
-        setErrorStatus={setErrorStatus}/>
+        setErrorStatus={setErrorStatus}
+        exit={exit}/>
       )
     }
     else{

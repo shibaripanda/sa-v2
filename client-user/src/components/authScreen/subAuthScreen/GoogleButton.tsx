@@ -1,10 +1,10 @@
 import { Button } from "@mantine/core";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../../interfaces/user";
 import { AuthScreenInterface } from "../mainScreen/AuthScreen";
 import { IconBrandGoogle } from "@tabler/icons-react";
+import { AxiosClass } from "../../../classes/AxiosClass";
 
 interface GoogleButtonInterface extends AuthScreenInterface {
     title: string;
@@ -15,14 +15,10 @@ interface GoogleButtonInterface extends AuthScreenInterface {
 
 export function GoogleButton(props: GoogleButtonInterface) {
 
+    const axiosClass = new AxiosClass()
+
     const loginServerRequest = async (credentialResponse: string) => {
-        return await axios({
-            method: 'POST',
-            url: import.meta.env.VITE_API_AUTH_LINK + '/auth/googleLogin',
-            data: {access_token: credentialResponse},
-            headers: {},
-            timeout: 10000
-        })
+        return await axiosClass.axiosGoogleRequest(credentialResponse)
         .then(async (res) => {
             console.log(jwtDecode(res.data.token))
             const newUser: User = {...jwtDecode(res.data.token), token: res.data['token']}
@@ -38,7 +34,6 @@ export function GoogleButton(props: GoogleButtonInterface) {
             }
             props.setAgreement(false)
             props.setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
-            // sessionStorage.setItem('user', JSON.stringify(newUser))
             props.pickUser(newUser)
             props.setServiseModal.open()
         })

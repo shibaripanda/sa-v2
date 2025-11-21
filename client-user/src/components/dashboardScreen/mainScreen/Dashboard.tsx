@@ -163,6 +163,7 @@ export interface DashScreenInterface {
     staffUser: StaffUser;
     pickService: any;
     pickUser: any;
+    pickStaffUser: any;
     text: TextLib | null;
     setText: any;
     leng: string;
@@ -171,6 +172,7 @@ export interface DashScreenInterface {
     setLoadingText: any;
     setLoaderShow: any;
     setErrorStatus: any;
+    exit: any;
 }
 
 export function Dashboard(props: DashScreenInterface) {

@@ -18,6 +18,15 @@ export class UserController {
     return await this.userService.getUserById(user._id);
   }
 
+  @UseGuards(UniversalJwtGuard) //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Добавить защиты
+  @Get('/delete-user')
+  deleteUser(
+    @CurrentUser() user: UserDocument,
+    // @Ip() ip: string,
+  ) {
+    return this.userService.deleteUser(user._id);
+  }
+
   @UseGuards(UniversalJwtGuard, RequestGuard)
   @Post('/update-user')
   async updateUserData(

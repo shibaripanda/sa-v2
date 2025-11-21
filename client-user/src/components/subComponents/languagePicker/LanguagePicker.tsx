@@ -23,7 +23,6 @@ export function LanguagePicker(props: {leng: string; setText: any; setLeng: any;
           timeout: 10000
       })
       .then(async (res) => {
-        console.log(res)
         setAvailableLengs(res.data)
       })
       .catch((er) => {
@@ -40,7 +39,6 @@ export function LanguagePicker(props: {leng: string; setText: any; setLeng: any;
           timeout: 10000
       })
       .then(async (res) => {
-        console.log(res)
         sessionStorage.setItem('text', JSON.stringify(res.data))
         props.setText(res.data)
       })

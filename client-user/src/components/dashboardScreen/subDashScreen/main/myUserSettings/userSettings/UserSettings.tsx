@@ -22,7 +22,7 @@ export function UserSettings(props: MainInterface) {
 
   return (
     <Paper withBorder radius="md" p="xs">
-      <Text>User Settings</Text>
+      <Text>{props.text?.userSettings}</Text>
 
       <Divider my="lg" label="User" labelPosition="left" />
       <Grid w="100%" gutter="md">
@@ -56,7 +56,7 @@ export function UserSettings(props: MainInterface) {
             props.user.email ? <IconCircleCheck key='1' size={45} color='green'/> : <IconCancel key='1' size={45} color='red'/>
           ],
           [
-            props.user.email ? props.user.email : 'Connect',
+            props.user.email ? props.user.email : props.text?.connect,
           ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>),
           // [
           //   props.user.email ? 'Disconect' : 'Connect'
@@ -77,7 +77,7 @@ export function UserSettings(props: MainInterface) {
             props.user.telegramId ? <IconCircleCheck key='1' size={45} color='green'/> : <IconCancel key='1' size={45} color='red'/>
           ],
           [
-            props.user.telegramId ? '@' + props.user.telegramUserName || props.user.telegramId : 'Connect',
+            props.user.telegramId ? '@' + props.user.telegramUserName || props.user.telegramId : props.text?.connect,
           ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>),
           // [
           //   props.user.telegramId ? 'Disconect' : 'Connect'
@@ -98,28 +98,31 @@ export function UserSettings(props: MainInterface) {
       <Grid w="100%" gutter="md">
         {[
           [
-            <Text c='red' size={warningSize()}>Warning</Text>
+            <Text key='a' c='red' size={warningSize()}>W A R N I N G</Text>
           ],
           [
-            <Text size='sm' c={'red'}>Step 1</Text>,
-            <Space h='xs'/>,
-            <TextInput value={deleteAccountString} placeholder='Print your name for delete' onChange={(u) => setDeleteAccountString(u.target.value)}/>
+            <Text key='b' size='sm' c={'red'}>{props.text?.step} 1</Text>,
+            <Space key='c' h='xs'/>,
+            <TextInput key='d' value={deleteAccountString} placeholder={props.text?.yourname} onChange={(u) => setDeleteAccountString(u.target.value)}/>
           ],
           [
-            <Text size='sm' c={deleteAccountString !== props.user.name ? 'grey' : 'red'}>Step 2</Text>,
-            <Space h='xs'/>,
-            <Checkbox size='md' disabled={deleteAccountString !== props.user.name} color='red' checked={deleteAccountCheckBox} onChange={(event) => setDeleteAccountCheckBox(event.currentTarget.checked)}/>
+            <Text key='z' size='sm' c={deleteAccountString !== props.user.name ? 'grey' : 'red'}>{props.text?.step} 2</Text>,
+            <Space key='x' h='xs'/>,
+            <Checkbox key='v' size='md' disabled={deleteAccountString !== props.user.name} color='red' checked={deleteAccountCheckBox} onChange={(event) => setDeleteAccountCheckBox(event.currentTarget.checked)}/>
           ],
           [
-            <Text size='sm' c={!deleteAccountCheckBox || deleteAccountString !== props.user.name ? 'grey' : 'red'}>Step 3</Text>,
-            <Space h='xs'/>,
-            <Button color='red' disabled={!deleteAccountCheckBox || deleteAccountString !== props.user.name}>Delete account</Button>
+            <Text key='n' size='sm' c={!deleteAccountCheckBox || deleteAccountString !== props.user.name ? 'grey' : 'red'}>{props.text?.step} 3</Text>,
+            <Space key='m' h='xs'/>,
+            <Button key='g' color='red' disabled={!deleteAccountCheckBox || deleteAccountString !== props.user.name}
+            onClick={() => {
+              props.user.deleteAccount(props.exit, props.setLoginedUsers)
+            }}>{props.text?.deleteaccount}</Button>
           ],
           [
-            'Безвозвратное удаление'
+            props.text?.deleteaccountInfo
           ],
           [
-            <Text c='red' size={warningSize()}>Warning</Text>
+            <Text key='j' c='red' size={warningSize()}>W A R N I N G</Text>
           ]
         ].map((item, i) => 
           <Grid.Col  key={`main-${i}`} span={{ base: 12, sm: 2 }}>

@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
@@ -17,6 +18,15 @@ export class KafkaService implements OnModuleInit {
     this.kafkaClient.emit('test', {
       value: {
         message: this.configService.get<string>('SERVICE_NAME'),
+      },
+      key: 123,
+    });
+  }
+
+  deleteAccount(_id: Types.ObjectId) {
+    this.kafkaClient.emit('deleteAccount', {
+      value: {
+        message: _id,
       },
       key: 123,
     });

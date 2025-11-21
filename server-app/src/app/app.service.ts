@@ -50,8 +50,8 @@ export class AppService implements OnModuleInit {
       compsOwner.map((c) => c._id),
       user_id,
     );
-    console.log(compsOwner);
-    console.log(compsStaff);
+    // console.log(compsOwner);
+    // console.log(compsStaff);
     return { compsOwner, compsStaff };
   }
 

@@ -4,15 +4,26 @@ import { User, UserDocument } from './user.schema';
 import { Model, Types } from 'mongoose';
 import { GoogleAuthUser } from './interfaces/GoogleAuthUser';
 import { TelegramAuthUser } from './interfaces/TelegramAuthUser';
+import { KafkaService } from 'src/app/kafka.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private kafkaService: KafkaService,
+  ) {
     console.log('UserService initialized');
   }
 
   async getUserById(_id: Types.ObjectId) {
     return await this.userModel.findById(_id);
+  }
+
+  deleteUser(_id: Types.ObjectId) {
+    console.log(_id);
+    this.kafkaService.deleteAccount(_id);
+    return false;
+    // return await this.userModel.updateOne({ _id }, data);
   }
 
   async updateUserData(_id: Types.ObjectId, data: object) {

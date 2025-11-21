@@ -17,6 +17,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { useGlobalAutopopulatePlugin } from './plugins/populateMongo';
 import { Connection } from 'mongoose';
+import { KafkaController } from './kafka.controller';
 
 @Global()
 @Module({
@@ -75,7 +76,7 @@ import { Connection } from 'mongoose';
     StatusModule,
     WorkModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, KafkaController],
   providers: [AppService],
   exports: [ClientsModule],
 })

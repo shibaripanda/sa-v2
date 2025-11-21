@@ -1,10 +1,10 @@
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../../../interfaces/user";
 import { AuthScreenInterface } from "../mainScreen/AuthScreen";
 import { useTelegramLogin } from '@telegram-login-ultimate/react';
 import { Button } from "@mantine/core";
 import { IconBrandTelegram } from "@tabler/icons-react";
+import { AxiosClass } from "../../../classes/AxiosClass";
 
 interface GoogleButtonInterface extends AuthScreenInterface {
     title: string;
@@ -16,14 +16,10 @@ interface GoogleButtonInterface extends AuthScreenInterface {
 export function TelegramButton(props: GoogleButtonInterface) {
 
     const loginServerRequest = async (credentialResponse: any) => {
-        console.log(credentialResponse)
-        return await axios({
-            method: 'POST',
-            url: import.meta.env.VITE_API_AUTH_LINK + '/auth/telegramLogin',
-            data: credentialResponse,
-            headers: {},
-            timeout: 10000
-        })
+
+        const axiosClass = new AxiosClass()
+
+        return await axiosClass.axiosTelegramRequest(credentialResponse)
         .then(async (res) => {
             console.log(jwtDecode(res.data.token))
             const newUser: User = {...jwtDecode(res.data.token), token: res.data['token']}
@@ -39,7 +35,6 @@ export function TelegramButton(props: GoogleButtonInterface) {
             }
             props.setAgreement(false)
             props.setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
-            // sessionStorage.setItem('user', JSON.stringify(newUser))
             props.pickUser(newUser)
             props.setServiseModal.open()
         })

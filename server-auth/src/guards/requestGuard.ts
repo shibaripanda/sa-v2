@@ -25,13 +25,13 @@ export class RequestGuard implements CanActivate {
     if (type === 'http') {
       const request: RequestWithUser = context.switchToHttp().getRequest();
       const requestName = request.body['requestName'];
-      const requestData = request.body['requestData'];
-      const alowedRequests = ['name', 'timeLiveToken'];
+      // const requestData = request.body['requestData'];
+      const alowedRequests = ['name', 'timeLiveToken', 'delete-user'];
       if (
         !requestName ||
-        !requestData ||
-        !alowedRequests.includes(requestName) ||
-        !requestData[requestName]
+        // !requestData ||
+        !alowedRequests.includes(requestName)
+        // !requestData[requestName]
       )
         throw new UnauthorizedException('Unsupported request type');
       console.log(requestName);
