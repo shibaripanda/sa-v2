@@ -13,6 +13,10 @@ export class PartService {
     @InjectModel(Part.name) private partModel: Model<PartDocument>,
   ) {}
 
+  async deleteManyParts(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.partModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
   async createNewPart(
     shop_owner_id: Types.ObjectId,
     service_owner_id: Types.ObjectId,

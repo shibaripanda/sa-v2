@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { Types } from 'mongoose';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
@@ -13,22 +14,23 @@ export class KafkaService implements OnModuleInit {
   }
 
   onModuleInit() {
-    // this.kafkaClient.subscribeToResponseOf('hello');
     // await this.kafkaClient.connect();
-    this.kafkaClient.emit('test', {
-      value: {
-        message: this.configService.get<string>('SERVICE_NAME'),
-      },
-      key: 123,
-    });
+    this.kafkaClient.subscribeToResponseOf('deleteAccount');
+    // await this.kafkaClient.connect();
+    // this.kafkaClient.emit('test', {
+    //   value: {
+    //     message: this.configService.get<string>('SERVICE_NAME'),
+    //   },
+    //   key: 123,
+    // });
   }
 
   deleteAccount(_id: Types.ObjectId) {
-    this.kafkaClient.emit('deleteAccount', {
-      value: {
-        message: _id,
-      },
-      key: 123,
-    });
+    return firstValueFrom<boolean>(
+      this.kafkaClient.send('deleteAccount', {
+        value: { message: _id },
+        key: 123,
+      }),
+    );
   }
 }

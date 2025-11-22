@@ -13,6 +13,10 @@ export class StatusService {
     @InjectModel(Status.name) private statusModel: Model<StatusDocument>,
   ) {}
 
+  async deleteManyStatuses(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.statusModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
   async createNewStatus(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.statusModel.create([{ freez: true }], { session });
     return res[0]._id;

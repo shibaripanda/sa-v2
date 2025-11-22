@@ -14,13 +14,17 @@ export class StaffUserService {
     private staffUserModel: Model<StaffUserDocument>,
   ) {}
 
-  async getMyStaffUsers_ids(origin_user_id: string) {
+  async deleteManyStaffUsers(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.staffUserModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
+  async getMyStaffUsers_ids(origin_user_id: Types.ObjectId) {
     const res = await this.staffUserModel.find({ origin_user_id }, { _id: 1 });
     return res.map((u) => u._id);
   }
 
   async createNewStaffUser(
-    origin_user_id: string,
+    origin_user_id: Types.ObjectId,
     role_id: Types.ObjectId,
     service_id: Types.ObjectId,
     session?: ClientSession,

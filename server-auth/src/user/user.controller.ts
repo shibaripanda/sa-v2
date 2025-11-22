@@ -19,12 +19,12 @@ export class UserController {
   }
 
   @UseGuards(UniversalJwtGuard) //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Добавить защиты
-  @Get('/delete-user')
-  deleteUser(
+  @Get('/delete-account')
+  deleteAccount(
     @CurrentUser() user: UserDocument,
     // @Ip() ip: string,
   ) {
-    return this.userService.deleteUser(user._id);
+    return this.userService.deleteAccount(user._id);
   }
 
   @UseGuards(UniversalJwtGuard, RequestGuard)

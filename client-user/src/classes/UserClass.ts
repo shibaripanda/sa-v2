@@ -20,7 +20,8 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
   }
 
   async deleteAccount(exit: () => void, setLoginedUsers: (user: User) => void) {
-    const res = await this.axiosClass.axiosAuthServer('GET', '/delete-user', 'delete-user')
+    const res = await this.axiosClass.axiosAuthServer('GET', '/delete-account', 'delete-account')
+    console.log(res);
     if (!res) return false
     this.deleteLoginedUsers(this, setLoginedUsers)
     exit()

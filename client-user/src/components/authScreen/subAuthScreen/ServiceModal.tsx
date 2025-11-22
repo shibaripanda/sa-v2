@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Button, Grid, Group, Modal, Space, Text } from '@mantine/core'
 import { AuthScreenInterface } from '../mainScreen/AuthScreen'
-import axios from 'axios';
 import { Company } from '../../../interfaces/company';
+import { AxiosClass } from '../../../classes/AxiosClass';
 
 interface ServiceModalInterface extends AuthScreenInterface {
     serviseModal: boolean;
@@ -19,6 +19,8 @@ interface CompsData {
 export function ServiceModal(props: ServiceModalInterface) {
 
     const [avaliableServices, setAvaliableServices] = useState<CompsData>({compsOwner: [], compsStaff: []})
+
+    const axiosClass = new AxiosClass()
     
     useEffect(() => {
         console.log('dddddd', props.serviseModal, props.user)
@@ -30,15 +32,7 @@ export function ServiceModal(props: ServiceModalInterface) {
     const getUserServices = async () => {
         props.setLoadingText(props.text?.getUserServices)
         props.setLoaderShow.open()
-        await axios({
-            method: 'POST',
-            url: import.meta.env.VITE_API_APP_LINK + '/app/get-all-my-comps',
-            data: {},
-            headers: {
-                "Authorization": `Bearer ${props.user?.token}`
-            },
-            timeout: 10000
-        })
+        await axiosClass.getUserServices()
         .then(async (res) => {
             console.log(res)
             setAvaliableServices(res.data)
@@ -54,15 +48,7 @@ export function ServiceModal(props: ServiceModalInterface) {
     const createNewCompany = async () => {
         props.setLoadingText(props.text?.createNewCompany)
         props.setLoaderShow.open()
-        await axios({
-            method: 'POST',
-            url: import.meta.env.VITE_API_APP_LINK + '/app/create-new-company',
-            data: {},
-            headers: {
-                "Authorization": `Bearer ${props.user?.token}`
-            },
-            timeout: 10000
-        })
+        await axiosClass.axiosCreateNewCompany()
         .then(async (res) => {
             console.log(res)
             getUserServices()

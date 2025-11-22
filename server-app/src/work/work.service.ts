@@ -13,6 +13,10 @@ export class WorkService {
     @InjectModel(Work.name) private workModel: Model<WorkDocument>,
   ) {}
 
+  async deleteManyWorks(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.workModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
   async createNewWork(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.workModel.create([{}], { session });
     return res[0]._id;

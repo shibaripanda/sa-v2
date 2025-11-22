@@ -16,7 +16,7 @@ export class CompanyService {
   async getCompanyesWhereStaff(
     user_staff_ids: Types.ObjectId[],
     comp_ids: Types.ObjectId[],
-    user_id: string,
+    user_id: Types.ObjectId,
   ) {
     const res = await this.companyModel.find({
       staff_users_ids: { $in: user_staff_ids },
@@ -26,7 +26,7 @@ export class CompanyService {
     if (!res.length) return [];
     for (const c of res) {
       c.staff_users_ids = c.staff_users_ids.filter(
-        (us) => us.origin_user_id === user_id,
+        (us) => us.origin_user_id.toString() === user_id.toString(),
       );
       c.services_ids = c.services_ids.filter(
         (ser) => !c.staff_users_ids[0].userStaffServices.includes(ser._id),
@@ -35,20 +35,31 @@ export class CompanyService {
     return res;
   }
 
-  async getMyStaffUsers(origin_user_id: string) {
+  async getMyStaffUsers(origin_user_id: Types.ObjectId) {
     return await this.companyModel.find({ origin_user_id });
   }
 
-  async getCompanyWhereOwner(user_owner_id: string) {
+  async getCompanyWhereOwner(user_owner_id: Types.ObjectId) {
     return await this.companyModel.find({ user_owner_id });
+  }
+
+  async getCompanyForDelete(
+    user_owner_id: Types.ObjectId,
+    session: ClientSession,
+  ) {
+    return await this.companyModel.find({ user_owner_id }).session(session);
   }
 
   async getCompanyWithRelations(companyId: Types.ObjectId) {
     return await this.companyModel.findById(companyId);
   }
 
+  async deleteCompany(_id: Types.ObjectId, session?: ClientSession) {
+    await this.companyModel.deleteOne({ _id }, { session });
+  }
+
   async createNewCompany(
-    user_owner_id: string,
+    user_owner_id: Types.ObjectId,
     staffUser_id: Types.ObjectId,
     shop_id: Types.ObjectId,
     role_id: Types.ObjectId,

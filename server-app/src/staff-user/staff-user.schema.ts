@@ -8,7 +8,7 @@ export type StaffUserDocument = HydratedDocument<StaffUser>;
 @Schema({ timestamps: true })
 export class StaffUser {
   @Prop({ required: true })
-  origin_user_id: string;
+  origin_user_id: Types.ObjectId;
 
   @Prop({ required: true, default: 'procentWork' })
   profitMode: ProfitMode;

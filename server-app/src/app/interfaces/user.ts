@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 interface HistoryLogin {
   date: number;
   ip: string;
@@ -15,6 +17,6 @@ export interface User {
   name: string;
   timeLiveToken: string;
   updatedAt: string;
-  _id: string;
+  _id: Types.ObjectId;
   token: string;
 }

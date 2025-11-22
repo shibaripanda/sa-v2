@@ -2,7 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { CompanyService } from 'src/company/company.service';
 import { DeviceService } from 'src/device/device.service';
 import { PartService } from 'src/part/part.service';
@@ -30,16 +30,103 @@ export class AppService implements OnModuleInit {
     private readonly staffUserService: StaffUserService,
   ) {}
 
-  onModuleInit() {
-    this.kafkaClient.emit('test', {
-      value: {
-        message: this.configService.get<string>('SERVICE_NAME'),
-      },
-      key: 123,
-    });
+  async onModuleInit() {
+    // await this.kafkaClient.connect();
+    // this.kafkaClient.emit('test', {
+    //   value: {
+    //     message: this.configService.get<string>('SERVICE_NAME'),
+    //   },
+    //   key: 123,
+    // });
   }
 
-  async getAllMyComps(user_id: string) {
+  async deleteAccount(user_owner_id: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      // Получаем компанию с дочерними объектами
+      const companyes = await this.companyService.getCompanyForDelete(
+        user_owner_id,
+        session,
+      );
+      if (!companyes || !companyes.length) throw new Error('Company not found');
+
+      for (const comp of companyes) {
+        if (comp.services_ids?.length) {
+          await this.serviceService.deleteManyServices(
+            comp.services_ids.map((s) => s._id),
+            session,
+          );
+        }
+
+        if (comp.shops_ids?.length) {
+          await this.shopService.deleteManyShops(
+            comp.shops_ids.map((s) => s._id),
+            session,
+          );
+        }
+
+        if (comp.works_ids?.length) {
+          await this.workService.deleteManyWorks(
+            comp.works_ids.map((w) => w._id),
+            session,
+          );
+        }
+
+        if (comp.devices_ids?.length) {
+          await this.deviceService.deleteManyDevices(
+            comp.devices_ids.map((d) => d._id),
+            session,
+          );
+        }
+
+        if (comp.parts_ids?.length) {
+          await this.partService.deleteManyParts(
+            comp.parts_ids.map((p) => p._id),
+            session,
+          );
+        }
+
+        if (comp.staff_users_ids?.length) {
+          await this.staffUserService.deleteManyStaffUsers(
+            comp.staff_users_ids.map((u) => u._id),
+            session,
+          );
+        }
+
+        if (comp.roles_ids?.length) {
+          await this.roleService.deleteManyRoles(
+            comp.roles_ids.map((r) => r._id),
+            session,
+          );
+        }
+
+        if (comp.statuses_ids?.length) {
+          await this.statusService.deleteManyStatuses(
+            comp.statuses_ids.map((s) => s._id),
+            session,
+          );
+        }
+
+        // Удаляем саму компанию
+        await this.companyService.deleteCompany(comp._id, session);
+      }
+
+      // Удаляем все дочерние элементы через сервисы с сессией
+
+      await session.commitTransaction();
+      return true;
+    } catch (error) {
+      console.log(error);
+      await session.abortTransaction();
+      return false;
+    } finally {
+      await session.endSession();
+    }
+  }
+
+  async getAllMyComps(user_id: Types.ObjectId) {
     const compsOwner = await this.companyService.getCompanyWhereOwner(user_id);
 
     const myStaffUsers_ids =
@@ -55,7 +142,7 @@ export class AppService implements OnModuleInit {
     return { compsOwner, compsStaff };
   }
 
-  async createNewCompany(user_owner_id: string) {
+  async createNewCompany(user_owner_id: Types.ObjectId) {
     const session = await this.connection.startSession();
     session.startTransaction();
 

@@ -13,6 +13,10 @@ export class ShopService {
     @InjectModel(Shop.name) private shopModel: Model<ShopDocument>,
   ) {}
 
+  async deleteManyShops(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.shopModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
   async createNewShop(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.shopModel.create([{}], { session });
     return res[0]._id;

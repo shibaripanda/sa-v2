@@ -19,11 +19,12 @@ export class UserService {
     return await this.userModel.findById(_id);
   }
 
-  deleteUser(_id: Types.ObjectId) {
-    console.log(_id);
-    this.kafkaService.deleteAccount(_id);
-    return false;
-    // return await this.userModel.updateOne({ _id }, data);
+  async deleteAccount(_id: Types.ObjectId) {
+    console.log('1', _id);
+    const res = await this.kafkaService.deleteAccount(_id);
+    console.log('2', res);
+    if (res) await this.userModel.deleteOne({ _id });
+    return res;
   }
 
   async updateUserData(_id: Types.ObjectId, data: object) {

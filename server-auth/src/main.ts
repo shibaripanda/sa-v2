@@ -15,7 +15,9 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: { brokers: [configService.get<string>('KAFKA_BROKER')!] },
-        consumer: { groupId: configService.get<string>('KAFKA_GROUP_ID')! },
+        consumer: {
+          groupId: 'Lisener ' + configService.get<string>('KAFKA_GROUP_ID')!,
+        },
       },
     });
     await app.startAllMicroservices();

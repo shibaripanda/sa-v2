@@ -13,6 +13,10 @@ export class DeviceService {
     @InjectModel(Device.name) private deviceModel: Model<DeviceDocument>,
   ) {}
 
+  async deleteManyDevices(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.deviceModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
   async createNewDevice(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.deviceModel.create([{}], {
       session,

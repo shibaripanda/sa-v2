@@ -13,6 +13,10 @@ export class RoleService {
     @InjectModel(Role.name) private roleModel: Model<RoleDocument>,
   ) {}
 
+  async deleteManyRoles(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.roleModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
   async createNewRole(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.roleModel.create([{ name: 'Owner' }], {
       session,

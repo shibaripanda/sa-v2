@@ -18,6 +18,9 @@ export class ServiceService {
   //     users_staff_ids: { $in: [users_staff_id] },
   //   });
   // }
+  async deleteManyServices(ids: Types.ObjectId[], session?: ClientSession) {
+    await this.serviceModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
 
   async createNewService(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.serviceModel.create([{}], { session });
