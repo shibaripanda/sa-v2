@@ -103,6 +103,7 @@ export default function App() {
       return (
         <AuthScreen
         setLoadingText={setLoadingText}
+        setErrorStatus={setErrorStatus}
         setLoaderShow={setLoaderShow}
         pickUser={pickUser}
         pickStaffUser={pickStaffUser}

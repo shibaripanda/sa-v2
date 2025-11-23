@@ -32,33 +32,42 @@ export function ServiceModal(props: ServiceModalInterface) {
     const getUserServices = async () => {
         props.setLoadingText(props.text?.getUserServices)
         props.setLoaderShow.open()
-        await axiosClass.getUserServices()
-        .then(async (res) => {
-            console.log(res)
-            setAvaliableServices(res.data)
-        })
-        .catch((er) => {
-            console.log(er)
-        })
-        .finally(() => {
-            props.setLoaderShow.close()
-        })
+        const res = await axiosClass.getUserServices()
+        if (!res) {
+            props.setErrorStatus(true)
+            props.setLoadingText(props.text?.itWasErrorLate)
+            return
+        }
+        props.setLoaderShow.close()
+        console.log(res)
+        setAvaliableServices(res.data)
     }
 
     const createNewCompany = async () => {
         props.setLoadingText(props.text?.createNewCompany)
         props.setLoaderShow.open()
-        await axiosClass.axiosCreateNewCompany()
-        .then(async (res) => {
-            console.log(res)
-            getUserServices()
-        })
-        .catch((er) => {
-            console.log(er)
-        })
-        .finally(() => {
-            props.setLoaderShow.close()
-        })
+        const res = await axiosClass.axiosCreateNewCompany()
+        if (!res) {
+            props.setErrorStatus(true)
+            props.setLoadingText(props.text?.itWasErrorLate)
+            return
+        }
+        props.setLoaderShow.close()
+        getUserServices()
+    }
+
+    const createNewService = async (company_id: string) => {
+        props.setLoadingText(props.text?.createNewService)
+        props.setLoaderShow.open()
+        const res = await axiosClass.axiosCreateNewService(company_id)
+        console.log(res)
+        if (!res) {
+            props.setErrorStatus(true)
+            props.setLoadingText(props.text?.itWasErrorLate)
+            return
+        }
+        props.setLoaderShow.close()
+        getUserServices()
     }
 
     const listOfCampsAndServices = (comps: Company[], isOwner: boolean) => {
@@ -91,7 +100,11 @@ export function ServiceModal(props: ServiceModalInterface) {
                 {isOwner ?
                 <div>
                     
-                    <Group justify="flex-end"><Button size='xs' variant='default'>{props.text?.crateNewService}</Button></Group>
+                    <Group justify="flex-end"><Button size='xs' variant='default'
+                    onClick={() => {
+                        createNewService(item1._id)
+                    }}>
+                        {props.text?.crateNewService}</Button></Group>
                     <Space h='sm'/>
                 </div> : ''}
                 <hr></hr>

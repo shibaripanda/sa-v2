@@ -13,6 +13,19 @@ export class CompanyService {
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
   ) {}
 
+  async addServiceToCompany(
+    company_id: Types.ObjectId,
+    service_id: Types.ObjectId,
+    session: ClientSession,
+  ) {
+    return await this.companyModel
+      .updateOne(
+        { _id: company_id },
+        { $addToSet: { services_ids: service_id } },
+      )
+      .session(session);
+  }
+
   async getCompanyesWhereStaff(
     user_staff_ids: Types.ObjectId[],
     comp_ids: Types.ObjectId[],

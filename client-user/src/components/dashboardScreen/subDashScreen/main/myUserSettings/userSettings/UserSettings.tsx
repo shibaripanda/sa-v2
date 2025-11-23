@@ -20,6 +20,18 @@ export function UserSettings(props: MainInterface) {
         return 'xs'
     }
 
+    const deleteAccount = async () => {
+      props.setLoadingText(props.text?.deleting)
+      props.setLoaderShow.open()
+      const res = await props.user.deleteAccount(props.exit, props.setLoginedUsers)
+      if (!res) {
+        props.setErrorStatus(true)
+        props.setLoadingText(props.text?.itWasErrorLate)
+        return
+      }
+      props.setLoaderShow.close()
+    }
+
   return (
     <Paper withBorder radius="md" p="xs">
       <Text>{props.text?.userSettings}</Text>
@@ -115,15 +127,16 @@ export function UserSettings(props: MainInterface) {
             <Space key='m' h='xs'/>,
             <Button key='g' color='red' disabled={!deleteAccountCheckBox || deleteAccountString !== props.user.name}
             onClick={async () => {
-              props.setLoadingText('Удаление')
-              props.setLoaderShow.open()
-              const res = await props.user.deleteAccount(props.exit, props.setLoginedUsers)
-              if (!res) {
-                props.setErrorStatus(true)
-                props.setLoadingText('Ошибка')
-                return
-              }
-              props.setLoaderShow.close()
+              await deleteAccount()
+              // props.setLoadingText('Удаление')
+              // props.setLoaderShow.open()
+              // const res = await props.user.deleteAccount(props.exit, props.setLoginedUsers)
+              // if (!res) {
+              //   props.setErrorStatus(true)
+              //   props.setLoadingText('Ошибка')
+              //   return
+              // }
+              // props.setLoaderShow.close()
             }}>{props.text?.deleteaccount}</Button>
           ],
           [

@@ -2,7 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectConnection } from '@nestjs/mongoose';
-import { Connection, Types } from 'mongoose';
+import { Connection, Error, Types } from 'mongoose';
 import { CompanyService } from 'src/company/company.service';
 import { DeviceService } from 'src/device/device.service';
 import { PartService } from 'src/part/part.service';
@@ -120,7 +120,7 @@ export class AppService implements OnModuleInit {
     } catch (error) {
       console.log(error);
       await session.abortTransaction();
-      return false;
+      throw error;
     } finally {
       await session.endSession();
     }
@@ -140,6 +140,30 @@ export class AppService implements OnModuleInit {
     // console.log(compsOwner);
     // console.log(compsStaff);
     return { compsOwner, compsStaff };
+  }
+
+  async createNewService(company_id: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const service_id = await this.serviceService.createNewService(session);
+
+      await this.companyService.addServiceToCompany(
+        company_id,
+        service_id,
+        session,
+      );
+
+      await session.commitTransaction();
+      return true;
+    } catch (error) {
+      await session.abortTransaction();
+      console.log(error);
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
 
   async createNewCompany(user_owner_id: Types.ObjectId) {

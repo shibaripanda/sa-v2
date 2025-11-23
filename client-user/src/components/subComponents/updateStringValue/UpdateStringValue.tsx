@@ -83,14 +83,13 @@ export function UpdateStringValue(props: UpdateStringValue) {
               props.setLoadingText(props.text?.updatingData)
               props.setLoaderShow.open()
               const res = await props.func(props.dataName, value, props.pickUser, props.setLoginedUsers)
-              if(res) {
-                props.setLoaderShow.close()
-                setStep(1)
-              }
-              else {
+              if(!res) {
                 props.setErrorStatus(true)
                 props.setLoadingText(props.text?.itWasErrorLate)
+                return
               }
+              props.setLoaderShow.close()
+              setStep(1)
             }
           }}
         />

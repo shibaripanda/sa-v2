@@ -34,6 +34,11 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Удаление',
+    index: 'deleting',
+    update: false,
+  },
+  {
     rutext:
       'Безвозвратное удаление аккаунта, ваших компаний, сервисов и заказов',
     index: 'deleteaccountInfo',
@@ -127,6 +132,11 @@ export const myLib: LengInstruction[] = [
   {
     rutext: 'Ты владелец',
     index: 'youOwner',
+    update: false,
+  },
+  {
+    rutext: 'Создаем новый сервис',
+    index: 'createNewService',
     update: false,
   },
   {

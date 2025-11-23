@@ -3,6 +3,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './interfaces/user';
 import { UniversalJwtGuard } from './guards/universalJwtGuard';
 import { AppService } from './app.service';
+import { Types } from 'mongoose';
 
 @Controller('app')
 export class AppController {
@@ -16,6 +17,16 @@ export class AppController {
     // @Ip() ip: string,
   ) {
     return this.appService.getAllMyComps(user._id);
+  }
+
+  @UseGuards(UniversalJwtGuard)
+  @Post('/create-new-service')
+  async createNewService(
+    @Body() data: { company_id: Types.ObjectId },
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    return await this.appService.createNewService(data.company_id);
   }
 
   @UseGuards(UniversalJwtGuard)

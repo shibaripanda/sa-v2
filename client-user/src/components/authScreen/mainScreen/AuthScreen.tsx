@@ -35,6 +35,7 @@ export interface AuthScreenInterface {
   pickUser: any;
   setLoaderShow: any;
   setLoadingText: any;
+  setErrorStatus: any;
 }
 
   export function AuthScreen(props: AuthScreenInterface) {

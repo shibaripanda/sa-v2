@@ -7,27 +7,54 @@ export class AxiosClass {
   private appServerLink = import.meta.env.VITE_API_APP_LINK
 
   async getUserServices(){
-    return await axios({
-        method: 'POST',
-        url: this.appServerLink + '/app/get-all-my-comps',
-        data: {},
-        headers: {
-            "Authorization": `Bearer ${this.token}`
-        },
-        timeout: 10000
-    })
+    try{
+      return await axios({
+          method: 'POST',
+          url: this.appServerLink + '/app/get-all-my-comps',
+          data: {},
+          headers: {
+              "Authorization": `Bearer ${this.token}`
+          },
+          timeout: 10000
+      })
+    }
+    catch {
+      return false
+    }
   }
 
   async axiosCreateNewCompany() {
-    return await axios({
-        method: 'POST',
-        url: this.appServerLink + '/app/create-new-company',
-        data: {},
-        headers: {
-            "Authorization": `Bearer ${this.token}`
-        },
-        timeout: 10000
-    })
+    try{
+      return await axios({
+          method: 'POST',
+          url: this.appServerLink + '/app/create-new-company',
+          data: {},
+          headers: {
+              "Authorization": `Bearer ${this.token}`
+          },
+          timeout: 10000
+      })
+    }
+    catch {
+      return false
+    }
+  }
+
+  async axiosCreateNewService(company_id: string) {
+    try{
+      return await axios({
+          method: 'POST',
+          url: this.appServerLink + '/app/create-new-service',
+          data: { company_id },
+          headers: {
+              "Authorization": `Bearer ${this.token}`
+          },
+          timeout: 10000
+      })
+    }
+    catch {
+      return false
+    }
   }
 
   async axiosAuthServer(crub: string, line: string, requestName?: string, requestData?: object) {
@@ -42,7 +69,7 @@ export class AxiosClass {
         timeout: 10000
       })
     }
-    catch(error){
+    catch {
       return false
     }
   }
