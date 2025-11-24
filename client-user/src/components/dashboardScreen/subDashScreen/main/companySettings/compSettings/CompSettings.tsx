@@ -1,51 +1,53 @@
 import { Button, Checkbox, Divider, Flex, Grid, Paper, Space, Text, TextInput } from '@mantine/core';
 import { MainInterface } from '../../Main';
 import { UpdateStringValue } from '../../../../../subComponents/updateStringValue/UpdateStringValue';
-import { TableHistoryLocation } from '.././tableHistoryLocation/TableHistoryLocation';
-import { IconCancel, IconCircleCheck } from '@tabler/icons-react';
+// import { TableHistoryLocation } from '.././tableHistoryLocation/TableHistoryLocation';
+// import { IconCancel, IconCircleCheck } from '@tabler/icons-react';
 import { useState } from 'react';
 
-export function UserSettings(props: MainInterface) {
+export function CompSettings(props: MainInterface) {
 
-    const [deleteAccountString, setDeleteAccountString] = useState<string>('')
-    const [deleteAccountCheckBox, setDeleteAccountCheckBox] = useState<boolean>(false)
+  const [deleteAccountString, setDeleteAccountString] = useState<string>('')
+  const [deleteAccountCheckBox, setDeleteAccountCheckBox] = useState<boolean>(false)
 
-    const warningSize = () => {
-        if(deleteAccountCheckBox && deleteAccountString === props.user.name) {
-            return 'xl'
-        }
-        if(deleteAccountString === props.user.name) {
-            return 'md'
-        }
-        return 'xs'
-    }
-
-    const deleteAccount = async () => {
-      props.setLoadingText(props.text?.deleting)
-      props.setLoaderShow.open()
-      const res = await props.user.deleteAccount(props.exit, props.setLoginedUsers)
-      if (!res) {
-        props.setErrorStatus(true)
-        props.setLoadingText(props.text?.itWasErrorLate)
-        return
+  const warningSize = () => {
+      if(deleteAccountCheckBox && deleteAccountString === props.user.name) {
+          return 'xl'
       }
-      props.setLoaderShow.close()
-    }
+      if(deleteAccountString === props.user.name) {
+          return 'md'
+      }
+      return 'xs'
+  }
+
+  // const deleteAccount = async () => {
+  //   props.setLoadingText(props.text?.deleting)
+  //   props.setLoaderShow.open()
+  //   const res = await props.user.deleteAccount(props.exit, props.setLoginedUsers)
+  //   if (!res) {
+  //     props.setErrorStatus(true)
+  //     props.setLoadingText(props.text?.itWasErrorLate)
+  //     return
+  //   }
+  //   props.setLoaderShow.close()
+  // }
 
   return (
     <Paper withBorder radius="md" p="xs">
-      <Text>{props.text?.userSettings}</Text>
+      <Text>{'Настройки компании'}</Text>
 
-      <Divider my="lg" label="User" labelPosition="left" />
+      <Divider my="lg" label="Company" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
           [
-            `id: ${props.user._id}`
+            `id: ${props.comp._id}`
           ].map((item, i) => <Text key={`1-${i}`}>{item}</Text>),
           [
-            <UpdateStringValue {...props} item="user" dataName="name" func={props.user.updateUser.bind(props.user)} key={`up1`}/>,
+            <UpdateStringValue {...props} item="comp" dataName="name" func={props.comp.updateCompany.bind(props.comp)} key={`up1`}/>,
             <Space h="md" key={`up2`}/>,
-            <UpdateStringValue {...props} item="user" dataName="timeLiveToken" func={props.user.updateUser.bind(props.user)} key={`up3`}/>
+            <UpdateStringValue {...props} item="comp" dataName="mainOfficeData" func={props.comp.updateCompany.bind(props.comp)} key={`up3`}/>,
+            <Space h="md" key={`up4`}/>,
+            <UpdateStringValue {...props} item="comp" dataName="mainOfficeContacts" func={props.comp.updateCompany.bind(props.comp)} key={`up5`}/>
           ],
           [
             `${props.user.location} ip: ${props.user.ip}`,
@@ -61,7 +63,7 @@ export function UserSettings(props: MainInterface) {
         )}
       </Grid>
 
-      <Divider my="lg" label="Google Auth" labelPosition="left" />
+      {/* <Divider my="lg" label="Google Auth" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
           [
@@ -104,7 +106,7 @@ export function UserSettings(props: MainInterface) {
       </Grid>
 
       <Divider my="lg" label="Sessions" labelPosition="left" />
-      <TableHistoryLocation historyLogin={props.user.historyLogin} text={props.text}/>
+      <TableHistoryLocation historyLogin={props.user.historyLogin} text={props.text}/>*/}
 
       <Divider my="lg" label="Delete User" labelPosition="left" />
       <Grid w="100%" gutter="md">
@@ -127,16 +129,7 @@ export function UserSettings(props: MainInterface) {
             <Space key='m' h='xs'/>,
             <Button key='g' color='red' disabled={!deleteAccountCheckBox || deleteAccountString !== props.user.name}
             onClick={async () => {
-              await deleteAccount()
-              // props.setLoadingText('Удаление')
-              // props.setLoaderShow.open()
-              // const res = await props.user.deleteAccount(props.exit, props.setLoginedUsers)
-              // if (!res) {
-              //   props.setErrorStatus(true)
-              //   props.setLoadingText('Ошибка')
-              //   return
-              // }
-              // props.setLoaderShow.close()
+              // await deleteAccount()
             }}>{props.text?.deleteaccount}</Button>
           ],
           [
@@ -152,7 +145,7 @@ export function UserSettings(props: MainInterface) {
             </Flex>
           </Grid.Col>
         )}
-      </Grid>
+      </Grid> 
       <Space h='md'/>
     </Paper>
   );

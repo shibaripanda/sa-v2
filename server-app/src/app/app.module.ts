@@ -78,6 +78,6 @@ import { KafkaController } from './kafka.controller';
   ],
   controllers: [AppController, KafkaController],
   providers: [AppService],
-  exports: [ClientsModule],
+  exports: [ClientsModule, JwtModule],
 })
 export class AppModule {}

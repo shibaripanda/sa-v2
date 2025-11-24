@@ -57,6 +57,23 @@ export class AxiosClass {
     }
   }
 
+  async axiosAppServer(crub: string, line: string, requestName?: string, requestData?: object, _id?: string) {
+    try{
+      return await axios({
+        method: crub,
+        url: this.appServerLink + `${line}`,
+        data: {requestName, requestData, _id},
+        headers: {
+            "Authorization": `Bearer ${this.token}`
+        },
+        timeout: 10000
+      })
+    }
+    catch {
+      return false
+    }
+  }
+
   async axiosAuthServer(crub: string, line: string, requestName?: string, requestData?: object) {
     try{
       return await axios({

@@ -3,22 +3,36 @@ import { IconCancel, IconCircleCheck, IconDeviceFloppy, IconEdit } from '@tabler
 import { useState } from 'react';
 import { MainInterface } from '../../dashboardScreen/subDashScreen/main/Main';
 import { UserClass } from '../../../classes/UserClass';
+import { StaffUserClass } from '../../../classes/StaffUserClass';
+import { ServiceClass } from '../../../classes/ServiceClass';
+import { CompanyClass } from '../../../classes/CompanyClass';
+
+type ItemMap = {
+  user: UserClass;
+  staffUser: StaffUserClass;
+  service: ServiceClass;
+  comp: CompanyClass;
+};
 
 type StringKeys<T> = {
   [K in keyof T]: T[K] extends string ? K : never
-}[keyof T]
+}[keyof T];
 
-interface UpdateStringValue extends MainInterface {
-  dataName: StringKeys<UserClass>;
+interface UpdateStringValue<T extends keyof ItemMap> extends MainInterface {
+  item: T;
+  dataName: StringKeys<ItemMap[T]>;
   func: any;
 }
 
 type Step =  0 | 1 | 2
 
-export function UpdateStringValue(props: UpdateStringValue) {
+export function UpdateStringValue<T extends keyof ItemMap>(props: UpdateStringValue<T>) {
 
   const [value, setNewValue] = useState<string>('')
   const [step, setStep] = useState<Step>(0)
+
+  const key = props.item
+  const itemObj: ItemMap[T] = props[key]
 
   const examples = () => {
     if(props.dataName === 'timeLiveToken') {
@@ -42,13 +56,20 @@ export function UpdateStringValue(props: UpdateStringValue) {
     return value
   }
 
+  const updateItem = () => {
+    if (props.item === 'user') return props.pickUser
+    if (props.item === 'comp') return props.pickComp
+    if (props.item === 'staffUser') return props.pickStaffUser
+    if (props.item === 'service') return props.pickService
+  }
+
   const defaultItem = () => {
     return (
       <Group gap={7} align="flex-start">
         <Tooltip fz="xs" label={props.text?.edit} position="top" transitionProps={{ duration: 0 }}>
           <IconEdit size={20} color='red'style={{ cursor: 'pointer' }} onClick={() => setStep(2)}/>
         </Tooltip>
-        <Text>{props.user[props.dataName]}</Text>
+        <Text>{itemObj[props.dataName] as unknown as string}</Text>
       </Group>
     )
   }
@@ -60,7 +81,7 @@ export function UpdateStringValue(props: UpdateStringValue) {
         <IconEdit size={20} color='red'style={{ cursor: 'pointer' }} onClick={() => setStep(2)}/>
       </Tooltip>
         <IconCircleCheck size={20} color='green'/>
-        <Text>{props.user[props.dataName]}</Text>
+        <Text>{itemObj[props.dataName] as unknown as string}</Text>
     </Group>
     )
   }
@@ -82,7 +103,7 @@ export function UpdateStringValue(props: UpdateStringValue) {
             if(valid()) {
               props.setLoadingText(props.text?.updatingData)
               props.setLoaderShow.open()
-              const res = await props.func(props.dataName, value, props.pickUser, props.setLoginedUsers)
+              const res = await props.func(props.dataName, value, updateItem(), props.setLoginedUsers)
               if(!res) {
                 props.setErrorStatus(true)
                 props.setLoadingText(props.text?.itWasErrorLate)
@@ -101,7 +122,7 @@ export function UpdateStringValue(props: UpdateStringValue) {
           }}
         value={value}
         variant="unstyled"
-          placeholder={props.user[props.dataName]}
+          placeholder={itemObj[props.dataName] as unknown as string}
           autoFocus
         />
       </Group>

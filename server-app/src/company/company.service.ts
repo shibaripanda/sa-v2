@@ -13,6 +13,10 @@ export class CompanyService {
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
   ) {}
 
+  async updateCompanyData(_id: Types.ObjectId, data: object) {
+    return await this.companyModel.updateOne({ _id }, data);
+  }
+
   async addServiceToCompany(
     company_id: Types.ObjectId,
     service_id: Types.ObjectId,

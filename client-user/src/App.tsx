@@ -14,6 +14,8 @@ import { StaffUser } from "./interfaces/staffUser";
 import { Company } from "./interfaces/company";
 import { UserClass } from "./classes/UserClass";
 import { StaffUserClass } from "./classes/StaffUserClass";
+import { CompanyClass } from "./classes/CompanyClass";
+import { ServiceClass } from "./classes/ServiceClass";
 
 export default function App() {
 
@@ -22,10 +24,10 @@ export default function App() {
   const [loginedUsers, setLoginedUsers] = useState<User[]>(JSON.parse(sessionStorage.getItem('loginedUsers')!) ?? [])
 
   const [user, setUser] = useState<UserClass | null>(new UserClass(JSON.parse(sessionStorage.getItem('user')!)) ?? null)
-  const [service, setService] = useState<Service | null>(JSON.parse(sessionStorage.getItem('service')!) ?? null)
+  const [service, setService] = useState<ServiceClass | null>(new ServiceClass(JSON.parse(sessionStorage.getItem('service')!)) ?? null)
 
   const [staffUser, setStaffUser] = useState<StaffUserClass | null>(new StaffUserClass(JSON.parse(sessionStorage.getItem('staffUser')!)) ?? null)
-  const [comp, setComp] = useState<Company | null>(JSON.parse(sessionStorage.getItem('comp')!) ?? null)
+  const [comp, setComp] = useState<CompanyClass | null>(new CompanyClass(JSON.parse(sessionStorage.getItem('comp')!)) ?? null)
 
   const [loadingText, setLoadingText] = useState<string>(text?.loading ?? 'Loading')
   const [loaderShow, setLoaderShow] = useDisclosure(false)
@@ -51,12 +53,12 @@ export default function App() {
   const pickComp = (comp: Company | null) => {
     if(comp) sessionStorage.setItem('comp', JSON.stringify(comp))
     else sessionStorage.removeItem('comp')
-    setComp(comp)
+    setComp(comp && new CompanyClass(comp))
   }
   const pickService = (service: Service | null) => {
     if(service) sessionStorage.setItem('service', JSON.stringify(service))
     else sessionStorage.removeItem('service')
-    setService(service)
+    setService(service && new ServiceClass(service))
   }
   const pickUser = (user: User | null) => {
     if(user) {
@@ -88,6 +90,7 @@ export default function App() {
         pickService={pickService}
         pickUser={pickUser}
         pickStaffUser={pickStaffUser}
+        pickComp={pickComp}
         text={text}
         setText={setText}
         leng={leng}

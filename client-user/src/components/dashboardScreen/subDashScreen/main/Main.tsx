@@ -1,4 +1,5 @@
 import { DashScreenInterface, Order } from '../../mainScreen/Dashboard';
+import { CompanySettings } from './companySettings/CompanySettings';
 import { MyUserSettings } from './myUserSettings/MyUserSettings';
 import { Orders } from './orders/Orders';
 
@@ -14,11 +15,12 @@ export function Main(props: MainInterface) {
   const dashboards = [
     <Orders {...props}/>,
     <MyUserSettings {...props}/>,
-    <div>hello2</div>,
-    <div>hello3</div>,
-    <div>hello4</div>,
-    <div>hello5</div>,
-    <div>hello6</div>,
+    <CompanySettings {...props}/>,
+    <div>Service settings</div>,
+    <div>Roles settings</div>,
+    <div>Library</div>,
+    <div>Warehouse</div>,
+    <div>Supplier</div>,
   ]
 
   const showDashboard = () => {

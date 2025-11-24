@@ -1,17 +1,17 @@
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from '../subDashScreen/navBar/NavBar';
-import { Service } from '../../../interfaces/service';
 import { TextLib } from '../../../interfaces/textLib';
-import { IconHome2, IconUser } from '@tabler/icons-react';
+import { IconBook, IconBuildingCastle, IconBuildingStore, IconBuildingWarehouse, IconCircles, IconHome2, IconMapPin, IconUser } from '@tabler/icons-react';
 import { Header } from '../subDashScreen/header/Header';
 import { useEffect, useState } from 'react';
 import { Main } from '../subDashScreen/main/Main';
 import { useMediaQuery } from '@mantine/hooks'
-import { Company } from '../../../interfaces/company';
-import { StaffUser } from '../../../interfaces/staffUser';
 import { FooterLine } from '../subDashScreen/footer/FooterLine';
 import { UserClass } from '../../../classes/UserClass';
+import { CompanyClass } from '../../../classes/CompanyClass';
+import { ServiceClass } from '../../../classes/ServiceClass';
+import { StaffUserClass } from '../../../classes/StaffUserClass';
 
 const orderViewVariants = ['Table default', 'Cards (1 line)', 'Cards (2 line)', 'Cards (3 line)', 'Cards (4 line)', 'Cards (5 line)', 'Cards (6 line)', 'Cards (8 line)', 'Cards (10 line)']
 
@@ -122,14 +122,14 @@ const orders_Test = [
     },
 ];
 const navBarData_Test = [
-    { icon: IconHome2, label: 'Orders dashboard' },
-    { icon: IconUser, label: 'My user settings' },
-    // { icon: IconGauge, label: 'Dashboard' },
-    // { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-    // { icon: IconCalendarStats, label: 'Releases' },
-    // { icon: IconUser, label: 'Account' },
-    // { icon: IconFingerprint, label: 'Security' },
-    // { icon: IconSettings, label: 'Settings' },
+    { icon: IconHome2, label: 'Dashboard' },
+    { icon: IconUser, label: 'User settings' },
+    { icon: IconBuildingCastle, label: 'Company settings' },
+    { icon: IconMapPin, label: 'Service settings' },
+    { icon: IconCircles, label: 'Roles settings' },
+    { icon: IconBook, label: 'Library' },
+    { icon: IconBuildingWarehouse, label: 'Warehouse' },
+    { icon: IconBuildingStore, label: 'Supplier' },
 ];
 
 type DropHeadMenu = 
@@ -158,12 +158,13 @@ export interface Order {
 
 export interface DashScreenInterface {
     user: UserClass;
-    service: Service;
-    comp: Company;
-    staffUser: StaffUser;
+    service: ServiceClass;
+    comp: CompanyClass;
+    staffUser: StaffUserClass;
     pickService: any;
     pickUser: any;
     pickStaffUser: any;
+    pickComp: any;
     text: TextLib | null;
     setText: any;
     leng: string;
