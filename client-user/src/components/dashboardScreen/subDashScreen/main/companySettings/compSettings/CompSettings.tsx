@@ -4,11 +4,17 @@ import { UpdateStringValue } from '../../../../../subComponents/updateStringValu
 // import { TableHistoryLocation } from '.././tableHistoryLocation/TableHistoryLocation';
 // import { IconCancel, IconCircleCheck } from '@tabler/icons-react';
 import { useState } from 'react';
+import { TableServices } from '../tableServices/TableServices';
+import { useDisclosure } from '@mantine/hooks';
+import { ModalEditStatus } from '../modalEditStatus/ModalEditStatus';
+import { StatusClass } from '../../../../../../classes/StatusClass';
 
 export function CompSettings(props: MainInterface) {
 
   const [deleteAccountString, setDeleteAccountString] = useState<string>('')
   const [deleteAccountCheckBox, setDeleteAccountCheckBox] = useState<boolean>(false)
+  const [modalStatus, setModalStatus] = useDisclosure(false)
+  const [selectedStatus, setSelectedStatus] = useState<StatusClass | null>(null)
 
   const warningSize = () => {
       if(deleteAccountCheckBox && deleteAccountString === props.user.name) {
@@ -18,6 +24,14 @@ export function CompSettings(props: MainInterface) {
           return 'md'
       }
       return 'xs'
+  }
+  const editStatus = async (status: StatusClass) => {
+    setSelectedStatus(status)
+    setModalStatus.open()
+  }
+  const addNewStatus = async () => {
+    const res = await props.comp.addNewStatus(props.pickComp)
+    console.log(res)
   }
 
   // const deleteAccount = async () => {
@@ -43,19 +57,13 @@ export function CompSettings(props: MainInterface) {
             `id: ${props.comp._id}`
           ].map((item, i) => <Text key={`1-${i}`}>{item}</Text>),
           [
-            <UpdateStringValue {...props} item="comp" dataName="name" func={props.comp.updateCompany.bind(props.comp)} key={`up1`}/>,
-            <Space h="md" key={`up2`}/>,
-            <UpdateStringValue {...props} item="comp" dataName="mainOfficeData" func={props.comp.updateCompany.bind(props.comp)} key={`up3`}/>,
-            <Space h="md" key={`up4`}/>,
-            <UpdateStringValue {...props} item="comp" dataName="mainOfficeContacts" func={props.comp.updateCompany.bind(props.comp)} key={`up5`}/>
+            <UpdateStringValue {...props} item="comp" dataName="name" func={props.comp.updateCompany.bind(props.comp)}/>
           ],
           [
-            `${props.user.location} ip: ${props.user.ip}`,
-            `${props.text?.sessionwillended}:`,
-            props.user.getDateSessionEnd()
-          ].map((item, i) => <Text key={`3-${i}`}>{item}</Text>)
+            <Text c='green'>{props.user._id === props.comp.user_owner_id ? props.text?.youOwner : '--'}</Text>
+          ]
         ].map((item, i) => 
-          <Grid.Col key={`main-${i}`} span={{ base: 12, sm: 4 }}>
+          <Grid.Col key={`Company-${i}`} span={{ base: 12, sm: 4 }}>
             <Flex direction="column" align="center" justify="center" h="100%">
               {item}
             </Flex>
@@ -63,20 +71,47 @@ export function CompSettings(props: MainInterface) {
         )}
       </Grid>
 
-      {/* <Divider my="lg" label="Google Auth" labelPosition="left" />
+      <Divider my="lg" label="Info" labelPosition="left" />
+      <Grid w="100%" gutter="md">
+        {[
+          <UpdateStringValue {...props} item="comp" dataName="mainOfficeData" func={props.comp.updateCompany.bind(props.comp)}/>
+        ].map((item, i) => 
+          <Grid.Col key={`Info-${i}`} span={{ base: 12, sm: 12 }}>
+            <Flex direction="column" align="center" justify="center" h="100%">
+              {item}
+            </Flex>
+          </Grid.Col>
+        )}
+      </Grid>
+
+      <Divider my="lg" label="Contacts" labelPosition="left" />
+      <Grid w="100%" gutter="md">
+        {[
+          <UpdateStringValue {...props} item="comp" dataName="mainOfficeContacts" func={props.comp.updateCompany.bind(props.comp)}/>
+        ].map((item, i) => 
+          <Grid.Col key={`Contacts-${i}`} span={{ base: 12, sm: 12 }}>
+            <Flex direction="column" align="center" justify="center" h="100%">
+              {item}
+            </Flex>
+          </Grid.Col>
+        )}
+      </Grid>
+
+      <Divider my="lg" label="Taxes" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
           [
-            props.user.email ? <IconCircleCheck key='1' size={45} color='green'/> : <IconCancel key='1' size={45} color='red'/>
+            <Text>Налог %</Text>,
+            <Space h="xs"/>,
+            <UpdateStringValue {...props} item="comp" dataName="defaulTaxProcent" func={props.comp.updateCompany.bind(props.comp)}/>
           ],
           [
-            props.user.email ? props.user.email : props.text?.connect,
-          ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>),
-          // [
-          //   props.user.email ? 'Disconect' : 'Connect'
-          // ]
+            <Text>Наценка на запчасти %</Text>,
+            <Space h="xs"/>,
+            <UpdateStringValue {...props} item="comp" dataName="defaultProfitPartProcent" func={props.comp.updateCompany.bind(props.comp)}/>
+          ]
         ].map((item, i) => 
-          <Grid.Col key={`main-${i}`} span={{ base: 12, sm: 6 }}>
+          <Grid.Col key={`Taxes-${i}`} span={{ base: 12, sm: 6 }}>
             <Flex direction="column" align="center" justify="center" h="100%">
               {item}
             </Flex>
@@ -84,31 +119,26 @@ export function CompSettings(props: MainInterface) {
         )}
       </Grid>
 
-      <Divider my="lg" label="Telegram Auth" labelPosition="left" />
+      <Divider my="lg" label="Statuses" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
-          [
-            props.user.telegramId ? <IconCircleCheck key='1' size={45} color='green'/> : <IconCancel key='1' size={45} color='red'/>
-          ],
-          [
-            props.user.telegramId ? '@' + props.user.telegramUserName || props.user.telegramId : props.text?.connect,
-          ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>),
-          // [
-          //   props.user.telegramId ? 'Disconect' : 'Connect'
-          // ]
+          ...props.comp.statuses_ids.map((s, i) => <Button key={`status-${i}`} onClick={() => editStatus(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
         ].map((item, i) => 
-          <Grid.Col  key={`main-${i}`} span={{ base: 12, sm: 6 }}>
+          <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
             <Flex direction="column" align="center" justify="center" h="100%">
               {item}
             </Flex>
           </Grid.Col>
         )}
       </Grid>
+      <Space h="xl"/>
+      <Button variant='default' size='xs' onClick={addNewStatus}>Add new Status</Button>
+      <ModalEditStatus selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} modalStatus={modalStatus} setModalStatus={setModalStatus}/>
 
-      <Divider my="lg" label="Sessions" labelPosition="left" />
-      <TableHistoryLocation historyLogin={props.user.historyLogin} text={props.text}/>*/}
+      <Divider my="lg" label="Services" labelPosition="left" />
+      <TableServices services={props.comp.services_ids} text={props.text}/>
 
-      <Divider my="lg" label="Delete User" labelPosition="left" />
+      <Divider my="lg" label="Delete Company" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
           [
@@ -139,7 +169,7 @@ export function CompSettings(props: MainInterface) {
             <Text key='j' c='red' size={warningSize()}>W A R N I N G</Text>
           ]
         ].map((item, i) => 
-          <Grid.Col  key={`main-${i}`} span={{ base: 12, sm: 2 }}>
+          <Grid.Col  key={`Delete Company-${i}`} span={{ base: 12, sm: 2 }}>
             <Flex direction="column" align="center" justify="center" h="100%">
               {item}
             </Flex>

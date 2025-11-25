@@ -40,6 +40,28 @@ export class AppService implements OnModuleInit {
     // });
   }
 
+  async addNewStatus(company_id: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const status_id = await this.statusService.createNewOpenStatus(session);
+      await this.companyService.addStatusToCompany(
+        company_id,
+        status_id,
+        session,
+      );
+
+      await session.commitTransaction();
+      return await this.companyService.getCompanyWithRelations(company_id);
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
   async deleteAccount(user_owner_id: Types.ObjectId) {
     const session = await this.connection.startSession();
     session.startTransaction();

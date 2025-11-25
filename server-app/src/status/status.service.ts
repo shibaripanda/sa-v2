@@ -17,6 +17,11 @@ export class StatusService {
     await this.statusModel.deleteMany({ _id: { $in: ids } }, { session });
   }
 
+  async createNewOpenStatus(session?: ClientSession): Promise<Types.ObjectId> {
+    const res = await this.statusModel.create([{ freez: false }], { session });
+    return res[0]._id;
+  }
+
   async createNewStatus(session?: ClientSession): Promise<Types.ObjectId> {
     const res = await this.statusModel.create([{ freez: true }], { session });
     return res[0]._id;

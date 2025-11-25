@@ -23,11 +23,11 @@ export default function App() {
   const [text, setText] = useState<TextLib | null>(JSON.parse(sessionStorage.getItem('text')!) ?? null)
   const [loginedUsers, setLoginedUsers] = useState<User[]>(JSON.parse(sessionStorage.getItem('loginedUsers')!) ?? [])
 
-  const [user, setUser] = useState<UserClass | null>(new UserClass(JSON.parse(sessionStorage.getItem('user')!)) ?? null)
-  const [service, setService] = useState<ServiceClass | null>(new ServiceClass(JSON.parse(sessionStorage.getItem('service')!)) ?? null)
+  const [user, setUser] = useState<UserClass | null>(sessionStorage.getItem('user') ? new UserClass(JSON.parse(sessionStorage.getItem('user')!)) : null)
+  const [service, setService] = useState<ServiceClass | null>(sessionStorage.getItem('service') ? new ServiceClass(JSON.parse(sessionStorage.getItem('service')!)) : null)
 
-  const [staffUser, setStaffUser] = useState<StaffUserClass | null>(new StaffUserClass(JSON.parse(sessionStorage.getItem('staffUser')!)) ?? null)
-  const [comp, setComp] = useState<CompanyClass | null>(new CompanyClass(JSON.parse(sessionStorage.getItem('comp')!)) ?? null)
+  const [staffUser, setStaffUser] = useState<StaffUserClass | null>(sessionStorage.getItem('staffUser') ? new StaffUserClass(JSON.parse(sessionStorage.getItem('staffUser')!)) : null)
+  const [comp, setComp] = useState<CompanyClass | null>(sessionStorage.getItem('comp') ? new CompanyClass(JSON.parse(sessionStorage.getItem('comp')!)) : null)
 
   const [loadingText, setLoadingText] = useState<string>(text?.loading ?? 'Loading')
   const [loaderShow, setLoaderShow] = useDisclosure(false)

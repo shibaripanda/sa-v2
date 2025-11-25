@@ -15,7 +15,7 @@ type ItemMap = {
 };
 
 type StringKeys<T> = {
-  [K in keyof T]: T[K] extends string ? K : never
+  [K in keyof T]: T[K] extends string | number ? K : never
 }[keyof T];
 
 interface UpdateStringValue<T extends keyof ItemMap> extends MainInterface {
@@ -45,10 +45,18 @@ export function UpdateStringValue<T extends keyof ItemMap>(props: UpdateStringVa
         <Text size='sm'>{props.text?.examples}: Tom Smith, Anne Smile ...</Text>
       )
     }
+    if(props.dataName === 'defaulTaxProcent' || props.dataName === 'defaultProfitPartProcent' ) {
+      return (
+        <Text size='sm'>{props.text?.examples}: 0, 5, 10, 15, 25 ... 99</Text>
+      )
+    }
   }
   const valid = () => {
     if(props.dataName === 'timeLiveToken') {
       return /^[1-9][0-9]*h$/.test(value)
+    }
+    if(props.dataName === 'defaulTaxProcent' || props.dataName === 'defaultProfitPartProcent') {
+      return /^[0-9]\d?$/.test(value)
     }
     if(props.dataName === 'name') {
       return /^[\p{L}\p{N} ]+$/u.test(value)

@@ -15,6 +15,6 @@ export interface Service {
     users_staff_ids: string[];
 
     historyServiceLogin: HistoryServiceLogin[];
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

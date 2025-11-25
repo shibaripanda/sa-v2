@@ -1,10 +1,6 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { UniversalJwtGuard } from 'src/app/guards/universalJwtGuard';
-// import { CurrentUser } from 'src/app/decorators/current-user.decorator';
-// import { User } from 'src/app/interfaces/user';
-// import { CurrentUser } from 'src/app/decorators/current-user.decorator';
-// import { User } from 'src/app/interfaces/user';
 import { UpdateCompanyDataDto } from './dto/updateCompanyData.dto';
 
 @Controller('company')
