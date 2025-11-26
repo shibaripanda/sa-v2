@@ -13,6 +13,16 @@ export class StatusService {
     @InjectModel(Status.name) private statusModel: Model<StatusDocument>,
   ) {}
 
+  async editStatus(status_id: Types.ObjectId, data: { [key: string]: string }) {
+    return await this.statusModel.findOneAndUpdate({ _id: status_id }, data, {
+      returnDocument: 'after',
+    });
+  }
+
+  async deleteStatus(status_id: Types.ObjectId) {
+    return await this.statusModel.deleteOne({ _id: status_id });
+  }
+
   async deleteManyStatuses(ids: Types.ObjectId[], session?: ClientSession) {
     await this.statusModel.deleteMany({ _id: { $in: ids } }, { session });
   }

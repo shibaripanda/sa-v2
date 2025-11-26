@@ -26,7 +26,7 @@ export function CompSettings(props: MainInterface) {
       return 'xs'
   }
   const editStatus = async (status: StatusClass) => {
-    setSelectedStatus(status)
+    setSelectedStatus(new StatusClass(status))
     setModalStatus.open()
   }
   const addNewStatus = async () => {
@@ -133,7 +133,7 @@ export function CompSettings(props: MainInterface) {
       </Grid>
       <Space h="xl"/>
       <Button variant='default' size='xs' onClick={addNewStatus}>Add new Status</Button>
-      <ModalEditStatus selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} modalStatus={modalStatus} setModalStatus={setModalStatus}/>
+      <ModalEditStatus {...props} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} modalStatus={modalStatus} setModalStatus={setModalStatus}/>
 
       <Divider my="lg" label="Services" labelPosition="left" />
       <TableServices services={props.comp.services_ids} text={props.text}/>

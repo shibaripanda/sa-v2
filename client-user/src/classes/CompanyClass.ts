@@ -22,24 +22,4 @@ export class CompanyClass extends (Model as new (data: Company) => ModelWithData
     pickComp(updatedCompany)
     return true
   }
-
-  // async deleteAccount(exit: () => void, setLoginedUsers: (user: User) => void) {
-  //   const res = await this.axiosClass.axiosAuthServer('GET', '/delete-account', 'delete-account')
-  //   if (!res) return false
-  //   this.deleteLoginedUsers(this, setLoginedUsers)
-  //   exit()
-  //   return true
-  // }
-
-  // private deleteLoginedUsers(updatedUser: User, setLoginedUsers: (user: User) => void) {
-  //   const existUsers: User[] = sessionStorage.getItem('loginedUsers') ? JSON.parse(sessionStorage.getItem('loginedUsers')!) : []
-  //   sessionStorage.setItem('loginedUsers', JSON.stringify([...existUsers.filter(user => user._id !== updatedUser._id)]))
-  //   setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
-  // }
-
-  // private updateLoginedUsers(updatedUser: User, setLoginedUsers: (user: User) => void) {
-  //   const existUsers: User[] = sessionStorage.getItem('loginedUsers') ? JSON.parse(sessionStorage.getItem('loginedUsers')!) : []
-  //   sessionStorage.setItem('loginedUsers', JSON.stringify([updatedUser, ...existUsers.filter(user => user._id !== updatedUser._id)]))
-  //   setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
-  // }
 }
