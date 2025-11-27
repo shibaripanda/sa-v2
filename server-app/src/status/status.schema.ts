@@ -10,6 +10,9 @@ export class Status {
 
   @Prop({ required: true, default: false })
   freez: boolean;
+
+  @Prop({ required: true, default: 0 })
+  color: number;
 }
 
 export const StatusSchema = SchemaFactory.createForClass(Status);

@@ -1,4 +1,4 @@
-import { Button, Checkbox, Divider, Flex, Grid, Paper, Space, Text, TextInput } from '@mantine/core';
+import { Button, Checkbox, Divider, Flex, Grid, Group, Paper, Space, Text, TextInput } from '@mantine/core';
 import { MainInterface } from '../../Main';
 import { UpdateStringValue } from '../../../../../subComponents/updateStringValue/UpdateStringValue';
 // import { TableHistoryLocation } from '.././tableHistoryLocation/TableHistoryLocation';
@@ -8,12 +8,15 @@ import { TableServices } from '../tableServices/TableServices';
 import { useDisclosure } from '@mantine/hooks';
 import { ModalEditStatus } from '../modalEditStatus/ModalEditStatus';
 import { StatusClass } from '../../../../../../classes/StatusClass';
+import { buttonColorObj } from '../../../../../subComponents/colorShema/buttonColorObj';
+import { ModalEditStatusLine } from '../modalEditStatus/ModalEditStatusLine';
 
 export function CompSettings(props: MainInterface) {
 
   const [deleteAccountString, setDeleteAccountString] = useState<string>('')
   const [deleteAccountCheckBox, setDeleteAccountCheckBox] = useState<boolean>(false)
   const [modalStatus, setModalStatus] = useDisclosure(false)
+  const [modalStatusLine, setModalStatusLine] = useDisclosure(false)
   const [selectedStatus, setSelectedStatus] = useState<StatusClass | null>(null)
 
   const warningSize = () => {
@@ -122,7 +125,7 @@ export function CompSettings(props: MainInterface) {
       <Divider my="lg" label="Statuses" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
-          ...props.comp.statuses_ids.map((s, i) => <Button key={`status-${i}`} onClick={() => editStatus(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
+          ...props.comp.statuses_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`status-${i}`} onClick={() => editStatus(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
         ].map((item, i) => 
           <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
             <Flex direction="column" align="center" justify="center" h="100%">
@@ -132,8 +135,12 @@ export function CompSettings(props: MainInterface) {
         )}
       </Grid>
       <Space h="xl"/>
-      <Button variant='default' size='xs' onClick={addNewStatus}>Add new Status</Button>
+      <Group justify='space-between'>
+        <Button variant='default' size='xs' onClick={addNewStatus}>Add new Status</Button>
+        <Button variant='default' size='xs' onClick={setModalStatusLine.open}>Порядок статусов</Button>
+      </Group>
       <ModalEditStatus {...props} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} modalStatus={modalStatus} setModalStatus={setModalStatus}/>
+      <ModalEditStatusLine {...props} modalStatusLine={modalStatusLine} setModalStatusLine={setModalStatusLine}/>
 
       <Divider my="lg" label="Services" labelPosition="left" />
       <TableServices services={props.comp.services_ids} text={props.text}/>
