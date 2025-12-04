@@ -32,7 +32,7 @@ export function ModalEditStatusLine(props: ModalEditStatusInterface) {
 
         return (
             <>
-                <Modal radius={'10px'} size={'lg'} opened={props.modalStatusLine} 
+                <Modal radius={'10px'} size={'sm'} opened={props.modalStatusLine} 
                     title={"Порядок статусов"} 
                     withCloseButton={true}
                     onClose={() => {

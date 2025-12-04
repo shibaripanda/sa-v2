@@ -15,27 +15,23 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import cx from 'clsx';
-import { Text } from '@mantine/core';
+import { Button, Grid, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import classes from './DndList.module.css';
 import { MainInterface } from '../../Main';
-
-const data = [
-  { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
-  { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
-  { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
-  { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
-  { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
-];
+import { StatusClass } from '../../../../../../classes/StatusClass';
+import { buttonColorObj } from '../../../../../subComponents/colorShema/buttonColorObj';
+import { IconGripVertical } from '@tabler/icons-react';
+import { useEffect } from 'react';
 
 interface ItemProps {
-  item: (typeof data)[number];
-  index: number; // kept if needed elsewhere
+  item: StatusClass;
+  index: number;
 }
 
-function SortableItem({ item }: ItemProps) {
+function SortableItem({ item, index}: ItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: item.symbol,
+    id: item._id,
   });
 
   const style: React.CSSProperties = {
@@ -44,26 +40,45 @@ function SortableItem({ item }: ItemProps) {
   };
 
   return (
-    <div
+    <Grid
       ref={setNodeRef}
       style={style}
       className={cx(classes.item, { [classes.itemDragging]: isDragging })}
       {...attributes}
       {...listeners}
+      justify="space-between" align="center"
     >
-      <Text className={classes.symbol}>{item.symbol}</Text>
-      <div>
-        <Text>{item.name}</Text>
-        <Text c="dimmed" size="sm">
-          Position: {item.position} • Mass: {item.mass}
-        </Text>
-      </div>
-    </div>
+      <Grid.Col span={3} mt='xs'>
+        <IconGripVertical size={'30px'}/>
+      </Grid.Col>
+      <Grid.Col span={7}>
+          <Text>{item.name}</Text>
+          <Text c="dimmed" size="sm">
+            Position: {index + 1}
+          </Text>
+      </Grid.Col>
+      <Grid.Col span={2}>
+        <Button fullWidth size='xs' style={buttonColorObj(item.color)}></Button>
+      </Grid.Col>
+    </Grid> 
   );
 }
 
 export function DragAndDrop(props: MainInterface) {
   const [state, handlers] = useListState(props.comp.statuses_ids);
+
+  useEffect(() => {
+    const updateStatusLine = async (state: StatusClass[]) => {
+      const res = await props.comp.updateStatusLine(state, props.pickComp)
+      console.log(res)
+    }
+
+    if (JSON.stringify(state) !== JSON.stringify(props.comp.statuses_ids)) {
+      const res = updateStatusLine(state)
+      console.log(res)
+      if (!res) handlers.setState(props.comp.statuses_ids)
+    }
+  }, [state])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -75,16 +90,16 @@ export function DragAndDrop(props: MainInterface) {
     if (!over || active.id === over.id) {
       return;
     }
-    const oldIndex = state.findIndex((i) => i.symbol === active.id);
-    const newIndex = state.findIndex((i) => i.symbol === over.id);
+    const oldIndex = state.findIndex((i) => i._id === active.id);
+    const newIndex = state.findIndex((i) => i._id === over.id);
     handlers.setState(arrayMove(state, oldIndex, newIndex));
   };
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={state.map((i) => i.symbol)} strategy={verticalListSortingStrategy}>
+      <SortableContext items={state.map((i) => i._id)} strategy={verticalListSortingStrategy}>
         {state.map((item, index) => (
-          <SortableItem key={item.symbol} item={item} index={index} />
+          <SortableItem key={item._id} item={item} index={index} />
         ))}
       </SortableContext>
     </DndContext>

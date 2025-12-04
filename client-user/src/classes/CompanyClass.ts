@@ -1,10 +1,20 @@
 import { Company } from "../interfaces/company"
 import { AxiosClass } from "./AxiosClass"
 import { Model, ModelWithData } from "./interfacesClass"
+import { StatusClass } from "./StatusClass"
 
 export class CompanyClass extends (Model as new (data: Company) => ModelWithData<Company>) {
 
   private axiosClass = new AxiosClass()
+
+  async updateStatusLine(newLine: StatusClass[], pickComp: (company: Company) => void) {
+    const res = await this.axiosClass.axiosAppServer('POST', '/company/update-status-line', 'update-status-line', {statuses_ids: newLine.map(s => s._id)}, this._id)
+    console.log(res)
+    if (!res) return false
+    const updatedCompany = { ...this, statuses_ids: newLine };
+    pickComp(updatedCompany)
+    return true
+  }
 
   async addNewStatus(pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/app/add-new-status', 'add-new-status', {company_id: this._id})
