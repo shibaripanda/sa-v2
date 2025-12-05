@@ -1,4 +1,4 @@
-import { Button, Divider, Group, HueSlider, Modal, Space, Text } from '@mantine/core'
+import { Button, Group, HueSlider, Modal, Space } from '@mantine/core'
 import { StatusClass } from '../../../../../../classes/StatusClass';
 import { MainInterface } from '../../Main';
 import { UpdateStringValueStatus } from '../../../../../subComponents/updateStringValue/UpdateStringValueStatus';
@@ -20,12 +20,12 @@ export function ModalEditStatus(props: ModalEditStatusInterface) {
 
         console.log(props.selectedStatus)
         const deleteStatus = async () => {
-            props.setLoadingText('Удаление статуса')
+            props.setLoadingText(props.text?.deleting)
             props.setLoaderShow.open()
             const res = await props.selectedStatus?.deleteStatus(props.selectedStatus._id, props.comp, props.pickComp)
             if (!res) {
                 props.setErrorStatus(true)
-                props.setLoadingText('оШИбКа')
+                props.setLoadingText(props.text?.error)
                 return
             } 
             props.setLoaderShow.close()
@@ -47,9 +47,10 @@ export function ModalEditStatus(props: ModalEditStatusInterface) {
                     }}
                     // zIndex={9999}
                     >
-                    {props.comp.statuses_ids.map(s => <Text>{s.name}</Text>)}
+                    {/* {props.comp.statuses_ids.map(s => <Text>{s.name}</Text>)} */}
                     <Space h='lg'/>
                     <HueSlider value={statusColor} onChange={onChangeStatusColor} />
+                    <Space h='lg'/>
                     <Space h='lg'/>
                     <Group justify='space-between'>
                         {statusColor !== props.selectedStatus?.color ? (
@@ -58,10 +59,10 @@ export function ModalEditStatus(props: ModalEditStatusInterface) {
                             size="xs"
                             onClick={() => onChangeStatusColor(props.selectedStatus?.color!)}
                         >
-                            Вернуть оригинальный цвет
+                            {props.text?.original}
                         </Button>
                         ) : (<div></div>)}
-                        <Button size="xs" color='red' onClick={deleteStatus}>{props.text?.deleting}</Button>
+                        <Button size="xs" color='red' onClick={deleteStatus}>{props.text?.delete}</Button>
                     </Group>
                 </Modal>
             </>

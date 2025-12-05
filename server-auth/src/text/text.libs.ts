@@ -34,6 +34,61 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Безвозвратное удаление компании и всех её сервисов и заказов',
+    index: 'deleteCompanyInfo',
+    update: false,
+  },
+  {
+    rutext: 'Удалить компанию',
+    index: 'deleteCompany',
+    update: false,
+  },
+  {
+    rutext: 'Название компании',
+    index: 'companyName',
+    update: false,
+  },
+  {
+    rutext: 'Ошибка',
+    index: 'error',
+    update: false,
+  },
+  {
+    rutext: 'Оригинал',
+    index: 'original',
+    update: false,
+  },
+  {
+    rutext: 'Удалить',
+    index: 'delete',
+    update: false,
+  },
+  {
+    rutext: 'Порядок статусов',
+    index: 'statusLine',
+    update: false,
+  },
+  {
+    rutext: 'Добавить новый статус',
+    index: 'addNewStatus',
+    update: false,
+  },
+  {
+    rutext: 'Наценка на запчасть по умолчанию',
+    index: 'taxPartDefault',
+    update: false,
+  },
+  {
+    rutext: 'Налог по умолчанию',
+    index: 'taxDefault',
+    update: false,
+  },
+  {
+    rutext: 'Настройки компании',
+    index: 'companySettings',
+    update: false,
+  },
+  {
     rutext: 'Удаление',
     index: 'deleting',
     update: false,

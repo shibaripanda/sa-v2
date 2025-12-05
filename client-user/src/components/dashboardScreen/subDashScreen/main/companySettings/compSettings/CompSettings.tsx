@@ -20,10 +20,10 @@ export function CompSettings(props: MainInterface) {
   const [selectedStatus, setSelectedStatus] = useState<StatusClass | null>(null)
 
   const warningSize = () => {
-      if(deleteAccountCheckBox && deleteAccountString === props.user.name) {
+      if(deleteAccountCheckBox && deleteAccountString === props.comp.name) {
           return 'xl'
       }
-      if(deleteAccountString === props.user.name) {
+      if(deleteAccountString === props.comp.name) {
           return 'md'
       }
       return 'xs'
@@ -51,7 +51,7 @@ export function CompSettings(props: MainInterface) {
 
   return (
     <Paper withBorder radius="md" p="xs">
-      <Text>{'Настройки компании'}</Text>
+      <Text>{props.text?.companySettings}</Text>
 
       <Divider my="lg" label="Company" labelPosition="left" />
       <Grid w="100%" gutter="md">
@@ -104,12 +104,12 @@ export function CompSettings(props: MainInterface) {
       <Grid w="100%" gutter="md">
         {[
           [
-            <Text>Налог %</Text>,
+            <Text>{props.text?.taxDefault} %</Text>,
             <Space h="xs"/>,
             <UpdateStringValue {...props} item="comp" dataName="defaulTaxProcent" func={props.comp.updateCompany.bind(props.comp)}/>
           ],
           [
-            <Text>Наценка на запчасти %</Text>,
+            <Text>{props.text?.taxPartDefault} %</Text>,
             <Space h="xs"/>,
             <UpdateStringValue {...props} item="comp" dataName="defaultProfitPartProcent" func={props.comp.updateCompany.bind(props.comp)}/>
           ]
@@ -136,8 +136,8 @@ export function CompSettings(props: MainInterface) {
       </Grid>
       <Space h="xl"/>
       <Group justify='space-between'>
-        <Button variant='default' size='xs' onClick={addNewStatus}>Add new Status</Button>
-        <Button variant='default' size='xs' onClick={setModalStatusLine.open}>Порядок статусов</Button>
+        <Button variant='default' size='xs' onClick={addNewStatus}>{props.text?.addNewStatus}</Button>
+        <Button variant='default' size='xs' onClick={setModalStatusLine.open}>{props.text?.statusLine}</Button>
       </Group>
       <ModalEditStatus {...props} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} modalStatus={modalStatus} setModalStatus={setModalStatus}/>
       <ModalEditStatusLine {...props} modalStatusLine={modalStatusLine} setModalStatusLine={setModalStatusLine}/>
@@ -154,23 +154,23 @@ export function CompSettings(props: MainInterface) {
           [
             <Text key='b' size='sm' c={'red'}>{props.text?.step} 1</Text>,
             <Space key='c' h='xs'/>,
-            <TextInput key='d' value={deleteAccountString} placeholder={props.text?.yourname} onChange={(u) => setDeleteAccountString(u.target.value)}/>
+            <TextInput key='d' value={deleteAccountString} placeholder={props.text?.companyName} onChange={(u) => setDeleteAccountString(u.target.value)}/>
           ],
           [
-            <Text key='z' size='sm' c={deleteAccountString !== props.user.name ? 'grey' : 'red'}>{props.text?.step} 2</Text>,
+            <Text key='z' size='sm' c={deleteAccountString !== props.comp.name ? 'grey' : 'red'}>{props.text?.step} 2</Text>,
             <Space key='x' h='xs'/>,
-            <Checkbox key='v' size='md' disabled={deleteAccountString !== props.user.name} color='red' checked={deleteAccountCheckBox} onChange={(event) => setDeleteAccountCheckBox(event.currentTarget.checked)}/>
+            <Checkbox key='v' size='md' disabled={deleteAccountString !== props.comp.name} color='red' checked={deleteAccountCheckBox} onChange={(event) => setDeleteAccountCheckBox(event.currentTarget.checked)}/>
           ],
           [
-            <Text key='n' size='sm' c={!deleteAccountCheckBox || deleteAccountString !== props.user.name ? 'grey' : 'red'}>{props.text?.step} 3</Text>,
+            <Text key='n' size='sm' c={!deleteAccountCheckBox || deleteAccountString !== props.comp.name ? 'grey' : 'red'}>{props.text?.step} 3</Text>,
             <Space key='m' h='xs'/>,
-            <Button key='g' color='red' disabled={!deleteAccountCheckBox || deleteAccountString !== props.user.name}
+            <Button key='g' color='red' disabled={!deleteAccountCheckBox || deleteAccountString !== props.comp.name}
             onClick={async () => {
               // await deleteAccount()
-            }}>{props.text?.deleteaccount}</Button>
+            }}>{props.text?.deleteCompany}</Button>
           ],
           [
-            props.text?.deleteaccountInfo
+            props.text?.deleteCompanyInfo
           ],
           [
             <Text key='j' c='red' size={warningSize()}>W A R N I N G</Text>
