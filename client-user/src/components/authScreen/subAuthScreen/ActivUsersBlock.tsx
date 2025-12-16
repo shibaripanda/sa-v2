@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, Space } from "@mantine/core"
+import { Button, Center, Divider, Grid, Slider, Space, Text } from "@mantine/core"
 import { googleLogout } from "@react-oauth/google";
 import { AuthScreenInterface } from "../mainScreen/AuthScreen";
 import { IconLogout } from "@tabler/icons-react";
@@ -59,6 +59,20 @@ export function ActivUsersBlock(props: ServiceMod) {
             </React.Fragment>
             )}
             </Grid>
+            
+            {props.loginedUsers.length > 1 && (
+                <div>
+                    <Space h='lg'/>
+                    <Center><Text size="sm">{props.text?.exit}: {props.onIdleTime} {props.text?.minutes}</Text></Center>
+                    <Slider label={null} color="green" thumbSize={19} size={2} min={0.1} max={30} value={props.onIdleTime} 
+                    onChange={(v) => {
+                        console.log(v)
+                        props.setOnIdleTime(v)
+                        sessionStorage.setItem('onIdleTime', v.toString())
+                    }}
+                    />
+                </div>
+                )}
             <Button
                 color='red'
                 fullWidth

@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "./theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "./interfaces/user";
 import { AuthScreen } from "./components/authScreen/mainScreen/AuthScreen";
 import { TextLib } from "./interfaces/textLib";
@@ -33,6 +33,8 @@ export default function App() {
   const [loaderShow, setLoaderShow] = useDisclosure(false)
   const [errorStatus, setErrorStatus] = useState<boolean>(false)
 
+  const [onIdleTime, setOnIdleTime] = useState<number>(sessionStorage.getItem('onIdleTime') ? Number(sessionStorage.getItem('onIdleTime'))! : 5)
+
   const onIdle = () => {
     console.log('onIdle')
     if(service && loginedUsers.length > 1) {
@@ -43,7 +45,7 @@ export default function App() {
     }
   };
 
-  useIdleTimer({ timeout: 1000 * 5, onIdle });
+  useIdleTimer({ timeout: 60000 * onIdleTime, onIdle });
 
   const pickStaffUser = (staffUser: StaffUser | null) => {
     if(staffUser) sessionStorage.setItem('staffUser', JSON.stringify(staffUser))
@@ -99,7 +101,8 @@ export default function App() {
         setLoadingText={setLoadingText}
         setLoaderShow={setLoaderShow}
         setErrorStatus={setErrorStatus}
-        exit={exit}/>
+        exit={exit}
+        />
       )
     }
     else{
@@ -118,7 +121,10 @@ export default function App() {
         setText={setText} 
         loginedUsers={loginedUsers} 
         setLoginedUsers={setLoginedUsers}
-        pickService={pickService}/>
+        pickService={pickService}
+        onIdleTime={onIdleTime}
+        setOnIdleTime={setOnIdleTime}
+        />
       )
     }
   }

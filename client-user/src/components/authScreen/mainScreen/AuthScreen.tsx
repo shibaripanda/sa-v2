@@ -36,6 +36,8 @@ export interface AuthScreenInterface {
   setLoaderShow: any;
   setLoadingText: any;
   setErrorStatus: any;
+  onIdleTime: number;
+  setOnIdleTime: any;
 }
 
   export function AuthScreen(props: AuthScreenInterface) {
@@ -56,6 +58,7 @@ export interface AuthScreenInterface {
             {props.text?.hello}
           </Title>
           <ActivUsersBlock {...props} setServiseModal={setServiseModal}/>
+          
           <Space h='md'/>
           <Checkbox
           checked={agreement}
