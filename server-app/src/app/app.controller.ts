@@ -11,6 +11,17 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @UseGuards(UniversalJwtGuard)
+  @Post('/delete-company')
+  async deleteCompany(
+    @Body() data: AddNewStatusDto,
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    console.log(data);
+    return await this.appService.deleteCompany(data.requestData.company_id);
+  }
+
+  @UseGuards(UniversalJwtGuard)
   @Post('/add-new-status')
   async addNewStatus(
     @Body() data: AddNewStatusDto,

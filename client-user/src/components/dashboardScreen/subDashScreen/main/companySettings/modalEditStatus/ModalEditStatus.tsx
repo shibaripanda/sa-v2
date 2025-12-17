@@ -45,9 +45,7 @@ export function ModalEditStatus(props: ModalEditStatusInterface) {
                         props.setModalStatus.close()
                         props.setSelectedStatus(null)
                     }}
-                    // zIndex={9999}
                     >
-                    {/* {props.comp.statuses_ids.map(s => <Text>{s.name}</Text>)} */}
                     <Space h='lg'/>
                     <HueSlider value={statusColor} onChange={onChangeStatusColor} />
                     <Space h='lg'/>
@@ -62,7 +60,7 @@ export function ModalEditStatus(props: ModalEditStatusInterface) {
                             {props.text?.original}
                         </Button>
                         ) : (<div></div>)}
-                        <Button size="xs" color='red' onClick={deleteStatus}>{props.text?.delete}</Button>
+                        {props.comp.statuses_ids.length > 2 && (<Button size="xs" color='red' onClick={deleteStatus}>{props.text?.delete}</Button>)}
                     </Group>
                 </Modal>
             </>

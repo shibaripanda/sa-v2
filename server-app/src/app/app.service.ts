@@ -40,6 +40,84 @@ export class AppService implements OnModuleInit {
     // });
   }
 
+  async deleteCompany(company_id: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      // Получаем компанию с дочерними объектами
+      const comp = await this.companyService.getCompany(company_id, session);
+      if (!comp) throw new Error('Company not found');
+
+      if (comp.services_ids?.length) {
+        await this.serviceService.deleteManyServices(
+          comp.services_ids.map((s) => s._id),
+          session,
+        );
+      }
+
+      if (comp.shops_ids?.length) {
+        await this.shopService.deleteManyShops(
+          comp.shops_ids.map((s) => s._id),
+          session,
+        );
+      }
+
+      if (comp.works_ids?.length) {
+        await this.workService.deleteManyWorks(
+          comp.works_ids.map((w) => w._id),
+          session,
+        );
+      }
+
+      if (comp.devices_ids?.length) {
+        await this.deviceService.deleteManyDevices(
+          comp.devices_ids.map((d) => d._id),
+          session,
+        );
+      }
+
+      if (comp.parts_ids?.length) {
+        await this.partService.deleteManyParts(
+          comp.parts_ids.map((p) => p._id),
+          session,
+        );
+      }
+
+      if (comp.staff_users_ids?.length) {
+        await this.staffUserService.deleteManyStaffUsers(
+          comp.staff_users_ids.map((u) => u._id),
+          session,
+        );
+      }
+
+      if (comp.roles_ids?.length) {
+        await this.roleService.deleteManyRoles(
+          comp.roles_ids.map((r) => r._id),
+          session,
+        );
+      }
+
+      if (comp.statuses_ids?.length) {
+        await this.statusService.deleteManyStatuses(
+          comp.statuses_ids.map((s) => s._id),
+          session,
+        );
+      }
+
+      await this.companyService.deleteCompany(comp._id, session);
+
+      await session.commitTransaction();
+      return true;
+    } catch (error) {
+      console.log(error);
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
   async addNewStatus(company_id: Types.ObjectId) {
     const session = await this.connection.startSession();
     session.startTransaction();
@@ -196,7 +274,7 @@ export class AppService implements OnModuleInit {
       const role_id = await this.roleService.createNewRole(session);
       const shop_id = await this.shopService.createNewShop(session);
       const device_id = await this.deviceService.createNewDevice(session);
-      const status_id = await this.statusService.createNewStatus(session);
+      const status_id_arr = await this.statusService.createNewStatus(session);
       const work_id = await this.workService.createNewWork(session);
       const service_id = await this.serviceService.createNewService(session);
 
@@ -219,7 +297,7 @@ export class AppService implements OnModuleInit {
         shop_id,
         role_id,
         device_id,
-        status_id,
+        status_id_arr,
         work_id,
         service_id,
         part_id,

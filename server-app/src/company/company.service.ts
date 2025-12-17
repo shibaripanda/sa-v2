@@ -13,6 +13,10 @@ export class CompanyService {
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
   ) {}
 
+  async getCompany(_id: Types.ObjectId, session: ClientSession) {
+    return await this.companyModel.findById({ _id }).session(session);
+  }
+
   async updateCompanyData(_id: Types.ObjectId, data: object) {
     return await this.companyModel.updateOne({ _id }, data);
   }
@@ -94,7 +98,7 @@ export class CompanyService {
     shop_id: Types.ObjectId,
     role_id: Types.ObjectId,
     device_id: Types.ObjectId,
-    status_id: Types.ObjectId,
+    status_id_arr: Types.ObjectId[],
     work_id: Types.ObjectId,
     service_id: Types.ObjectId,
     part_id: Types.ObjectId,
@@ -108,7 +112,7 @@ export class CompanyService {
           shops_ids: [shop_id],
           roles_ids: [role_id],
           devices_ids: [device_id],
-          statuses_ids: [status_id],
+          statuses_ids: status_id_arr,
           works_ids: [work_id],
           services_ids: [service_id],
           parts_ids: [part_id],

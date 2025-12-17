@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "./theme";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { User } from "./interfaces/user";
 import { AuthScreen } from "./components/authScreen/mainScreen/AuthScreen";
 import { TextLib } from "./interfaces/textLib";

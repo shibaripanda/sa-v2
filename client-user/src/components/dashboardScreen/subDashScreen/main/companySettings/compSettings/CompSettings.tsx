@@ -37,17 +37,17 @@ export function CompSettings(props: MainInterface) {
     console.log(res)
   }
 
-  // const deleteAccount = async () => {
-  //   props.setLoadingText(props.text?.deleting)
-  //   props.setLoaderShow.open()
-  //   const res = await props.user.deleteAccount(props.exit, props.setLoginedUsers)
-  //   if (!res) {
-  //     props.setErrorStatus(true)
-  //     props.setLoadingText(props.text?.itWasErrorLate)
-  //     return
-  //   }
-  //   props.setLoaderShow.close()
-  // }
+  const deleteCompany = async () => {
+    props.setLoadingText(props.text?.deleting)
+    props.setLoaderShow.open()
+    const res = await props.comp.deleteCompany(props.exit)
+    if (!res) {
+      props.setErrorStatus(true)
+      props.setLoadingText(props.text?.itWasErrorLate)
+      return
+    }
+    props.setLoaderShow.close()
+  }
 
   return (
     <Paper withBorder radius="md" p="xs">
@@ -166,7 +166,7 @@ export function CompSettings(props: MainInterface) {
             <Space key='m' h='xs'/>,
             <Button key='g' color='red' disabled={!deleteAccountCheckBox || deleteAccountString !== props.comp.name}
             onClick={async () => {
-              // await deleteAccount()
+              await deleteCompany()
             }}>{props.text?.deleteCompany}</Button>
           ],
           [

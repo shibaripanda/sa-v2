@@ -23,13 +23,16 @@ import { StatusClass } from '../../../../../../classes/StatusClass';
 import { buttonColorObj } from '../../../../../subComponents/colorShema/buttonColorObj';
 import { IconGripVertical } from '@tabler/icons-react';
 import { useEffect } from 'react';
+import { TextLib } from '../../../../../../interfaces/textLib';
 
 interface ItemProps {
   item: StatusClass;
   index: number;
+  l: number;
+  text: TextLib | null;
 }
 
-function SortableItem({ item, index}: ItemProps) {
+function SortableItem({ item, index, l, text}: ItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item._id,
   });
@@ -54,8 +57,10 @@ function SortableItem({ item, index}: ItemProps) {
       <Grid.Col span={7}>
           <Text>{item.name}</Text>
           <Text c="dimmed" size="sm">
-            Position: {index + 1}
+            {text?.position}: {index + 1}
           </Text>
+          {index === 0 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.new}</Text>)}
+          {index === l - 1 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.closed}</Text>)}
       </Grid.Col>
       <Grid.Col span={2}>
         <Button fullWidth size='xs' style={buttonColorObj(item.color)}></Button>
@@ -99,7 +104,7 @@ export function DragAndDrop(props: MainInterface) {
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={state.map((i) => i._id)} strategy={verticalListSortingStrategy}>
         {state.map((item, index) => (
-          <SortableItem key={item._id} item={item} index={index} />
+          <SortableItem key={item._id} item={item} index={index} l={state.length} text={props.text} />
         ))}
       </SortableContext>
     </DndContext>
