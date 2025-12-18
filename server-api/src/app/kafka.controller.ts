@@ -8,12 +8,8 @@ export class KafkaController {
   constructor(private readonly configService: ConfigService) {}
 
   // Kafka Listener
-  // @MessagePattern('googleLogin')
+  // @MessagePattern('test')
   // handleKafkaMessage(@Payload() value: KafkaMessage) {
-  //   console.log(this.configService.get<string>('SERVICE_NAME'), value['data']);
-  //   return {
-  //     value: { message: 'hello' },
-  //     key: 123,
-  //   };
+  //   console.log(this.configService.get<string>('SERVICE_NAME'), value);
   // }
 }

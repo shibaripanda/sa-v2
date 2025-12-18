@@ -6,6 +6,8 @@ export class AxiosClass {
   private authServerLink = import.meta.env.VITE_API_AUTH_LINK
   private appServerLink = import.meta.env.VITE_API_APP_LINK
 
+  private api = import.meta.env.VITE_API_LINK
+
   async getUserServices(){
     try{
       return await axios({
@@ -94,7 +96,7 @@ export class AxiosClass {
   async axiosTelegramRequest(credentialResponse: string) {
     return await axios({
       method: 'POST',
-      url: this.authServerLink + '/auth/telegramLogin',
+      url: this.api + '/auth/telegramLogin',
       data: credentialResponse,
       headers: {},
       timeout: 10000
@@ -104,7 +106,7 @@ export class AxiosClass {
   async axiosGoogleRequest(credentialResponse: string) {
     return await axios({
       method: 'POST',
-      url: this.authServerLink + '/auth/googleLogin',
+      url: this.api + '/auth/googleLogin',
       data: {access_token: credentialResponse},
       headers: {},
       timeout: 10000
