@@ -17,7 +17,7 @@ export function LanguagePicker(props: {leng: string; setText: any; setLeng: any;
   const getTextAvailable = async () => {
     return await axios({
           method: 'POST',
-          url: import.meta.env.VITE_API_AUTH_LINK + '/text/textavailable',
+          url: import.meta.env.VITE_API_LINK + '/text/textavailable',
           data: {},
           headers: {},
           timeout: 10000
@@ -33,7 +33,7 @@ export function LanguagePicker(props: {leng: string; setText: any; setLeng: any;
   const getTextLib = async () => {
     return await axios({
           method: 'POST',
-          url: import.meta.env.VITE_API_AUTH_LINK + '/text/textlib',
+          url: import.meta.env.VITE_API_LINK + '/text/textlib',
           data: {leng: props.leng},
           headers: {},
           timeout: 10000

@@ -4,6 +4,9 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthModule } from 'src/auth/auth.module';
 import { KafkaController } from './kafka.controller';
 import { KafkaService } from './kafka.service';
+import { TextModule } from 'src/text/text.module';
+import { UserModule } from 'src/user/user.module';
+import { JwtConfigModule } from 'src/jwt/jwt.module';
 // import { ScheduleModule } from '@nestjs/schedule';
 
 @Global()
@@ -35,7 +38,10 @@ import { KafkaService } from './kafka.service';
         }),
       },
     ]),
+    UserModule,
+    TextModule,
     AuthModule,
+    JwtConfigModule,
   ],
   controllers: [KafkaController],
   providers: [KafkaService],

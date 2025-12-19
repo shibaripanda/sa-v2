@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { GoogleLoginDto } from 'src/auth/dto/googleLogin.dto';
+// import { GoogleLoginDto } from 'src/auth/dto/googleLogin.dto';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
@@ -14,7 +14,13 @@ export class KafkaService implements OnModuleInit {
   }
 
   onModuleInit() {
-    // await this.kafkaClient.connect();
+    const auth = ['googleLogin', 'telegramLogin'];
+    const text = ['textavailable', 'textlib'];
+    const user = ['update-user', 'delete-account'];
+    const patterns = [...auth, ...text, ...user];
+
+    patterns.forEach((p) => this.kafkaClient.subscribeToResponseOf(p));
+
     // this.kafkaClient.subscribeToResponseOf('deleteAccount');
     // await this.kafkaClient.connect();
     // this.kafkaClient.emit('test', {
@@ -25,21 +31,11 @@ export class KafkaService implements OnModuleInit {
     // });
   }
 
-  sendAnyReq(message: string, data: object) {
-    this.kafkaClient.subscribeToResponseOf(message);
+  sendAnyReq(message: string, data: object | string) {
     return firstValueFrom<boolean>(
       this.kafkaClient.send(message, {
         value: data,
-        key: 123,
-      }),
-    );
-  }
-
-  googleLogin(data: GoogleLoginDto, ip: string) {
-    return firstValueFrom<boolean>(
-      this.kafkaClient.send('googleLogin', {
-        value: { data, ip },
-        key: 123,
+        key: message,
       }),
     );
   }

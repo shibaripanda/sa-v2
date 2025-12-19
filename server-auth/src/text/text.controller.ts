@@ -1,18 +1,26 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
 import { TextService } from './text.service';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('text')
 export class TextController {
   constructor(private textService: TextService) {}
 
-  @Post('/textavailable')
+  @MessagePattern('textavailable')
   getTextAvailable() {
-    return this.textService.getTextAvailable();
+    const res = this.textService.getTextAvailable();
+    return {
+      value: res,
+      key: 'textavailable',
+    };
   }
 
-  @Post('/textlib')
-  getTextLib(@Body() data: { leng: string }) {
-    console.log(data);
-    return this.textService.getTextLib(data.leng);
+  @MessagePattern('textlib')
+  getTextLib(@Payload() value: string) {
+    const res = this.textService.getTextLib(value);
+    return {
+      value: res,
+      key: 'textlib',
+    };
   }
 }

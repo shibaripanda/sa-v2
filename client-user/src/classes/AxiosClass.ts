@@ -80,7 +80,7 @@ export class AxiosClass {
     try{
       return await axios({
         method: crub,
-        url: this.authServerLink + `/user${line}`,
+        url: this.api + `/user${line}`,
         data: {requestName, requestData},
         headers: {
             "Authorization": `Bearer ${this.token}`

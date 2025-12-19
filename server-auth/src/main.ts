@@ -25,13 +25,13 @@ async function bootstrap() {
     console.log(error);
   }
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-  });
-  app.set('trust proxy', true);
+  // app.enableCors({
+  //   origin: '*',
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   preflightContinue: false,
+  //   optionsSuccessStatus: 204,
+  // });
+  // app.set('trust proxy', true);
   await app.listen(PORT);
   console.log(`${SERVICE_NAME} started on port ${PORT}`);
 }
