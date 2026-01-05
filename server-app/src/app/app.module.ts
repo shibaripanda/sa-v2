@@ -1,7 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ScheduleModule } from '@nestjs/schedule';
 import { CompanyModule } from '../company/company.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -17,54 +16,48 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { useGlobalAutopopulatePlugin } from './plugins/populateMongo';
 import { Connection } from 'mongoose';
-import { KafkaController } from './kafka.controller';
+import { AppKafkaController } from './app.kafka.controller';
+import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
 
 @Global()
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['../envs/.env.app-dev'],
-    }),
+    GlobalConfigModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MONGO_TOKEN')!,
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_TOKEN')!,
         connectionFactory: (connection: Connection) => {
           useGlobalAutopopulatePlugin(connection);
           return connection;
         },
       }),
+      inject: [ConfigService],
     }),
     ClientsModule.registerAsync([
       {
         name: 'KAFKA_SERVICE',
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (config: ConfigService) => ({
+        useFactory: (configService: ConfigService) => ({
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: config.get<string>('KAFKA_CLIENT_ID')!,
-              brokers: [config.get<string>('KAFKA_BROKER')!],
+              clientId: configService.get<string>('KAFKA_CLIENT_ID')!,
+              brokers: [configService.get<string>('KAFKA_BROKER')!],
             },
             consumer: {
-              groupId: config.get<string>('KAFKA_GROUP_ID')!,
+              groupId: configService.get<string>('KAFKA_GROUP_ID')!,
               allowAutoTopicCreation: true,
               autoCommit: true,
             },
           },
         }),
+        inject: [ConfigService],
       },
     ]),
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('SECRET_KEY')!,
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('SECRET_KEY')!,
       }),
+      inject: [ConfigService],
     }),
     CompanyModule,
     DeviceModule,
@@ -76,7 +69,7 @@ import { KafkaController } from './kafka.controller';
     StatusModule,
     WorkModule,
   ],
-  controllers: [AppController, KafkaController],
+  controllers: [AppController, AppKafkaController],
   providers: [AppService],
   exports: [ClientsModule, JwtModule],
 })

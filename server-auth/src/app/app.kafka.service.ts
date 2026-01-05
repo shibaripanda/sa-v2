@@ -1,14 +1,12 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
-import { Types } from 'mongoose';
 import { firstValueFrom } from 'rxjs';
+import { ObjID } from 'src/user/interfaces/ObjID';
 
 @Injectable()
-export class KafkaService implements OnModuleInit {
+export class AppKafkaService implements OnModuleInit {
   constructor(
     @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
-    private readonly configService: ConfigService,
   ) {
     console.log('KafkaService start');
   }
@@ -25,7 +23,7 @@ export class KafkaService implements OnModuleInit {
     // });
   }
 
-  deleteAccount(_id: Types.ObjectId) {
+  deleteAccount(_id: ObjID) {
     return firstValueFrom<boolean>(
       this.kafkaClient.send('deleteAccount', {
         value: { message: _id },

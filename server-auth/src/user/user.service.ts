@@ -1,27 +1,28 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
-import { Error, Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { GoogleAuthUser } from './interfaces/GoogleAuthUser';
 import { TelegramAuthUser } from './interfaces/TelegramAuthUser';
-import { KafkaService } from 'src/app/kafka.service';
+import { AppKafkaService } from 'src/app/app.kafka.service';
+import { ObjID } from './interfaces/ObjID';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private kafkaService: KafkaService,
+    private appKafkaService: AppKafkaService,
   ) {
     console.log('UserService initialized');
   }
 
-  async getUserById(_id: Types.ObjectId) {
+  async getUserById(_id: ObjID) {
     return await this.userModel.findById(_id);
   }
 
-  async deleteAccount(_id: Types.ObjectId) {
+  async deleteAccount(_id: ObjID) {
     try {
-      const res = await this.kafkaService.deleteAccount(_id);
+      const res = await this.appKafkaService.deleteAccount(_id);
       if (res) await this.userModel.deleteOne({ _id });
       return true;
     } catch {
@@ -32,7 +33,7 @@ export class UserService {
     }
   }
 
-  async updateUserData(_id: Types.ObjectId, data: object) {
+  async updateUserData(_id: ObjID, data: object) {
     return await this.userModel.updateOne({ _id }, data);
   }
 

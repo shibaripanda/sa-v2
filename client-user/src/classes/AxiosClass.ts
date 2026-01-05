@@ -3,7 +3,7 @@ import axios from "axios"
 export class AxiosClass {
 
   private token = sessionStorage.getItem('token')
-  private authServerLink = import.meta.env.VITE_API_AUTH_LINK
+  // private authServerLink = import.meta.env.VITE_API_AUTH_LINK
   private appServerLink = import.meta.env.VITE_API_APP_LINK
 
   private api = import.meta.env.VITE_API_LINK
@@ -12,7 +12,7 @@ export class AxiosClass {
     try{
       return await axios({
           method: 'POST',
-          url: this.appServerLink + '/app/get-all-my-comps',
+          url: this.api + '/app/get-all-my-comps',
           data: {},
           headers: {
               "Authorization": `Bearer ${this.token}`
@@ -29,7 +29,7 @@ export class AxiosClass {
     try{
       return await axios({
           method: 'POST',
-          url: this.appServerLink + '/app/create-new-company',
+          url: this.api + '/app/create-new-company',
           data: {},
           headers: {
               "Authorization": `Bearer ${this.token}`
@@ -46,7 +46,7 @@ export class AxiosClass {
     try{
       return await axios({
           method: 'POST',
-          url: this.appServerLink + '/app/create-new-service',
+          url: this.api + '/app/create-new-service',
           data: { company_id },
           headers: {
               "Authorization": `Bearer ${this.token}`

@@ -93,7 +93,7 @@ export class TextService implements OnModuleInit {
         });
         isNoItemToUpdate = true;
       } else {
-        console.log('exist', i.index);
+        // console.log('exist', i.index);
       }
     }
     if (isNoItemToUpdate) {

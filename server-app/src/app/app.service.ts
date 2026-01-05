@@ -1,6 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ClientKafka } from '@nestjs/microservices';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection, Error, Types } from 'mongoose';
 import { CompanyService } from 'src/company/company.service';
@@ -16,9 +14,7 @@ import { WorkService } from 'src/work/work.service';
 @Injectable()
 export class AppService implements OnModuleInit {
   constructor(
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
     @InjectConnection() private readonly connection: Connection,
-    private readonly configService: ConfigService,
     private readonly companyService: CompanyService,
     private readonly deviceService: DeviceService,
     private readonly serviceService: ServiceService,

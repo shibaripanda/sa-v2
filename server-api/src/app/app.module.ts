@@ -2,17 +2,15 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthModule } from 'src/auth/auth.module';
-import { KafkaController } from './kafka.controller';
 import { KafkaService } from './kafka.service';
 import { TextModule } from 'src/text/text.module';
 import { UserModule } from 'src/user/user.module';
 import { JwtConfigModule } from 'src/jwt/jwt.module';
-// import { ScheduleModule } from '@nestjs/schedule';
+import { AppController } from './app.controller';
 
 @Global()
 @Module({
   imports: [
-    // ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['../envs/.env.api-dev'],
@@ -43,7 +41,7 @@ import { JwtConfigModule } from 'src/jwt/jwt.module';
     AuthModule,
     JwtConfigModule,
   ],
-  controllers: [KafkaController],
+  controllers: [AppController],
   providers: [KafkaService],
   exports: [KafkaService],
 })

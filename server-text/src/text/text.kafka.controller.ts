@@ -2,8 +2,8 @@ import { Body, Controller } from '@nestjs/common';
 import { TextService } from './text.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('text')
-export class TextController {
+@Controller()
+export class TextKafkaController {
   constructor(private textService: TextService) {}
 
   @MessagePattern('textavailable')

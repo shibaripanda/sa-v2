@@ -1,9 +1,9 @@
-import { Body, Controller } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('auth')
-export class AuthController {
+@Controller()
+export class AuthKafkaController {
   constructor(private authService: AuthService) {}
 
   @MessagePattern('googleLogin')

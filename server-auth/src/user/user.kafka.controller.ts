@@ -1,19 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { UserDocument } from './user.schema';
 import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
-import { Types } from 'mongoose';
+import { ObjID } from './interfaces/ObjID';
 
-@Controller('user')
-export class UserController {
+@Controller()
+export class UserKafkaController {
   constructor(private userService: UserService) {}
 
   @MessagePattern('getUserById')
-  async getUserById(
-    @CurrentUser() user: UserDocument,
-    @Payload() value: { user_id: Types.ObjectId },
-  ) {
+  async getUserById(@Payload() value: { user_id: ObjID }) {
     const res = await this.userService.getUserById(value.user_id);
     return {
       value: res,
@@ -22,10 +17,7 @@ export class UserController {
   }
 
   @MessagePattern('delete-account')
-  async deleteAccount(
-    @CurrentUser() user: UserDocument,
-    @Payload() value: { user_id: Types.ObjectId },
-  ) {
+  async deleteAccount(@Payload() value: { user_id: ObjID }) {
     const res = await this.userService.deleteAccount(value.user_id);
     return {
       value: res,
@@ -37,12 +29,12 @@ export class UserController {
   async updateUserData(
     @Payload()
     value: {
-      user_id: Types.ObjectId;
+      user_id: ObjID;
       data: { [key: string]: string };
     },
   ) {
     const user = await this.userService.getUserById(value.user_id);
-    if (user) throw new RpcException('USER_NOT_FOUND');
+    if (!user) throw new RpcException('USER_NOT_FOUND');
     const res = await this.userService.updateUserData(
       value.user_id,
       value.data,
