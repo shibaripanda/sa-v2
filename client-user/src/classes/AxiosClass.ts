@@ -63,7 +63,7 @@ export class AxiosClass {
     try{
       return await axios({
         method: crub,
-        url: this.appServerLink + `${line}`,
+        url: this.api + `${line}`,
         data: {requestName, requestData, _id},
         headers: {
             "Authorization": `Bearer ${this.token}`

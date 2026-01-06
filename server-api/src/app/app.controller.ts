@@ -10,6 +10,22 @@ export class AppController {
   constructor(private readonly kafkaService: KafkaService) {}
 
   @UseGuards(UniversalJwtGuard)
+  @Post('/add-new-status')
+  async addNewStatus(
+    @Body() data: { requestData: { company_id: string } },
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    console.log(data.requestData.company_id);
+    const res = await this.kafkaService.sendAnyReq('add-new-status', {
+      company_id: data.requestData.company_id,
+    });
+    console.log(res);
+    // console.log(JSON.parse(res));
+    // return JSON.parse(res);
+  }
+
+  @UseGuards(UniversalJwtGuard)
   @Post('/create-new-service')
   async createNewService(
     @Body() data: { company_id: string },
@@ -43,6 +59,7 @@ export class AppController {
     const res = await this.kafkaService.sendAnyReq('get-all-my-comps', {
       user_id: user._id,
     });
+    console.log(res);
     return res;
   }
 }

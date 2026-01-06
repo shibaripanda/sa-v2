@@ -18,6 +18,7 @@ export class KafkaService implements OnModuleInit {
       'get-all-my-comps',
       'create-new-service',
       'create-new-company',
+      'add-new-status',
     ];
     const patterns = [...auth, ...text, ...user, ...comps];
 

@@ -20,16 +20,16 @@ export class AppController {
     return await this.appService.deleteCompany(data.requestData.company_id);
   }
 
-  @UseGuards(UniversalJwtGuard)
-  @Post('/add-new-status')
-  async addNewStatus(
-    @Body() data: AddNewStatusDto,
-    // @CurrentUser() user: User,
-    // @Ip() ip: string,
-  ) {
-    console.log(data);
-    return await this.appService.addNewStatus(data.requestData.company_id);
-  }
+  // @UseGuards(UniversalJwtGuard)
+  // @Post('/add-new-status')
+  // async addNewStatus(
+  //   @Body() data: AddNewStatusDto,
+  //   // @CurrentUser() user: User,
+  //   // @Ip() ip: string,
+  // ) {
+  //   console.log(data);
+  //   return await this.appService.addNewStatus(data.requestData.company_id);
+  // }
 
   //  @MessagePattern('delete-account')
   // async deleteAccount(
