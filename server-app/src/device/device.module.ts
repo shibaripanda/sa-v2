@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { DeviceController } from './device.controller';
 import { DeviceService } from './device.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DeviceSchema } from './device.schema';
@@ -8,7 +7,7 @@ import { DeviceSchema } from './device.schema';
   imports: [
     MongooseModule.forFeature([{ name: 'Device', schema: DeviceSchema }]),
   ],
-  controllers: [DeviceController],
+  controllers: [],
   providers: [DeviceService],
   exports: [DeviceService],
 })

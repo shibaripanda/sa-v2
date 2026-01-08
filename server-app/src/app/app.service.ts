@@ -127,7 +127,9 @@ export class AppService implements OnModuleInit {
       );
 
       await session.commitTransaction();
-      return await this.companyService.getCompanyWithRelations(company_id);
+      const res = await this.companyService.getCompanyWithRelations(company_id);
+      if (!res) throw new Error('Error');
+      return res.toObject();
     } catch (error) {
       await session.abortTransaction();
       throw error;

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "app": "concurrently \"(docker compose up -d)\" \"(npm run start:dev --prefix server-text)\" \"(npm run start:dev --prefix server-app)\" \"(npm run start:dev --prefix server-api)\" \"(npm run start:dev --prefix server-auth)\" \"(npm run dev --prefix client-user)\"",
+    "app": "concurrently  --names \"docker,text,app,api,auth,client\" --prefix name  \"(docker compose up -d)\" \"(npm run start:dev --prefix server-text)\" \"(npm run start:dev --prefix server-app)\" \"(npm run start:dev --prefix server-api)\" \"(npm run start:dev --prefix server-auth)\" \"(npm run dev --prefix client-user)\"",
     "npmi": "concurrently \"(npm i)\" \"(npm i --prefix client-user)\" \"(npm i --prefix server-text)\" \"(npm i --prefix server-app)\" \"(npm i --prefix server-api)\" \"(npm i --prefix server-auth)\"",
     "push": "node push.js",
     "pull": "git pull origin main"

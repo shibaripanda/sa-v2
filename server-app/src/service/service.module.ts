@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ServiceController } from './service.controller';
 import { ServiceService } from './service.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServiceSchema } from './service.schema';
@@ -8,7 +7,7 @@ import { ServiceSchema } from './service.schema';
   imports: [
     MongooseModule.forFeature([{ name: 'Service', schema: ServiceSchema }]),
   ],
-  controllers: [ServiceController],
+  controllers: [],
   providers: [ServiceService],
   exports: [ServiceService],
 })

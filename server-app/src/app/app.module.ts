@@ -12,7 +12,6 @@ import { ShopModule } from 'src/shop/shop.module';
 import { StaffUserModule } from 'src/staff-user/staff-user.module';
 import { StatusModule } from 'src/status/status.module';
 import { WorkModule } from 'src/work/work.module';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { useGlobalAutopopulatePlugin } from './plugins/populateMongo';
 import { Connection } from 'mongoose';
@@ -69,7 +68,7 @@ import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
     StatusModule,
     WorkModule,
   ],
-  controllers: [AppController, AppKafkaController],
+  controllers: [AppKafkaController],
   providers: [AppService],
   exports: [ClientsModule, JwtModule],
 })

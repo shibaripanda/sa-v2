@@ -14,13 +14,17 @@ export class KafkaService implements OnModuleInit {
     const auth = ['googleLogin', 'telegramLogin'];
     const text = ['textavailable', 'textlib'];
     const user = ['update-user', 'delete-account'];
+    const status = ['edit-status', 'delete-status'];
     const comps = [
       'get-all-my-comps',
       'create-new-service',
       'create-new-company',
       'add-new-status',
+      'delete-company',
+      'update-status-line',
+      'update-company',
     ];
-    const patterns = [...auth, ...text, ...user, ...comps];
+    const patterns = [...auth, ...text, ...user, ...comps, ...status];
 
     patterns.forEach((p) => this.kafkaClient.subscribeToResponseOf(p));
   }

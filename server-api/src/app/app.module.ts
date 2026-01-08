@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthModule } from 'src/auth/auth.module';
 import { KafkaService } from './kafka.service';
@@ -7,33 +7,32 @@ import { TextModule } from 'src/text/text.module';
 import { UserModule } from 'src/user/user.module';
 import { JwtConfigModule } from 'src/jwt/jwt.module';
 import { AppController } from './app.controller';
+import { StatusController } from './status.controller';
+import { CompanyController } from './company.controller';
+import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
 
 @Global()
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['../envs/.env.api-dev'],
-    }),
+    GlobalConfigModule,
     ClientsModule.registerAsync([
       {
         name: 'KAFKA_SERVICE',
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (config: ConfigService) => ({
+        useFactory: (configService: ConfigService) => ({
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: config.get<string>('KAFKA_CLIENT_ID')!,
-              brokers: [config.get<string>('KAFKA_BROKER')!],
+              clientId: configService.get<string>('KAFKA_CLIENT_ID')!,
+              brokers: [configService.get<string>('KAFKA_BROKER')!],
             },
             consumer: {
-              groupId: config.get<string>('KAFKA_GROUP_ID')!,
+              groupId: configService.get<string>('KAFKA_GROUP_ID')!,
               allowAutoTopicCreation: true,
               autoCommit: true,
             },
           },
         }),
+        inject: [ConfigService],
       },
     ]),
     UserModule,
@@ -41,7 +40,7 @@ import { AppController } from './app.controller';
     AuthModule,
     JwtConfigModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, StatusController, CompanyController],
   providers: [KafkaService],
   exports: [KafkaService],
 })

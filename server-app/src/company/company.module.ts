@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { CompanyController } from './company.controller';
 import { CompanyService } from './company.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CompanySchema } from './company.schema';
+import { CompanyKafkaController } from './company.kafka.controller';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Company', schema: CompanySchema }]),
   ],
-  controllers: [CompanyController],
+  controllers: [CompanyKafkaController],
   providers: [CompanyService],
   exports: [CompanyService],
 })

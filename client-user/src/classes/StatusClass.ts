@@ -10,9 +10,7 @@ export class StatusClass extends (Model as new (data: Status) => ModelWithData<S
 
   async editStatus(status_id: string, field: string, newValue: string, comp: CompanyClass, pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/status/edit-status', 'edit-status', {status_id, data: {[field]: newValue}})
-    console.log(res)
     if (!res) return false
-    console.log('aaaaaa', res.data)
     comp.statuses_ids = comp.statuses_ids.map(st =>
       st._id === status_id ? res.data : st
     )
@@ -22,7 +20,6 @@ export class StatusClass extends (Model as new (data: Status) => ModelWithData<S
 
   async deleteStatus(status_id: string, comp: CompanyClass, pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/status/delete-status', 'delete-status', {status_id})
-    console.log(res)
     if (!res) return false
     pickComp({...comp, statuses_ids: comp.statuses_ids.filter(st => status_id !== st._id)})
     return true

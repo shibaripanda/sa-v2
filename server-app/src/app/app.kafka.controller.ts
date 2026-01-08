@@ -7,6 +7,15 @@ import { Types } from 'mongoose';
 export class AppKafkaController {
   constructor(private readonly appService: AppService) {}
 
+  @MessagePattern('delete-company')
+  async deleteCompany(@Payload() value: { company_id: Types.ObjectId }) {
+    const res = await this.appService.deleteCompany(value.company_id);
+    return {
+      value: { message: res },
+      key: Date.now(),
+    };
+  }
+
   @MessagePattern('add-new-status')
   async addNewStatus(@Payload() value: { company_id: Types.ObjectId }) {
     const res = await this.appService.addNewStatus(value.company_id);

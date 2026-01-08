@@ -14,9 +14,11 @@ export class StatusService {
   ) {}
 
   async editStatus(status_id: Types.ObjectId, data: { [key: string]: string }) {
-    return await this.statusModel.findOneAndUpdate({ _id: status_id }, data, {
-      returnDocument: 'after',
-    });
+    return await this.statusModel
+      .findOneAndUpdate({ _id: status_id }, data, {
+        returnDocument: 'after',
+      })
+      .lean();
   }
 
   async deleteStatus(status_id: Types.ObjectId) {
