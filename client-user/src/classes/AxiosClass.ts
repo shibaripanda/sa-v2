@@ -3,8 +3,6 @@ import axios from "axios"
 export class AxiosClass {
 
   private token = sessionStorage.getItem('token')
-  // private authServerLink = import.meta.env.VITE_API_AUTH_LINK
-  // private appServerLink = import.meta.env.VITE_API_APP_LINK
 
   private api = import.meta.env.VITE_API_LINK
 
