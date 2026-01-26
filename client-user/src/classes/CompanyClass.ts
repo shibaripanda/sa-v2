@@ -1,5 +1,6 @@
 import { Company } from "../interfaces/company"
 import { AxiosClass } from "./AxiosClass"
+import { DeviceClass } from "./DeviceClass"
 import { Model, ModelWithData } from "./interfacesClass"
 import { StatusClass } from "./StatusClass"
 
@@ -15,12 +16,29 @@ export class CompanyClass extends (Model as new (data: Company) => ModelWithData
       return true
     }
 
+  async updateDeviceLine(newLine: DeviceClass[], pickComp: (company: Company) => void) {
+    const res = await this.axiosClass.axiosAppServer('POST', '/company/update-device-line', 'update-device-line', {devices_ids: newLine.map(s => s._id)}, this._id)
+    console.log(res)
+    if (!res) return false
+    const updatedCompany = { ...this, devices_ids: newLine };
+    pickComp(updatedCompany)
+    return true
+  }
+
   async updateStatusLine(newLine: StatusClass[], pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/company/update-status-line', 'update-status-line', {statuses_ids: newLine.map(s => s._id)}, this._id)
     console.log(res)
     if (!res) return false
     const updatedCompany = { ...this, statuses_ids: newLine };
     pickComp(updatedCompany)
+    return true
+  }
+
+  async addNewDevice(pickComp: (company: Company) => void) {
+    const res = await this.axiosClass.axiosAppServer('POST', '/app/add-new-device', 'add-new-device', {company_id: this._id})
+    console.log(res)
+    if (!res) return false
+    pickComp(res.data)
     return true
   }
 

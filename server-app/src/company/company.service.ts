@@ -21,6 +21,16 @@ export class CompanyService {
     return await this.companyModel.updateOne({ _id }, data);
   }
 
+  async addDeviceToCompany(
+    company_id: Types.ObjectId,
+    device_id: Types.ObjectId,
+    session: ClientSession,
+  ) {
+    return await this.companyModel
+      .updateOne({ _id: company_id }, { $addToSet: { devices_ids: device_id } })
+      .session(session);
+  }
+
   async addStatusToCompany(
     company_id: Types.ObjectId,
     status_id: Types.ObjectId,

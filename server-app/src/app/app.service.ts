@@ -138,6 +138,30 @@ export class AppService implements OnModuleInit {
     }
   }
 
+  async addNewDevice(company_id: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const status_id = await this.deviceService.createNewDevice(session);
+      await this.companyService.addDeviceToCompany(
+        company_id,
+        status_id,
+        session,
+      );
+
+      await session.commitTransaction();
+      const res = await this.companyService.getCompanyWithRelations(company_id);
+      if (!res) throw new Error('Error');
+      return res.toObject();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
   async deleteAccount(user_owner_id: Types.ObjectId) {
     const session = await this.connection.startSession();
     session.startTransaction();

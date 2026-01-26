@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { Service } from "./service";
 import { StaffUser } from "./staffUser";
 import { StatusClass } from "../classes/StatusClass";
+import { DeviceClass } from "../classes/DeviceClass";
 
 export interface Company {
     _id: string;
@@ -15,7 +16,7 @@ export interface Company {
     services_ids: Service[];
     roles_ids: Types.ObjectId[];
     statuses_ids: StatusClass[];
-    devices_ids: Types.ObjectId[];
+    devices_ids: DeviceClass[];
     parts_ids: Types.ObjectId[];
     works_ids: Types.ObjectId[];
     shops_ids: Types.ObjectId[];

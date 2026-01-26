@@ -23,6 +23,19 @@ export class AppController {
   }
 
   @UseGuards(UniversalJwtGuard)
+  @Post('/add-new-device')
+  async addNewDevice(
+    @Body() data: { requestData: { company_id: string } },
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    const res = await this.kafkaService.sendAnyReq('add-new-device', {
+      company_id: data.requestData.company_id,
+    });
+    return res;
+  }
+
+  @UseGuards(UniversalJwtGuard)
   @Post('/add-new-status')
   async addNewStatus(
     @Body() data: { requestData: { company_id: string } },

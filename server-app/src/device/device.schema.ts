@@ -7,6 +7,9 @@ export type DeviceDocument = HydratedDocument<Device>;
 export class Device {
   @Prop({ required: true, default: 'New Device' })
   name: string;
+
+  @Prop({ required: true, default: 0 })
+  color: number;
 }
 
 export const DeviceSchema = SchemaFactory.createForClass(Device);

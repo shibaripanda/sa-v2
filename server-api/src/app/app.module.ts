@@ -10,6 +10,7 @@ import { AppController } from './app.controller';
 import { StatusController } from './status.controller';
 import { CompanyController } from './company.controller';
 import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
+import { DeviceController } from './device.controller';
 
 @Global()
 @Module({
@@ -40,7 +41,12 @@ import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
     AuthModule,
     JwtConfigModule,
   ],
-  controllers: [AppController, StatusController, CompanyController],
+  controllers: [
+    AppController,
+    StatusController,
+    CompanyController,
+    DeviceController,
+  ],
   providers: [KafkaService],
   exports: [KafkaService],
 })

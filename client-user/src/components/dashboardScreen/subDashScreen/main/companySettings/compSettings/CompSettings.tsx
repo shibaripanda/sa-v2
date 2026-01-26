@@ -10,6 +10,9 @@ import { ModalEditStatus } from '../modalEditStatus/ModalEditStatus';
 import { StatusClass } from '../../../../../../classes/StatusClass';
 import { buttonColorObj } from '../../../../../subComponents/colorShema/buttonColorObj';
 import { ModalEditStatusLine } from '../modalEditStatus/ModalEditStatusLine';
+import { DeviceClass } from '../../../../../../classes/DeviceClass';
+import { ModalEditDevice } from '../modalEditDevice/ModalEditDevice';
+import { ModalEditDeviceLine } from '../modalEditDevice/ModalEditDeviceLine';
 
 export function CompSettings(props: MainInterface) {
 
@@ -18,6 +21,10 @@ export function CompSettings(props: MainInterface) {
   const [modalStatus, setModalStatus] = useDisclosure(false)
   const [modalStatusLine, setModalStatusLine] = useDisclosure(false)
   const [selectedStatus, setSelectedStatus] = useState<StatusClass | null>(null)
+
+  const [modalDevice, setModalDevice] = useDisclosure(false)
+  const [modalDeviceLine, setModalDeviceLine] = useDisclosure(false)
+  const [selectedDevice, setSelectedDevice] = useState<DeviceClass | null>(null)
 
   const warningSize = () => {
       if(deleteAccountCheckBox && deleteAccountString === props.comp.name) {
@@ -28,6 +35,16 @@ export function CompSettings(props: MainInterface) {
       }
       return 'xs'
   }
+
+  const editDevice = async (device: DeviceClass) => {
+    setSelectedDevice(new DeviceClass(device))
+    setModalDevice.open()
+  }
+  const addNewDevice = async () => {
+    const res = await props.comp.addNewDevice(props.pickComp)
+    console.log(res)
+  }
+
   const editStatus = async (status: StatusClass) => {
     setSelectedStatus(new StatusClass(status))
     setModalStatus.open()
@@ -36,7 +53,6 @@ export function CompSettings(props: MainInterface) {
     const res = await props.comp.addNewStatus(props.pickComp)
     console.log(res)
   }
-
   const deleteCompany = async () => {
     props.setLoadingText(props.text?.deleting)
     props.setLoaderShow.open()
@@ -122,6 +138,24 @@ export function CompSettings(props: MainInterface) {
         )}
       </Grid>
 
+      <Divider my="lg" label="Devices" labelPosition="left" />
+      <Grid w="100%" gutter="md">
+        {[
+          ...props.comp.devices_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`device-${i}`} onClick={() => editDevice(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
+        ].map((item, i) => 
+          <Grid.Col key={`Devices-${i}`} span={{ base: 12, sm: 12 / props.comp.devices_ids.length }}>
+            <Flex direction="column" align="center" justify="center" h="100%">
+              {item}
+            </Flex>
+          </Grid.Col>
+        )}
+      </Grid>
+      <Space h="xl"/>
+      <Group justify='space-between'>
+        <Button variant='default' size='xs' onClick={addNewDevice}>{props.text?.addNewStatus}</Button>
+        <Button variant='default' size='xs' onClick={setModalDeviceLine.open}>{props.text?.statusLine}</Button>
+      </Group>
+
       <Divider my="lg" label="Statuses" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
@@ -139,6 +173,10 @@ export function CompSettings(props: MainInterface) {
         <Button variant='default' size='xs' onClick={addNewStatus}>{props.text?.addNewStatus}</Button>
         <Button variant='default' size='xs' onClick={setModalStatusLine.open}>{props.text?.statusLine}</Button>
       </Group>
+
+      <ModalEditDevice {...props} selectedDevice={selectedDevice} setSelectedDevice={setSelectedDevice} modalDevice={modalDevice} setModalDevice={setModalDevice}/>
+      <ModalEditDeviceLine {...props} modalDeviceLine={modalDeviceLine} setModalDeviceLine={setModalDeviceLine}/>
+
       <ModalEditStatus {...props} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} modalStatus={modalStatus} setModalStatus={setModalStatus}/>
       <ModalEditStatusLine {...props} modalStatusLine={modalStatusLine} setModalStatusLine={setModalStatusLine}/>
 

@@ -13,6 +13,18 @@ export class DeviceService {
     @InjectModel(Device.name) private deviceModel: Model<DeviceDocument>,
   ) {}
 
+  async editDevice(device_id: Types.ObjectId, data: { [key: string]: string }) {
+    return await this.deviceModel
+      .findOneAndUpdate({ _id: device_id }, data, {
+        returnDocument: 'after',
+      })
+      .lean();
+  }
+
+  async deleteDevice(device_id: Types.ObjectId) {
+    return await this.deviceModel.deleteOne({ _id: device_id });
+  }
+
   async deleteManyDevices(ids: Types.ObjectId[], session?: ClientSession) {
     await this.deviceModel.deleteMany({ _id: { $in: ids } }, { session });
   }

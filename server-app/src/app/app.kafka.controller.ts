@@ -25,6 +25,15 @@ export class AppKafkaController {
     };
   }
 
+  @MessagePattern('add-new-device')
+  async addNewDevice(@Payload() value: { company_id: Types.ObjectId }) {
+    const res = await this.appService.addNewDevice(value.company_id);
+    return {
+      value: res,
+      key: Date.now(),
+    };
+  }
+
   @MessagePattern('create-new-company')
   async createNewCompany(@Payload() value: { user_id: Types.ObjectId }) {
     const res = await this.appService.createNewCompany(value.user_id);
