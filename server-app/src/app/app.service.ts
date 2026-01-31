@@ -295,7 +295,8 @@ export class AppService implements OnModuleInit {
     try {
       const role_id = await this.roleService.createNewRole(session);
       const shop_id = await this.shopService.createNewShop(session);
-      const device_id = await this.deviceService.createNewDevice(session);
+      const device_id_arr =
+        await this.deviceService.createNewDevicesForNewCompany(session);
       const status_id_arr = await this.statusService.createNewStatus(session);
       const work_id = await this.workService.createNewWork(session);
       const service_id = await this.serviceService.createNewService(session);
@@ -318,7 +319,7 @@ export class AppService implements OnModuleInit {
         staffUser_id,
         shop_id,
         role_id,
-        device_id,
+        device_id_arr,
         status_id_arr,
         work_id,
         service_id,

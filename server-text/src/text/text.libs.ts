@@ -34,6 +34,21 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Документы для печати',
+    index: 'docForPrint',
+    update: false,
+  },
+  {
+    rutext: 'Порядок девайсов',
+    index: 'deviceLine',
+    update: false,
+  },
+  {
+    rutext: 'Добавить новый девайс',
+    index: 'addNewDevice',
+    update: false,
+  },
+  {
     rutext: 'Позиция',
     index: 'position',
     update: false,

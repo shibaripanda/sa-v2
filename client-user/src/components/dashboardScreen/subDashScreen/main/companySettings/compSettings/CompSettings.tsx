@@ -69,6 +69,44 @@ export function CompSettings(props: MainInterface) {
     <Paper withBorder radius="md" p="xs">
       <Text>{props.text?.companySettings}</Text>
 
+      <Divider my="lg" label="Devices" labelPosition="left" />
+      <Group>
+        <Button variant='default' size='xs' onClick={addNewDevice}>{props.text?.addNewDevice}</Button>
+        <Button variant='default' size='xs' onClick={setModalDeviceLine.open}>{props.text?.deviceLine}</Button>
+      </Group>
+      <Space h="xl"/>
+      <Grid w="100%" gutter="md">
+        {[
+          ...props.comp.devices_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`device-${i}`} onClick={() => editDevice(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
+        ].map((item, i) => 
+          // <Grid.Col key={`Devices-${i}`} span={{ base: 12, sm: 12 / props.comp.devices_ids.length }}>
+            <Grid.Col key={`Devices-${i}`} span={{ base: 4, sm: 1.5}}>
+            <Flex direction="column" align="center" justify="center" h="100%">
+              {item}
+            </Flex>
+          </Grid.Col>
+        )}
+      </Grid>
+      
+      <Divider my="lg" label="Statuses" labelPosition="left" />
+      <Group>
+        <Button variant='default' size='xs' onClick={addNewStatus}>{props.text?.addNewStatus}</Button>
+        <Button variant='default' size='xs' onClick={setModalStatusLine.open}>{props.text?.statusLine}</Button>
+      </Group>
+      <Space h="xl"/>
+      <Grid w="100%" gutter="md">
+        {[
+          ...props.comp.statuses_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`status-${i}`} onClick={() => editStatus(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
+        ].map((item, i) => 
+          // <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
+            <Grid.Col key={`Statuses-${i}`} span={{ base: 4, sm: 1.5}}>
+            <Flex direction="column" align="center" justify="center" h="100%">
+              {item}
+            </Flex>
+          </Grid.Col>
+        )}
+      </Grid>
+      
       <Divider my="lg" label="Company" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
@@ -138,41 +176,7 @@ export function CompSettings(props: MainInterface) {
         )}
       </Grid>
 
-      <Divider my="lg" label="Devices" labelPosition="left" />
-      <Grid w="100%" gutter="md">
-        {[
-          ...props.comp.devices_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`device-${i}`} onClick={() => editDevice(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
-        ].map((item, i) => 
-          <Grid.Col key={`Devices-${i}`} span={{ base: 12, sm: 12 / props.comp.devices_ids.length }}>
-            <Flex direction="column" align="center" justify="center" h="100%">
-              {item}
-            </Flex>
-          </Grid.Col>
-        )}
-      </Grid>
-      <Space h="xl"/>
-      <Group justify='space-between'>
-        <Button variant='default' size='xs' onClick={addNewDevice}>{props.text?.addNewStatus}</Button>
-        <Button variant='default' size='xs' onClick={setModalDeviceLine.open}>{props.text?.statusLine}</Button>
-      </Group>
-
-      <Divider my="lg" label="Statuses" labelPosition="left" />
-      <Grid w="100%" gutter="md">
-        {[
-          ...props.comp.statuses_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`status-${i}`} onClick={() => editStatus(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
-        ].map((item, i) => 
-          <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
-            <Flex direction="column" align="center" justify="center" h="100%">
-              {item}
-            </Flex>
-          </Grid.Col>
-        )}
-      </Grid>
-      <Space h="xl"/>
-      <Group justify='space-between'>
-        <Button variant='default' size='xs' onClick={addNewStatus}>{props.text?.addNewStatus}</Button>
-        <Button variant='default' size='xs' onClick={setModalStatusLine.open}>{props.text?.statusLine}</Button>
-      </Group>
+      
 
       <ModalEditDevice {...props} selectedDevice={selectedDevice} setSelectedDevice={setSelectedDevice} modalDevice={modalDevice} setModalDevice={setModalDevice}/>
       <ModalEditDeviceLine {...props} modalDeviceLine={modalDeviceLine} setModalDeviceLine={setModalDeviceLine}/>

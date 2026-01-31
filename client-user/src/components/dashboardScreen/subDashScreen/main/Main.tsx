@@ -1,5 +1,6 @@
 import { DashScreenInterface, Order } from '../../mainScreen/Dashboard';
 import { CompanySettings } from './companySettings/CompanySettings';
+import { LibrarySettings } from './librarySettings/LibrarySettings';
 import { MyUserSettings } from './myUserSettings/MyUserSettings';
 import { Orders } from './orders/Orders';
 
@@ -18,7 +19,7 @@ export function Main(props: MainInterface) {
     <CompanySettings {...props}/>,
     <div>Service settings</div>,
     <div>Roles settings</div>,
-    <div>Library</div>,
+    <LibrarySettings {...props}/>,
     <div>Warehouse</div>,
     <div>Supplier</div>,
   ]

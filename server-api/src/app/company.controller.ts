@@ -4,10 +4,23 @@ import { KafkaService } from 'src/app/kafka.service';
 import { UniversalJwtGuard } from 'src/guards/universalJwtGuard';
 import { UpdateCompanyDataDto } from './dto/comp/updateCompanyData.dto';
 import { UpdateCompanyStatusLine } from './dto/comp/updateCompanyStatusLine.dto';
+import { UpdateCompanyDeviceLine } from './dto/comp/updateCompanyDeviceLine.dto';
 
 @Controller('company')
 export class CompanyController {
   constructor(private readonly kafkaService: KafkaService) {}
+
+  @UseGuards(UniversalJwtGuard)
+  @Post('/update-device-line')
+  async editDevice(
+    @Body()
+    data: UpdateCompanyDeviceLine,
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    const res = await this.kafkaService.sendAnyReq('update-device-line', data);
+    return res;
+  }
 
   @UseGuards(UniversalJwtGuard)
   @Post('/update-status-line')

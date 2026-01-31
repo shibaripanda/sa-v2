@@ -11,7 +11,7 @@ export class DeviceKafkaController {
   @MessagePattern('edit-device')
   async editStatus(@Payload() data: EditStatusDto) {
     const res = await this.deviceService.editDevice(
-      data.requestData.status_id,
+      data.requestData.device_id,
       data.requestData.data,
     );
     return {

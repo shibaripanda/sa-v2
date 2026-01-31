@@ -36,8 +36,20 @@ export class DeviceService {
     return res[0]._id;
   }
 
-  // async createNewDevice() {
-  //   const res = await this.deviceModel.create({});
-  //   return res._id;
-  // }
+  async createNewDevicesForNewCompany(
+    session?: ClientSession,
+  ): Promise<Types.ObjectId[]> {
+    const stats = [
+      { name: 'Device 1', color: 100 },
+      { name: 'Device 2', color: 100 },
+      { name: 'Device 3', color: 100 },
+      { name: 'Device 4', color: 100 },
+      { name: 'Device 5', color: 100 },
+    ];
+    const res = await this.deviceModel.create(stats, {
+      session,
+      ordered: true,
+    });
+    return res.map((s) => s._id);
+  }
 }

@@ -20,7 +20,6 @@ export class DeviceClass extends (Model as new (data: Device) => ModelWithData<D
 
   async deleteDevice(device_id: string, comp: CompanyClass, pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/device/delete-device', 'delete-device', {device_id})
-    console.log('ssssssssssssss', res)
     if (!res) return false
     pickComp({...comp, devices_ids: comp.devices_ids.filter(st => device_id !== st._id)})
     return true

@@ -59,8 +59,8 @@ function SortableItem({ item, index, l, text}: ItemProps) {
           <Text c="dimmed" size="sm">
             {text?.position}: {index + 1}
           </Text>
-          {index === 0 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.new}</Text>)}
-          {index === l - 1 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.closed}</Text>)}
+          {/* {index === 0 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.new}</Text>)}
+          {index === l - 1 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.closed}</Text>)} */}
       </Grid.Col>
       <Grid.Col span={2}>
         <Button fullWidth size='xs' style={buttonColorObj(item.color)}></Button>

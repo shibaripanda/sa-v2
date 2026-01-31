@@ -24,6 +24,7 @@ export class KafkaService implements OnModuleInit {
       'add-new-device',
       'delete-company',
       'update-status-line',
+      'update-device-line',
       'update-company',
     ];
     const patterns = [
