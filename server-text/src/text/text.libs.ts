@@ -34,6 +34,16 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Порядок полей',
+    index: 'fieldLine',
+    update: false,
+  },
+  {
+    rutext: 'Добавить новое поле',
+    index: 'addNewField',
+    update: false,
+  },
+  {
     rutext: 'Документы для печати',
     index: 'docForPrint',
     update: false,

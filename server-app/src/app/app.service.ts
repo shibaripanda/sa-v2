@@ -3,6 +3,7 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { Connection, Error, Types } from 'mongoose';
 import { CompanyService } from 'src/company/company.service';
 import { DeviceService } from 'src/device/device.service';
+import { FieldService } from 'src/field/field.service';
 import { PartService } from 'src/part/part.service';
 import { RoleService } from 'src/role/role.service';
 import { ServiceService } from 'src/service/service.service';
@@ -17,6 +18,7 @@ export class AppService implements OnModuleInit {
     @InjectConnection() private readonly connection: Connection,
     private readonly companyService: CompanyService,
     private readonly deviceService: DeviceService,
+    private readonly fieldService: FieldService,
     private readonly serviceService: ServiceService,
     private readonly shopService: ShopService,
     private readonly roleService: RoleService,
@@ -298,6 +300,8 @@ export class AppService implements OnModuleInit {
       const device_id_arr =
         await this.deviceService.createNewDevicesForNewCompany(session);
       const status_id_arr = await this.statusService.createNewStatus(session);
+      const field_id_arr =
+        await this.fieldService.createNewFieldsForNewCompany(session);
       const work_id = await this.workService.createNewWork(session);
       const service_id = await this.serviceService.createNewService(session);
 
@@ -321,6 +325,7 @@ export class AppService implements OnModuleInit {
         role_id,
         device_id_arr,
         status_id_arr,
+        field_id_arr,
         work_id,
         service_id,
         part_id,

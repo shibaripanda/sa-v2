@@ -17,6 +17,7 @@ import { useGlobalAutopopulatePlugin } from './plugins/populateMongo';
 import { Connection } from 'mongoose';
 import { AppKafkaController } from './app.kafka.controller';
 import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
+import { FieldModule } from 'src/field/field.module';
 
 @Global()
 @Module({
@@ -67,6 +68,7 @@ import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
     StaffUserModule,
     StatusModule,
     WorkModule,
+    FieldModule,
   ],
   controllers: [AppKafkaController],
   providers: [AppService],

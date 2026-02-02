@@ -13,11 +13,15 @@ import { ModalEditStatusLine } from '../modalEditStatus/ModalEditStatusLine';
 import { DeviceClass } from '../../../../../../classes/DeviceClass';
 import { ModalEditDevice } from '../modalEditDevice/ModalEditDevice';
 import { ModalEditDeviceLine } from '../modalEditDevice/ModalEditDeviceLine';
+import { FieldClass } from '../../../../../../classes/FieldClass';
+import { ModalEditField } from '../modalEditField/ModalEditField';
+import { ModalEditFieldLine } from '../modalEditField/ModalEditFieldLine';
 
 export function CompSettings(props: MainInterface) {
 
   const [deleteAccountString, setDeleteAccountString] = useState<string>('')
   const [deleteAccountCheckBox, setDeleteAccountCheckBox] = useState<boolean>(false)
+
   const [modalStatus, setModalStatus] = useDisclosure(false)
   const [modalStatusLine, setModalStatusLine] = useDisclosure(false)
   const [selectedStatus, setSelectedStatus] = useState<StatusClass | null>(null)
@@ -25,6 +29,10 @@ export function CompSettings(props: MainInterface) {
   const [modalDevice, setModalDevice] = useDisclosure(false)
   const [modalDeviceLine, setModalDeviceLine] = useDisclosure(false)
   const [selectedDevice, setSelectedDevice] = useState<DeviceClass | null>(null)
+
+  const [modalField, setModalField] = useDisclosure(false)
+  const [modalFieldLine, setModalFieldLine] = useDisclosure(false)
+  const [selectedField, setSelectedField] = useState<FieldClass | null>(null)
 
   const warningSize = () => {
       if(deleteAccountCheckBox && deleteAccountString === props.comp.name) {
@@ -53,6 +61,16 @@ export function CompSettings(props: MainInterface) {
     const res = await props.comp.addNewStatus(props.pickComp)
     console.log(res)
   }
+
+  const editField = async (field: FieldClass) => {
+    setSelectedField(new FieldClass(field))
+    setModalField.open()
+  }
+  const addNewField = async () => {
+    const res = await props.comp.addNewField(props.pickComp)
+    console.log(res)
+  }
+
   const deleteCompany = async () => {
     props.setLoadingText(props.text?.deleting)
     props.setLoaderShow.open()
@@ -81,6 +99,25 @@ export function CompSettings(props: MainInterface) {
         ].map((item, i) => 
           // <Grid.Col key={`Devices-${i}`} span={{ base: 12, sm: 12 / props.comp.devices_ids.length }}>
             <Grid.Col key={`Devices-${i}`} span={{ base: 4, sm: 1.5}}>
+            <Flex direction="column" align="center" justify="center" h="100%">
+              {item}
+            </Flex>
+          </Grid.Col>
+        )}
+      </Grid>
+
+      <Divider my="lg" label="Fields" labelPosition="left" />
+      <Group>
+        <Button variant='default' size='xs' onClick={addNewField}>{props.text?.addNewField}</Button>
+        <Button variant='default' size='xs' onClick={setModalFieldLine.open}>{props.text?.fieldLine}</Button>
+      </Group>
+      <Space h="xl"/>
+      <Grid w="100%" gutter="md">
+        {[
+          ...props.comp.fields_ids.map((s, i) => <Button key={`status-${i}`} onClick={() => editField(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
+        ].map((item, i) => 
+          // <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
+            <Grid.Col key={`Statuses-${i}`} span={{ base: 4, sm: 1.5}}>
             <Flex direction="column" align="center" justify="center" h="100%">
               {item}
             </Flex>
@@ -183,6 +220,9 @@ export function CompSettings(props: MainInterface) {
 
       <ModalEditStatus {...props} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} modalStatus={modalStatus} setModalStatus={setModalStatus}/>
       <ModalEditStatusLine {...props} modalStatusLine={modalStatusLine} setModalStatusLine={setModalStatusLine}/>
+
+      <ModalEditField {...props} selectedField={selectedField} setSelectedField={setSelectedField} modalField={modalField} setModalField={setModalField}/>
+      <ModalEditFieldLine {...props} modalFieldLine={modalFieldLine} setModalFieldLine={setModalFieldLine}/>
 
       <Divider my="lg" label="Services" labelPosition="left" />
       <TableServices services={props.comp.services_ids} text={props.text}/>

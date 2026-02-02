@@ -36,11 +36,11 @@ export class StatusService {
 
   async createNewStatus(session?: ClientSession): Promise<Types.ObjectId[]> {
     const stats = [
-      { name: '1', color: 1 },
-      { name: '2', color: 50 },
-      { name: '3', color: 100 },
-      { name: '4', color: 150 },
-      { name: '5', color: 250 },
+      { name: 'Status 1', color: 1 },
+      { name: 'Status 2', color: 50 },
+      { name: 'Status 3', color: 100 },
+      { name: 'Status 4', color: 150 },
+      { name: 'Status 5', color: 250 },
     ];
     const res = await this.statusModel.create(stats, {
       session,

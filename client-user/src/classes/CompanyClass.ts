@@ -1,6 +1,7 @@
 import { Company } from "../interfaces/company"
 import { AxiosClass } from "./AxiosClass"
 import { DeviceClass } from "./DeviceClass"
+import { FieldClass } from "./FieldClass"
 import { Model, ModelWithData } from "./interfacesClass"
 import { StatusClass } from "./StatusClass"
 
@@ -15,6 +16,15 @@ export class CompanyClass extends (Model as new (data: Company) => ModelWithData
       exit()
       return true
     }
+
+  async updateFieldLine(newLine: FieldClass[], pickComp: (company: Company) => void) {
+    const res = await this.axiosClass.axiosAppServer('POST', '/company/update-field-line', 'update-field-line', {fields_ids: newLine.map(s => s._id)}, this._id)
+    console.log(res)
+    if (!res) return false
+    const updatedCompany = { ...this, fields_ids: newLine };
+    pickComp(updatedCompany)
+    return true
+  }
 
   async updateDeviceLine(newLine: DeviceClass[], pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/company/update-device-line', 'update-device-line', {devices_ids: newLine.map(s => s._id)}, this._id)
@@ -31,6 +41,14 @@ export class CompanyClass extends (Model as new (data: Company) => ModelWithData
     if (!res) return false
     const updatedCompany = { ...this, statuses_ids: newLine };
     pickComp(updatedCompany)
+    return true
+  }
+
+  async addNewField(pickComp: (company: Company) => void) {
+    const res = await this.axiosClass.axiosAppServer('POST', '/app/add-new-field', 'add-new-field', {company_id: this._id})
+    console.log(res)
+    if (!res) return false
+    pickComp(res.data)
     return true
   }
 

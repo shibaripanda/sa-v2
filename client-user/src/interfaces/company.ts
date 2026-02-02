@@ -3,6 +3,7 @@ import { Service } from "./service";
 import { StaffUser } from "./staffUser";
 import { StatusClass } from "../classes/StatusClass";
 import { DeviceClass } from "../classes/DeviceClass";
+import { FieldClass } from "../classes/FieldClass";
 
 export interface Company {
     _id: string;
@@ -17,6 +18,7 @@ export interface Company {
     roles_ids: Types.ObjectId[];
     statuses_ids: StatusClass[];
     devices_ids: DeviceClass[];
+    fields_ids: FieldClass[];
     parts_ids: Types.ObjectId[];
     works_ids: Types.ObjectId[];
     shops_ids: Types.ObjectId[];

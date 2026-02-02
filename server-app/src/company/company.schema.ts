@@ -61,6 +61,13 @@ export class Company {
   statuses_ids: Types.ObjectId[];
 
   @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Field', autopopulate: true }],
+    required: true,
+    default: [],
+  })
+  fields_ids: Types.ObjectId[];
+
+  @Prop({
     type: [{ type: Types.ObjectId, ref: 'Device', autopopulate: true }],
     required: true,
     default: [],
