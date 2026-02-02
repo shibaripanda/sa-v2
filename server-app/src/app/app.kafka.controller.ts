@@ -34,6 +34,15 @@ export class AppKafkaController {
     };
   }
 
+  @MessagePattern('add-new-field')
+  async addNewField(@Payload() value: { company_id: Types.ObjectId }) {
+    const res = await this.appService.addNewField(value.company_id);
+    return {
+      value: res,
+      key: Date.now(),
+    };
+  }
+
   @MessagePattern('create-new-company')
   async createNewCompany(@Payload() value: { user_id: Types.ObjectId }) {
     const res = await this.appService.createNewCompany(value.user_id);

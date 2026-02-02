@@ -49,6 +49,19 @@ export class AppController {
   }
 
   @UseGuards(UniversalJwtGuard)
+  @Post('/add-new-field')
+  async addNewField(
+    @Body() data: { requestData: { company_id: string } },
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    const res = await this.kafkaService.sendAnyReq('add-new-field', {
+      company_id: data.requestData.company_id,
+    });
+    return res;
+  }
+
+  @UseGuards(UniversalJwtGuard)
   @Post('/create-new-service')
   async createNewService(
     @Body() data: { company_id: string },

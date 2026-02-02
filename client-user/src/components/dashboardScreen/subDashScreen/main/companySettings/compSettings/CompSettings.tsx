@@ -114,7 +114,7 @@ export function CompSettings(props: MainInterface) {
       <Space h="xl"/>
       <Grid w="100%" gutter="md">
         {[
-          ...props.comp.fields_ids.map((s, i) => <Button key={`status-${i}`} onClick={() => editField(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
+          ...props.comp.fields_ids.map((s, i) => <Button variant='default' key={`status-${i}`} onClick={() => editField(s)} size='xs'>{s.name}</Button>)
         ].map((item, i) => 
           // <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
             <Grid.Col key={`Statuses-${i}`} span={{ base: 4, sm: 1.5}}>

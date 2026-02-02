@@ -44,6 +44,16 @@ export class CompanyService {
       .session(session);
   }
 
+  async addFieldToCompany(
+    company_id: Types.ObjectId,
+    field_id: Types.ObjectId,
+    session: ClientSession,
+  ) {
+    return await this.companyModel
+      .updateOne({ _id: company_id }, { $addToSet: { fields_ids: field_id } })
+      .session(session);
+  }
+
   async addServiceToCompany(
     company_id: Types.ObjectId,
     service_id: Types.ObjectId,

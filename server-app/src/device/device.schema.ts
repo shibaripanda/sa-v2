@@ -10,6 +10,9 @@ export class Device {
 
   @Prop({ required: true, default: 0 })
   color: number;
+
+  @Prop({ required: true, default: [] })
+  blockFields: [];
 }
 
 export const DeviceSchema = SchemaFactory.createForClass(Device);

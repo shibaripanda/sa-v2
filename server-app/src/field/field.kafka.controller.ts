@@ -14,6 +14,7 @@ export class FieldKafkaController {
       data.requestData.field_id,
       data.requestData.data,
     );
+    console.log(data);
     return {
       value: res,
       key: Date.now(),

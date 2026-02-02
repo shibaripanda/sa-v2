@@ -8,7 +8,7 @@ export class FieldClass extends (Model as new (data: Field) => ModelWithData<Fie
 
   private axiosClass = new AxiosClass()
 
-  async editField(field_id: string, field: string, newValue: string, comp: CompanyClass, pickComp: (company: Company) => void) {
+  async editField(field_id: string, field: string, newValue: string | boolean, comp: CompanyClass, pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/field/edit-field', 'edit-field', {field_id, data: {[field]: newValue}})
     if (!res) return false
     comp.fields_ids = comp.fields_ids.map(st =>

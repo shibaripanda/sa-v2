@@ -5,6 +5,7 @@ import { UniversalJwtGuard } from 'src/guards/universalJwtGuard';
 import { UpdateCompanyDataDto } from './dto/comp/updateCompanyData.dto';
 import { UpdateCompanyStatusLine } from './dto/comp/updateCompanyStatusLine.dto';
 import { UpdateCompanyDeviceLine } from './dto/comp/updateCompanyDeviceLine.dto';
+import { UpdateCompanyFieldLine } from './dto/comp/updateCompanyFieldLine.dto';
 
 @Controller('company')
 export class CompanyController {
@@ -19,6 +20,18 @@ export class CompanyController {
     // @Ip() ip: string,
   ) {
     const res = await this.kafkaService.sendAnyReq('update-device-line', data);
+    return res;
+  }
+
+  @UseGuards(UniversalJwtGuard)
+  @Post('/update-field-line')
+  async editField(
+    @Body()
+    data: UpdateCompanyFieldLine,
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    const res = await this.kafkaService.sendAnyReq('update-field-line', data);
     return res;
   }
 

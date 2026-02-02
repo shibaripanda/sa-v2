@@ -11,6 +11,7 @@ import { StatusController } from './status.controller';
 import { CompanyController } from './company.controller';
 import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
 import { DeviceController } from './device.controller';
+import { FieldController } from './field.controller';
 
 @Global()
 @Module({
@@ -46,6 +47,7 @@ import { DeviceController } from './device.controller';
     StatusController,
     CompanyController,
     DeviceController,
+    FieldController,
   ],
   providers: [KafkaService],
   exports: [KafkaService],

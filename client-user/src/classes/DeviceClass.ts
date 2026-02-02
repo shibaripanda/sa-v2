@@ -8,7 +8,7 @@ export class DeviceClass extends (Model as new (data: Device) => ModelWithData<D
 
   private axiosClass = new AxiosClass()
 
-  async editDevice(device_id: string, field: string, newValue: string, comp: CompanyClass, pickComp: (company: Company) => void) {
+  async editDevice(device_id: string, field: string, newValue: string | string[], comp: CompanyClass, pickComp: (company: Company) => void) {
     const res = await this.axiosClass.axiosAppServer('POST', '/device/edit-device', 'edit-device', {device_id, data: {[field]: newValue}})
     if (!res) return false
     comp.devices_ids = comp.devices_ids.map(st =>

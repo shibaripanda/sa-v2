@@ -4,6 +4,7 @@ import { CompanyService } from './company.service';
 import { UpdateCompanyStatusLine } from './dto/updateCompanyStatusLine.dto';
 import { UpdateCompanyDataDto } from './dto/updateCompanyData.dto';
 import { UpdateCompanyDeviceLine } from './dto/updateCompanyDeviceLine.dto';
+import { UpdateCompanyFieldLine } from './dto/updateCompanyFieldLine.dto';
 
 @Controller()
 export class CompanyKafkaController {
@@ -11,6 +12,18 @@ export class CompanyKafkaController {
 
   @MessagePattern('update-device-line')
   async updateDeviceLine(@Payload() data: UpdateCompanyDeviceLine) {
+    const res = await this.companyService.updateCompanyData(
+      data._id,
+      data.requestData,
+    );
+    return {
+      value: res,
+      key: Date.now(),
+    };
+  }
+
+  @MessagePattern('update-field-line')
+  async updateFieldLine(@Payload() data: UpdateCompanyFieldLine) {
     const res = await this.companyService.updateCompanyData(
       data._id,
       data.requestData,

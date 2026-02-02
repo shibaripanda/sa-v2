@@ -61,6 +61,13 @@ export class AppService implements OnModuleInit {
         );
       }
 
+      if (comp.fields_ids?.length) {
+        await this.fieldService.deleteManyFields(
+          comp.fields_ids.map((s) => s._id),
+          session,
+        );
+      }
+
       if (comp.works_ids?.length) {
         await this.workService.deleteManyWorks(
           comp.works_ids.map((w) => w._id),
@@ -164,6 +171,30 @@ export class AppService implements OnModuleInit {
     }
   }
 
+  async addNewField(company_id: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const status_id = await this.fieldService.createNewField(session);
+      await this.companyService.addFieldToCompany(
+        company_id,
+        status_id,
+        session,
+      );
+
+      await session.commitTransaction();
+      const res = await this.companyService.getCompanyWithRelations(company_id);
+      if (!res) throw new Error('Error');
+      return res.toObject();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
   async deleteAccount(user_owner_id: Types.ObjectId) {
     const session = await this.connection.startSession();
     session.startTransaction();
@@ -187,6 +218,13 @@ export class AppService implements OnModuleInit {
         if (comp.shops_ids?.length) {
           await this.shopService.deleteManyShops(
             comp.shops_ids.map((s) => s._id),
+            session,
+          );
+        }
+
+        if (comp.fields_ids?.length) {
+          await this.fieldService.deleteManyFields(
+            comp.fields_ids.map((s) => s._id),
             session,
           );
         }
