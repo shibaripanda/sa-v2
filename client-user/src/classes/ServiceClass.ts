@@ -6,6 +6,23 @@ export class ServiceClass extends (Model as new (data: Service) => ModelWithData
 
   private axiosClass = new AxiosClass()
 
+  async updateService(dataName: string, newValue: string, pickService: (service: Service) => void) {
+    const res = await this.axiosClass.axiosAppServer('POST', '/service/update-service', dataName, {[dataName]: newValue}, this._id)
+    console.log(res)
+    if (!res) return false
+    const updatedService = { ...this, [dataName]: newValue };
+    pickService(updatedService)
+    return true
+  }
+
+  async deleteService(exit: () => void) {
+    const res = await this.axiosClass.axiosAppServer('POST', '/app/delete-service', 'delete-service', {service_id: this._id})
+    if (!res) return false
+    // this.deleteLoginedUsers(this, setLoginedUsers)
+    exit()
+    return true
+  }
+
   // getDateSessionEnd() {
   //   return new Date(this.exp * 1000).toLocaleString()
   // }

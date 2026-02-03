@@ -34,6 +34,31 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Безвозвратное удаление сервиса и его заказов',
+    index: 'deleteServiceInfo',
+    update: false,
+  },
+  // {
+  //   rutext: 'Название сервиса',
+  //   index: 'serviceName',
+  //   update: false,
+  // },
+  {
+    rutext: 'Удалить сервис',
+    index: 'deleteService',
+    update: false,
+  },
+  {
+    rutext: 'Название сервиса',
+    index: 'serviceName',
+    update: false,
+  },
+  {
+    rutext: 'Настройки сервиса',
+    index: 'serviceSettings',
+    update: false,
+  },
+  {
     rutext: 'Порядок полей',
     index: 'fieldLine',
     update: false,

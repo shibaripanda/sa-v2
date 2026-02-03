@@ -23,6 +23,19 @@ export class AppController {
   }
 
   @UseGuards(UniversalJwtGuard)
+  @Post('/delete-service')
+  async deleteSevice(
+    @Body() data: { requestData: { service_id: string } },
+    // @CurrentUser() user: User,
+    // @Ip() ip: string,
+  ) {
+    const res = await this.kafkaService.sendAnyReq('delete-service', {
+      service_id: data.requestData.service_id,
+    });
+    return res;
+  }
+
+  @UseGuards(UniversalJwtGuard)
   @Post('/add-new-device')
   async addNewDevice(
     @Body() data: { requestData: { company_id: string } },

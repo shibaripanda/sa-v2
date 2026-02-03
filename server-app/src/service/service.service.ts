@@ -13,11 +13,10 @@ export class ServiceService {
     @InjectModel(Service.name) private serviceModel: Model<ServiceDocument>,
   ) {}
 
-  // async getServiceWhereAamStaff(users_staff_id: Types.ObjectId) {
-  //   return await this.serviceModel.find({
-  //     users_staff_ids: { $in: [users_staff_id] },
-  //   });
-  // }
+  async updateServiceData(_id: Types.ObjectId, data: object) {
+    return await this.serviceModel.updateOne({ _id }, data);
+  }
+
   async deleteManyServices(ids: Types.ObjectId[], session?: ClientSession) {
     await this.serviceModel.deleteMany({ _id: { $in: ids } }, { session });
   }

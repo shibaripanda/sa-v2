@@ -3,6 +3,7 @@ import { CompanySettings } from './companySettings/CompanySettings';
 import { LibrarySettings } from './librarySettings/LibrarySettings';
 import { MyUserSettings } from './myUserSettings/MyUserSettings';
 import { Orders } from './orders/Orders';
+import { ServiceSettings } from './serviceSettings/ServiceSettings';
 
 export interface MainInterface extends DashScreenInterface {
   orders: Order[];
@@ -17,7 +18,7 @@ export function Main(props: MainInterface) {
     <Orders {...props}/>,
     <MyUserSettings {...props}/>,
     <CompanySettings {...props}/>,
-    <div>Service settings</div>,
+    <ServiceSettings {...props}/>,
     <div>Roles settings</div>,
     <LibrarySettings {...props}/>,
     <div>Warehouse</div>,

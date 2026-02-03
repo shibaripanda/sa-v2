@@ -69,6 +69,7 @@ import { FieldModule } from 'src/field/field.module';
     StatusModule,
     WorkModule,
     FieldModule,
+    ServiceModule,
   ],
   controllers: [AppKafkaController],
   providers: [AppService],
