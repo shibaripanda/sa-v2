@@ -13,6 +13,14 @@ export class ServiceService {
     @InjectModel(Service.name) private serviceModel: Model<ServiceDocument>,
   ) {}
 
+  async deleteService(_id: Types.ObjectId, session?: ClientSession) {
+    await this.serviceModel.deleteOne({ _id }, { session });
+  }
+
+  async getService(_id: Types.ObjectId, session: ClientSession) {
+    return await this.serviceModel.findById({ _id }).session(session);
+  }
+
   async updateServiceData(_id: Types.ObjectId, data: object) {
     return await this.serviceModel.updateOne({ _id }, data);
   }

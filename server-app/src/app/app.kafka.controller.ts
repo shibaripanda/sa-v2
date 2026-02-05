@@ -7,6 +7,15 @@ import { Types } from 'mongoose';
 export class AppKafkaController {
   constructor(private readonly appService: AppService) {}
 
+  @MessagePattern('delete-service')
+  async deleteService(@Payload() value: { service_id: Types.ObjectId }) {
+    const res = await this.appService.deleteService(value.service_id);
+    return {
+      value: { message: res },
+      key: Date.now(),
+    };
+  }
+
   @MessagePattern('delete-company')
   async deleteCompany(@Payload() value: { company_id: Types.ObjectId }) {
     const res = await this.appService.deleteCompany(value.company_id);

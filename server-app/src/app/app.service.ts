@@ -38,6 +38,42 @@ export class AppService implements OnModuleInit {
     // });
   }
 
+  async deleteService(service_id: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      // Получаем компанию с дочерними объектами
+      const comp = await this.serviceService.getService(service_id, session);
+      if (!comp) throw new Error('Service not found');
+
+      // if (comp.parts_ids?.length) {
+      //   await this.partService.deleteManyParts(
+      //     comp.parts_ids.map((p) => p._id),
+      //     session,
+      //   );
+      // }
+
+      // if (comp.staff_users_ids?.length) {
+      //   await this.staffUserService.deleteManyStaffUsers(
+      //     comp.staff_users_ids.map((u) => u._id),
+      //     session,
+      //   );
+      // }
+
+      await this.serviceService.deleteService(comp._id, session);
+
+      await session.commitTransaction();
+      return true;
+    } catch (error) {
+      console.log(error);
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
   async deleteCompany(company_id: Types.ObjectId) {
     const session = await this.connection.startSession();
     session.startTransaction();
