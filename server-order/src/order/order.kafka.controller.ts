@@ -1,6 +1,6 @@
 import { Body, Controller } from '@nestjs/common';
 import { OrderService } from './order.service';
-// import { MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class OrderKafkaController {
@@ -15,12 +15,13 @@ export class OrderKafkaController {
   //   };
   // }
 
-  // @MessagePattern('textlib')
-  // getTextLib(@Payload() value: string) {
-  //   const res = { res: value };
-  //   return {
-  //     value: res,
-  //     key: 'textlib',
-  //   };
-  // }
+  @MessagePattern('create-order')
+  createOrder(@Payload() newOrder: object) {
+    console.log(newOrder);
+    // const res = { res: true };
+    return {
+      value: true,
+      key: 'create-order',
+    };
+  }
 }

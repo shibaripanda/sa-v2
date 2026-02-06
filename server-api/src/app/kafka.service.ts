@@ -18,6 +18,7 @@ export class KafkaService implements OnModuleInit {
     const device = ['edit-device', 'delete-device'];
     const field = ['edit-field', 'delete-field'];
     const service = ['update-service', 'delete-service'];
+    const order = ['create-order'];
     const comps = [
       'get-all-my-comps',
       'create-new-service',
@@ -40,6 +41,7 @@ export class KafkaService implements OnModuleInit {
       ...device,
       ...field,
       ...service,
+      ...order,
     ];
 
     patterns.forEach((p) => this.kafkaClient.subscribeToResponseOf(p));

@@ -13,6 +13,7 @@ import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
 import { DeviceController } from './device.controller';
 import { FieldController } from './field.controller';
 import { ServiceController } from './service.controller';
+import { OrderModule } from 'src/order/order.module';
 
 @Global()
 @Module({
@@ -41,6 +42,7 @@ import { ServiceController } from './service.controller';
     UserModule,
     TextModule,
     AuthModule,
+    OrderModule,
     JwtConfigModule,
   ],
   controllers: [

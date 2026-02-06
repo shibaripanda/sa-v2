@@ -7,6 +7,7 @@ import { NavbarLinkProps } from '../navBar/NavBar';
 import { Exit } from '../../../subComponents/exit/Exit';
 import { LanguagePicker } from '../../../subComponents/languagePicker/LanguagePicker';
 import { ColorShema } from '../../../subComponents/colorShema/ColorShema';
+import { CreateOrder } from '../../../subComponents/createOrder/CreateOrder';
 
 interface HeaderInterface extends DashScreenInterface {
     headerMenuData: {
@@ -95,7 +96,8 @@ export function Header(props: HeaderInterface) {
                 <Text size='sm'>{props.service.name}</Text>
                 <Text size='sm'>{props.user.name}</Text>
             </Box>
-            <Button size='xs' visibleFrom="sm" c='green' variant='default'>Создать заказ</Button>
+            {/* <Button size='xs' visibleFrom="sm" c='green' variant='default'>Создать заказ</Button> */}
+            <CreateOrder {...props}/>
         </Group>
 
         <Avatar radius="sm" alt={props.user.name} size='sm' name={props.user.name} color="initials" hiddenFrom="sm"/>

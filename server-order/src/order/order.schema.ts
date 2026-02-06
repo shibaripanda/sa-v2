@@ -9,16 +9,16 @@ export type OrderDocument = HydratedDocument<Order>;
 })
 export class Order {
   @Prop({ required: true, default: '-' })
-  _device_Id_: string;
+  _deviceId_: string;
 
   @Prop({ required: true, default: '-' })
-  _status_Id_: string;
+  _statusId_: string;
 
   @Prop({ required: true, default: '-' })
-  _createrStaff_Id_: string;
+  _createrStaffId_: string;
 
   @Prop({ required: true, default: '-' })
-  _createrOrigin_Id_: string;
+  _createrOriginId_: string;
 
   @Prop({ required: true, default: '-' })
   _createrName_: string;
