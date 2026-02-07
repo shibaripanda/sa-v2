@@ -6,7 +6,9 @@ export interface Field {
     onlyNumber: boolean;
     mustHave: boolean;
     variants: boolean;
-    data: string | number[];
+    data: string[] | number[];
+
+    currentData?: string | number | null
 
     createdAt: string;
     updatedAt: string;
