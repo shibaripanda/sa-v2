@@ -23,10 +23,10 @@ export type TextDocument = Text & Document;
 @Schema()
 export class Text {
   @Prop({ required: true })
-  rutext: string;
+  rutext!: string;
 
   @Prop({ required: true, unique: true })
-  index: string;
+  index!: string;
 }
 
 const baseSchema = SchemaFactory.createForClass(Text);

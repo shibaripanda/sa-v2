@@ -48,11 +48,6 @@ export const myLib: LengInstruction[] = [
     index: 'deleteServiceInfo',
     update: false,
   },
-  // {
-  //   rutext: 'Название сервиса',
-  //   index: 'serviceName',
-  //   update: false,
-  // },
   {
     rutext: 'Удалить сервис',
     index: 'deleteService',
