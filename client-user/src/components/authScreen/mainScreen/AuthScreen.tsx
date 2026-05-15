@@ -5,6 +5,9 @@ import {
     Group,
     Paper,
     Space,
+    Stack,
+    Tabs,
+    Text,
     Title,
   } from '@mantine/core';
 import classes from './AuthScreen.module.css'
@@ -44,6 +47,16 @@ export interface AuthScreenInterface {
 
     const [agreement, setAgreement] = useState(false)
     const [serviseModal, setServiseModal] = useDisclosure(false)
+    const [activeTab, setActiveTab] = useState<string | null>('enter');
+
+    const loginPanel = (panel: string) => {    
+      return (
+        <Stack gap="lg">
+          <TelegramButton {...props} activeTab={panel} setServiseModal={setServiseModal} title={'Telegram'} agreement={agreement} setAgreement={setAgreement}/>
+          <GoogleButton {...props} activeTab={panel} setServiseModal={setServiseModal} title={'Google'} agreement={agreement} setAgreement={setAgreement}/>
+        </Stack>
+      )
+    }
 
     return (
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_TOKEN}>
@@ -60,16 +73,38 @@ export interface AuthScreenInterface {
           <ActivUsersBlock {...props} setServiseModal={setServiseModal}/>
           
           <Space h='md'/>
-          <Checkbox
-          checked={agreement}
-          color='grey'
-          onChange={(event) => setAgreement(event.currentTarget.checked)}
-          />
-          <Grid justify="space-between" align="center">
-            <Grid.Col span={6}><GoogleButton {...props} setServiseModal={setServiseModal} title={'Google'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
-            <Grid.Col span={6}><TelegramButton {...props} setServiseModal={setServiseModal} title={'Telegram'} agreement={agreement} setAgreement={setAgreement}/></Grid.Col>
-          </Grid>
+          
+          <Tabs color="green"  defaultValue="enter" value={activeTab} onChange={setActiveTab}>
 
+            <Tabs.List>
+              <Tabs.Tab value="enter">
+                <Text size='sm' fw={700} c={activeTab === 'enter' ? undefined : "dimmed"}>Вход</Text>
+              </Tabs.Tab>
+              <Tabs.Tab value="reg">
+                <Text size='sm' fw={700} c={activeTab === 'reg' ? undefined : "dimmed"}>Регистрация</Text>
+              </Tabs.Tab>
+            </Tabs.List>
+
+            <Space h='xl'/>
+
+            <Tabs.Panel value="enter">
+              {loginPanel("enter")}
+            </Tabs.Panel>
+
+            <Tabs.Panel value="reg">
+              {loginPanel("reg")}
+            </Tabs.Panel>
+
+          </Tabs>
+
+          <Space h='xl'/>
+
+          <Checkbox
+            checked={agreement}
+            color='grey'
+            onChange={(event) => setAgreement(event.currentTarget.checked)}
+          />
+          
         </Paper>
       </div>
       <ServiceModal {...props} serviseModal={serviseModal} setServiseModal={setServiseModal}/>

@@ -11,6 +11,7 @@ interface GoogleButtonInterface extends AuthScreenInterface {
     agreement: boolean;
     setAgreement: any;
     setServiseModal: any;
+    activeTab: string;
 }
 
 export function TelegramButton(props: GoogleButtonInterface) {
@@ -54,7 +55,7 @@ export function TelegramButton(props: GoogleButtonInterface) {
             disabled={!props.agreement}
             variant='default'
             fullWidth
-            mt="xl"
+            // mt="xl"
             size="md" 
             onClick={openPopup}>
             {props.title}&nbsp;&nbsp;<IconBrandTelegram/>

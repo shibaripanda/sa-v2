@@ -6,13 +6,13 @@ export type WorkDocument = HydratedDocument<Work>;
 @Schema({ timestamps: true })
 export class Work {
   @Prop({ required: true, default: 'Software setup' })
-  name: string;
+  name!: string;
 
   @Prop({ required: true, default: 10 })
-  buyPrice: number;
+  buyPrice!: number;
 
   @Prop({ required: true, default: 15 })
-  sellPrice: number;
+  sellPrice!: number;
 }
 
 export const WorkSchema = SchemaFactory.createForClass(Work);

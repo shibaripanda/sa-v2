@@ -11,6 +11,7 @@ interface GoogleButtonInterface extends AuthScreenInterface {
     agreement: boolean;
     setAgreement: any;
     setServiseModal: any;
+    activeTab: string;
 }
 
 export function GoogleButton(props: GoogleButtonInterface) {
@@ -53,7 +54,7 @@ export function GoogleButton(props: GoogleButtonInterface) {
             disabled={!props.agreement}
             variant='default'
             fullWidth
-            mt="xl"
+            // mt="xl"
             size="md" 
             onClick={() => login()}>
             {props.title}&nbsp;&nbsp;<IconBrandGoogle/>

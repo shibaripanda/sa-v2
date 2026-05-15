@@ -23,7 +23,7 @@ export default defineConfig({
   // в клиентском коде нужны с VITE_*
   server: {
     allowedHosts: [
-      '543f10c370ee.ngrok-free.app', // 👈 твой ngrok-хост
+      'filly-optimum-ostrich.ngrok-free.app', // 👈 твой ngrok-хост
     ],
   },
 });
