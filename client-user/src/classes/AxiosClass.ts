@@ -91,21 +91,21 @@ export class AxiosClass {
     }
   }
 
-  async axiosTelegramRequest(credentialResponse: string) {
+  async axiosTelegramRequest(credentialResponse: object, enterReg: string) {
     return await axios({
       method: 'POST',
       url: this.api + '/auth/telegramLogin',
-      data: credentialResponse,
+      data: {user: credentialResponse, enterReg},
       headers: {},
       timeout: 10000
     })
   }
 
-  async axiosGoogleRequest(credentialResponse: string) {
+  async axiosGoogleRequest(credentialResponse: string, enterReg: string) {
     return await axios({
       method: 'POST',
       url: this.api + '/auth/googleLogin',
-      data: {access_token: credentialResponse},
+      data: {access_token: credentialResponse, enterReg},
       headers: {},
       timeout: 10000
     })

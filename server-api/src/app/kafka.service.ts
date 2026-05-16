@@ -4,14 +4,12 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
-  constructor(
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
-  ) {
+  constructor(@Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka) {
     console.log('KafkaService start');
   }
 
   onModuleInit() {
-    const auth = ['googleLogin', 'telegramLogin'];
+    const auth = ['googleLoginReg', 'googleLoginEnter', 'telegramLoginReg', 'telegramLoginEnter'];
     const text = ['textavailable', 'textlib'];
     const user = ['update-user', 'delete-account'];
     const status = ['edit-status', 'delete-status'];
@@ -32,17 +30,7 @@ export class KafkaService implements OnModuleInit {
       'update-field-line',
       'update-company',
     ];
-    const patterns = [
-      ...auth,
-      ...text,
-      ...user,
-      ...comps,
-      ...status,
-      ...device,
-      ...field,
-      ...service,
-      ...order,
-    ];
+    const patterns = [...auth, ...text, ...user, ...comps, ...status, ...device, ...field, ...service, ...order];
 
     patterns.forEach((p) => this.kafkaClient.subscribeToResponseOf(p));
   }

@@ -26,10 +26,7 @@ export class UserService {
       if (res) await this.userModel.deleteOne({ _id });
       return true;
     } catch {
-      throw new HttpException(
-        'Kafka deleteAccount failed',
-        HttpStatus.BAD_GATEWAY,
-      );
+      throw new HttpException('Kafka deleteAccount failed', HttpStatus.BAD_GATEWAY);
     }
   }
 
@@ -37,9 +34,29 @@ export class UserService {
     return await this.userModel.updateOne({ _id }, data);
   }
 
-  async getOrCreateTelegramUser(
-    user: TelegramAuthUser,
-  ): Promise<UserDocument | null> {
+  async getTelegramUser(user: TelegramAuthUser): Promise<UserDocument | null> {
+    if (!user) return null;
+
+    const ex = await this.userModel.findOne({ telegramId: user.id });
+    if (ex) {
+      ex.telegramUserName = user.username ?? '';
+      await ex.save();
+      return ex;
+    }
+    return null;
+  }
+
+  async getGoogleUser(user: GoogleAuthUser): Promise<UserDocument | null> {
+    if (!user) return null;
+
+    const ex = await this.userModel.findOne({ email: user.email });
+    if (ex) {
+      return ex;
+    }
+    return null;
+  }
+
+  async getOrCreateTelegramUser(user: TelegramAuthUser): Promise<UserDocument | null> {
     if (!user) return null;
 
     const ex = await this.userModel.findOne({ telegramId: user.id });
@@ -57,9 +74,7 @@ export class UserService {
     return created.save();
   }
 
-  async getOrCreateGoogleUser(
-    user: GoogleAuthUser,
-  ): Promise<UserDocument | null> {
+  async getOrCreateGoogleUser(user: GoogleAuthUser): Promise<UserDocument | null> {
     if (!user) return null;
 
     const ex = await this.userModel.findOne({ email: user.email });

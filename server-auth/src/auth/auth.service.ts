@@ -11,6 +11,7 @@ import { IpInfo } from './interfaces/IpInfo';
 import { AuthDataValidator } from '@telegram-auth/server';
 import { urlStrToAuthDataMap } from '@telegram-auth/server/utils';
 import { ConfigService } from '@nestjs/config';
+import { LoginData } from './auth.kafka.controller';
 
 @Injectable()
 export class AuthService {
@@ -21,54 +22,84 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async telegramLogin(data: object, ip: string) {
+  async telegramLoginEnter(data: object, ip: string) {
     const telegramUserData = await this.telegramAuth(data);
     if (telegramUserData) {
-      const user: UserDocument | null =
-        await this.userService.getOrCreateTelegramUser(telegramUserData);
+      const user: UserDocument | null = await this.userService.getTelegramUser(telegramUserData);
       if (user) {
         const location = await this.getLocation(ip);
         user.historyLogin.push({ date: Date.now(), ip, location });
         await user.save();
-        return this.generateToken(user, ip, location);
+        return { ...this.generateToken(user, ip, location), status: true };
+        // return this.generateToken(user, ip, location);
       }
+      return { status: false, message: 'This user does not exist. :-/' };
     }
-    throw new UnauthorizedException({ message: 'Error auth :-/' });
+    return { status: false, message: 'Authorization error :-/' };
   }
 
-  async googleLogin(data: GoogleLoginDto, ip: string) {
+  async googleLoginEnter(data: LoginData, ip: string) {
+    console.log('googleLoginEnter');
     const googleUserData = await this.verifyIdTokenGoogle(data);
     if (googleUserData) {
-      const user: UserDocument | null =
-        await this.userService.getOrCreateGoogleUser({
-          email: googleUserData.email,
-          name: googleUserData?.name,
-        });
+      const user: UserDocument | null = await this.userService.getGoogleUser({
+        email: googleUserData.email,
+        name: googleUserData?.name,
+      });
       if (user) {
         const location = await this.getLocation(ip);
         user.historyLogin.push({ date: Date.now(), ip, location });
         await user.save();
-        return this.generateToken(user, ip, location);
+        return { ...this.generateToken(user, ip, location), status: true };
       }
+      return { status: false, message: 'This user does not exist. :-/' };
     }
-    throw new UnauthorizedException({ message: 'Error auth :-/' });
+    return { status: false, message: 'Authorization error :-/' };
+  }
+
+  async telegramLoginReg(data: object, ip: string) {
+    const telegramUserData = await this.telegramAuth(data);
+    if (telegramUserData) {
+      const user: UserDocument | null = await this.userService.getOrCreateTelegramUser(telegramUserData);
+      if (user) {
+        const location = await this.getLocation(ip);
+        user.historyLogin.push({ date: Date.now(), ip, location });
+        await user.save();
+        return { ...this.generateToken(user, ip, location), status: true };
+      }
+      return { status: false, message: 'Error :-/' };
+    }
+    return { status: false, message: 'Authorization error :-/' };
+  }
+
+  async googleLoginReg(data: LoginData, ip: string) {
+    const googleUserData = await this.verifyIdTokenGoogle(data);
+    if (googleUserData) {
+      const user: UserDocument | null = await this.userService.getOrCreateGoogleUser({
+        email: googleUserData.email,
+        name: googleUserData?.name,
+      });
+      if (user) {
+        const location = await this.getLocation(ip);
+        user.historyLogin.push({ date: Date.now(), ip, location });
+        await user.save();
+        return { ...this.generateToken(user, ip, location), status: true };
+      }
+      return { status: false, message: 'Error :-/' };
+    }
+    return { status: false, message: 'Authorization error :-/' };
   }
 
   private async getLocation(ip: string): Promise<string> {
     const link = `https://ipinfo.io/${ip}/json`;
 
-    const response: AxiosResponse<IpInfo> = await firstValueFrom(
-      this.httpService.get<IpInfo>(link),
-    );
+    const response: AxiosResponse<IpInfo> = await firstValueFrom(this.httpService.get<IpInfo>(link));
 
     if (!response?.data) return 'noLocation';
 
-    const parts = [
-      response.data.country,
-      response.data.region,
-      response.data.city,
-      response.data.postal,
-    ].filter(Boolean);
+    const parts = [response.data.country, response.data.region, response.data.city, response.data.postal].filter(
+      Boolean,
+    );
 
     return parts.length ? parts.join(', ') : 'noLocation';
   }

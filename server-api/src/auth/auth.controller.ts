@@ -1,7 +1,7 @@
 import { Body, Controller, Ip, Post } from '@nestjs/common';
 import { GoogleLoginDto } from './dto/googleLogin.dto';
 import { KafkaService } from 'src/app/kafka.service';
-import { TelegramLoginDto } from './dto/telegramLogin.dto';
+// import { TelegramLoginDto } from './dto/telegramLogin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -9,11 +9,18 @@ export class AuthController {
 
   @Post('/googleLogin')
   async googleLogin(@Body() data: GoogleLoginDto, @Ip() ip: string) {
-    return await this.kafkaService.sendAnyReq('googleLogin', { data, ip });
+    console.log('/googleLogin', data);
+    if (data.enterReg === 'reg') return await this.kafkaService.sendAnyReq('googleLoginReg', { data, ip });
+    if (data.enterReg === 'enter') return await this.kafkaService.sendAnyReq('googleLoginEnter', { data, ip });
+    return { status: false, message: 'Invalid enterReg value' };
   }
 
   @Post('/telegramLogin')
-  async telegramLogin(@Body() data: TelegramLoginDto, @Ip() ip: string) {
-    return await this.kafkaService.sendAnyReq('telegramLogin', { data, ip });
+  async telegramLogin(@Body() data: { enterReg: string; user: object }, @Ip() ip: string) {
+    console.log('/telegramLogin', data);
+    if (data.enterReg === 'reg') return await this.kafkaService.sendAnyReq('telegramLoginReg', { data: data.user, ip });
+    if (data.enterReg === 'enter')
+      return await this.kafkaService.sendAnyReq('telegramLoginEnter', { data: data.user, ip });
+    return { status: false, message: 'Invalid enterReg value' };
   }
 }
