@@ -57,6 +57,25 @@ export class AuthService {
     return { status: false, message: 'Authorization error :-/' };
   }
 
+  async googleLoginEnterAdmin(data: LoginData, ip: string) {
+    console.log('googleLoginEnterAdmin');
+    const googleUserData = await this.verifyIdTokenGoogle(data);
+    if (googleUserData && this.adminEnterControlEmail(googleUserData.email)) {
+      const user: UserDocument | null = await this.userService.getGoogleUser({
+        email: googleUserData.email,
+        name: googleUserData?.name,
+      });
+      if (user) {
+        const location = await this.getLocation(ip);
+        user.historyLogin.push({ date: Date.now(), ip, location });
+        await user.save();
+        return { ...this.generateToken(user, ip, location), status: true };
+      }
+      return { status: false, message: 'This user does not exist. :-/' };
+    }
+    return { status: false, message: 'Admin authorization error :-/' };
+  }
+
   async telegramLoginReg(data: object, ip: string) {
     const telegramUserData = await this.telegramAuth(data);
     if (telegramUserData) {
@@ -88,6 +107,10 @@ export class AuthService {
       return { status: false, message: 'Error :-/' };
     }
     return { status: false, message: 'Authorization error :-/' };
+  }
+
+  private adminEnterControlEmail(email: string) {
+    return this.configService.get<string>('ADMIN_EMAIL')!.split(',').includes(email);
   }
 
   private async getLocation(ip: string): Promise<string> {

@@ -9,7 +9,13 @@ export class KafkaService implements OnModuleInit {
   }
 
   onModuleInit() {
-    const auth = ['googleLoginReg', 'googleLoginEnter', 'telegramLoginReg', 'telegramLoginEnter'];
+    const auth = [
+      'googleLoginReg',
+      'googleLoginEnter',
+      'telegramLoginReg',
+      'telegramLoginEnter',
+      'googleLoginEnterAdmin',
+    ];
     const text = ['textavailable', 'textlib'];
     const user = ['update-user', 'delete-account'];
     const status = ['edit-status', 'delete-status'];

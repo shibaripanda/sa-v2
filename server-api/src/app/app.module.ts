@@ -14,6 +14,7 @@ import { DeviceController } from './device.controller';
 import { FieldController } from './field.controller';
 import { ServiceController } from './service.controller';
 import { OrderModule } from 'src/order/order.module';
+import { AppGateway } from './app.gateway';
 
 @Global()
 @Module({
@@ -53,7 +54,7 @@ import { OrderModule } from 'src/order/order.module';
     FieldController,
     ServiceController,
   ],
-  providers: [KafkaService],
+  providers: [KafkaService, AppGateway],
   exports: [KafkaService],
 })
 export class AppModule {}

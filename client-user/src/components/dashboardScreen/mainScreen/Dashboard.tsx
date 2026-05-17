@@ -12,6 +12,7 @@ import { UserClass } from '../../../classes/UserClass';
 import { CompanyClass } from '../../../classes/CompanyClass';
 import { ServiceClass } from '../../../classes/ServiceClass';
 import { StaffUserClass } from '../../../classes/StaffUserClass';
+import { socket } from '../../../utils/socket';
 
 const orderViewVariants = ['Table default', 'Cards (1 line)', 'Cards (2 line)', 'Cards (3 line)', 'Cards (4 line)', 'Cards (5 line)', 'Cards (6 line)', 'Cards (8 line)', 'Cards (10 line)']
 
@@ -195,6 +196,38 @@ export function Dashboard(props: DashScreenInterface) {
       links: orderViewVariants.map((v, index) => ({name: activOrderView === index ? v + ' *' : v, action: () => setActivOrderView(index)}))
     },
   ];
+
+  useEffect(() => {
+    const onConnect = () => {
+      console.log("connected", socket.id);
+    };
+
+    const onDisconnect = (reason: string) => {
+      console.log("disconnected", reason);
+    };
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
+  }, []);
+
+  useEffect(() => {
+    const token = props.user.token || '';
+
+    if (token) {
+      socket.auth = { token };
+
+      if (!socket.connected) {
+        socket.connect();
+      }
+
+      return;
+    }
+  }, [])
 
   
 

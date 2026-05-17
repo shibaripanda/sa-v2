@@ -5,9 +5,7 @@ import { ObjID } from 'src/user/interfaces/ObjID';
 
 @Injectable()
 export class AppKafkaService implements OnModuleInit {
-  constructor(
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
-  ) {
+  constructor(@Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka) {
     console.log('KafkaService start');
   }
 
