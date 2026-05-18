@@ -23,7 +23,7 @@ export default defineConfig({
   // в клиентском коде нужны с VITE_*
   server: {
     allowedHosts: [
-      '10b5-134-209-88-21.ngrok-free.app', // 👈 твой ngrok-хост
+      '4780-134-209-88-21.ngrok-free.app', // 👈 твой ngrok-хост
     ],
     port: 4000, // 👈 порт для admin
   },

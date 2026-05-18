@@ -10,6 +10,7 @@ import { useMediaQuery } from '@mantine/hooks'
 import { FooterLine } from '../subDashScreen/footer/FooterLine';
 import { UserClass } from '../../../classes/UserClass';
 import { socket } from '../../../utils/socket';
+import { User } from '../../../interfaces/user';
 
 const navBarData_Test = [
     { icon: IconDashboard, label: 'DashboardScreen' },
@@ -57,6 +58,8 @@ export function Dashboard(props: DashScreenInterface) {
   const [openedBurgerMainMenu, toggleOpenedBurgerMainMenu ] = useDisclosure();
   const [activeNavBar, setActiveNavBar] = useState(sessionStorage.getItem('activeNavBar') ? Number(sessionStorage.getItem('activeNavBar')) : 0);
   const [navBarData, setNavBarData] = useState(navBarData_Test)
+
+  const [users, setUsers] = useState<User[]>([])
 
   useEffect(() => {
     const onConnect = () => {
@@ -126,6 +129,8 @@ export function Dashboard(props: DashScreenInterface) {
 
         <AppShell.Main>
             <Main {...props}
+            users={users} setUsers={setUsers}
+            navBarData={navBarData}
             activeNavBar={activeNavBar} 
             isMobile={isMobile}
             />

@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  InternalServerErrorException,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, InternalServerErrorException, Post, UseGuards } from '@nestjs/common';
 import { UniversalJwtGuard } from 'src/guards/universalJwtGuard';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { UpdateUserDataDto } from './dto/updateUserData.dto';

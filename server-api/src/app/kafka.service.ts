@@ -9,6 +9,7 @@ export class KafkaService implements OnModuleInit {
   }
 
   onModuleInit() {
+    const admin = ['getUsersAdmin'];
     const auth = [
       'googleLoginReg',
       'googleLoginEnter',
@@ -36,7 +37,18 @@ export class KafkaService implements OnModuleInit {
       'update-field-line',
       'update-company',
     ];
-    const patterns = [...auth, ...text, ...user, ...comps, ...status, ...device, ...field, ...service, ...order];
+    const patterns = [
+      ...auth,
+      ...text,
+      ...user,
+      ...comps,
+      ...status,
+      ...device,
+      ...field,
+      ...service,
+      ...order,
+      ...admin,
+    ];
 
     patterns.forEach((p) => this.kafkaClient.subscribeToResponseOf(p));
   }

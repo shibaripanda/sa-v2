@@ -16,6 +16,10 @@ export class UserService {
     console.log('UserService initialized');
   }
 
+  async getUsersAdmin() {
+    return await this.userModel.find();
+  }
+
   async getUserById(_id: ObjID) {
     return await this.userModel.findById(_id);
   }

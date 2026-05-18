@@ -35,10 +35,7 @@ export class UserKafkaController {
   ) {
     const user = await this.userService.getUserById(value.user_id);
     if (!user) throw new RpcException('USER_NOT_FOUND');
-    const res = await this.userService.updateUserData(
-      value.user_id,
-      value.data,
-    );
+    const res = await this.userService.updateUserData(value.user_id, value.data);
     return {
       value: res,
       key: 'update-user',
