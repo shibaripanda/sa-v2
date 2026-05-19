@@ -11,6 +11,7 @@ import { FooterLine } from '../subDashScreen/footer/FooterLine';
 import { UserClass } from '../../../classes/UserClass';
 import { socket } from '../../../utils/socket';
 import { User } from '../../../interfaces/user';
+import { Company } from '../../../interfaces/company';
 
 const navBarData_Test = [
     { icon: IconDashboard, label: 'DashboardScreen' },
@@ -52,6 +53,26 @@ export interface DashScreenInterface {
     exit: any;
 }
 
+export interface UsersAdminPagination {
+  items: User[];
+  meta: {
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  }
+}
+
+export interface CompaniesAdminPagination {
+  items: Company[];
+  meta: {
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  }
+}
+
 export function Dashboard(props: DashScreenInterface) {
   
   const isMobile = useMediaQuery('(max-width: 48em)')
@@ -59,7 +80,8 @@ export function Dashboard(props: DashScreenInterface) {
   const [activeNavBar, setActiveNavBar] = useState(sessionStorage.getItem('activeNavBar') ? Number(sessionStorage.getItem('activeNavBar')) : 0);
   const [navBarData, setNavBarData] = useState(navBarData_Test)
 
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<UsersAdminPagination>({ items: [], meta: { limit: 100, page: 1, total: 0, totalPages: 0 } });
+  const [companies, setCompanies] = useState<CompaniesAdminPagination>({ items: [], meta: { limit: 100, page: 1, total: 0, totalPages: 0 } });
 
   useEffect(() => {
     const onConnect = () => {
@@ -129,6 +151,7 @@ export function Dashboard(props: DashScreenInterface) {
 
         <AppShell.Main>
             <Main {...props}
+            companies={companies} setCompanies={setCompanies}
             users={users} setUsers={setUsers}
             navBarData={navBarData}
             activeNavBar={activeNavBar} 

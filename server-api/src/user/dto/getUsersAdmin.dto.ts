@@ -1,17 +1,14 @@
-import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min, Max } from 'class-validator';
+import { IsInt, IsNotEmpty, Max, Min } from 'class-validator';
 
 export class GetUsersAdminDto {
-  @IsOptional()
-  @Type(() => Number)
+  @IsNotEmpty()
   @IsInt()
   @Min(1)
-  page = 1;
+  readonly page!: number;
 
-  @IsOptional()
-  @Type(() => Number)
+  @IsNotEmpty()
   @IsInt()
   @Min(1)
   @Max(100)
-  limit = 10;
+  readonly limit!: number;
 }

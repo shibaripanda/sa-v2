@@ -4,7 +4,7 @@ import { SubscribeMessage } from '@nestjs/websockets/decorators/subscribe-messag
 import { MessageBody } from '@nestjs/websockets';
 import { Socket } from 'node_modules/socket.io/dist/socket';
 import { GetUsersAdminDto } from './dto/getUsersAdmin.dto';
-import { UsePipes } from '@nestjs/common';
+import { UsePipes, ValidationPipe } from '@nestjs/common';
 
 export interface MySocket extends Socket {
   data: {
@@ -18,7 +18,7 @@ export interface MySocket extends Socket {
 export class UserAdminGateway {
   constructor(private readonly kafkaService: KafkaService) {}
 
-  @UsePipes()
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('getUsersAdmin')
   async getUsersAdmin(@MessageBody() messageBody: GetUsersAdminDto) {
     console.log(messageBody);

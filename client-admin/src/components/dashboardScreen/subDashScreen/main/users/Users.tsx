@@ -1,40 +1,42 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MainInterface } from '../Main';
 import { socket } from '../../../../../utils/socket';
-import { User } from '../../../../../interfaces/user';
+import { Modal, Pagination } from '@mantine/core';
 import { Button, Group, Space, Table, Text } from '@mantine/core';
-
-  // _id: string; x
-  // telegramId: number; x
-  // email: string; x
-  // name: string; x
-  // telegramUserName: string; x
-  // timeLiveToken: string; x
-  // historyLogin: HistoryLogin[];
-
-  // updatedAt: string; x
-  // createdAt: string; x
-
-  // location: string;
-  // ip: string;
+import { UsersAdminPagination } from '../../../mainScreen/Dashboard';
+import { useDisclosure } from '@mantine/hooks';
+import { User } from '../../../../../interfaces/user';
 
 export function Users(props: MainInterface) {
 
-  const getUsersAdmin = () => {
-    socket.emit('getUsersAdmin', {}, (res: User[]) => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [selectedItem, setSelectedItem] = useState<User | null>(null);
+
+  const getUsersAdmin = (page: number) => {
+    socket.emit('getUsersAdmin', {page, limit: props.users.meta.limit}, (res: UsersAdminPagination) => {
       console.log('getUsersAdmin', res);
       props.setUsers(res);
     });
   }
 
+  const handleRowClickOpen = (item: User) => {
+    setSelectedItem(item);
+    open();
+  };
+
+  const handleRowClickClose = () => {
+    setSelectedItem(null);
+    close();
+  };
+
   useEffect(() => {
-    if (props.users.length) return;
-    getUsersAdmin();
+    if (props.users.items.length) return;
+    getUsersAdmin(props.users.meta.page);
   }, [])
 
   console.log(props)
 
-  const rows = props.users.map((row) => {
+  const rows = props.users.items.map((row) => {
     const createdDate = new Date(row.createdAt).toLocaleDateString('ru-RU', {
       year: 'numeric',
       month: '2-digit',
@@ -52,7 +54,7 @@ export function Users(props: MainInterface) {
 
 
     return (
-      <Table.Tr key={row._id}>
+      <Table.Tr key={row._id} onClick={() => handleRowClickOpen(row)} style={{ cursor: 'pointer' }}>
         <Table.Td>
             {row._id}
         </Table.Td>
@@ -91,16 +93,23 @@ export function Users(props: MainInterface) {
 
         <Group>
           <Text size="xl" fw={700}>
-            {props.navBarData[props.activeNavBar].label} {props.users.length ? `(${props.users.length})` : ''}
+            {props.navBarData[props.activeNavBar].label}
           </Text>
-          <Button size='xs' variant='default' onClick={getUsersAdmin}>
+          <Button size='xs' variant='default' onClick={() => getUsersAdmin(1)}>
             {props.text?.refresh}
           </Button>
         </Group>
-        
-        <Text size="sm" c="dimmed">
-          Всего: {props.users.length}
+
+        <Text size="xl" fw={700}>
+          {props.users.items.length} / {props.users.meta.total}
         </Text>
+
+        <Pagination
+          size="sm" radius="xs"
+          value={props.users.meta.page}
+          onChange={(page) => getUsersAdmin(page)}
+          total={props.users.meta.totalPages}
+        />
 
       </Group>
 
@@ -124,6 +133,15 @@ export function Users(props: MainInterface) {
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
       </Table.ScrollContainer>
+
+      <Modal size="70%" opened={opened} onClose={handleRowClickClose} title="Authentication">
+        {selectedItem ? Object.keys(selectedItem).map((key) => (
+          <div key={key}>
+            <strong>{key}:</strong> {JSON.stringify(selectedItem[key])}
+          </div>
+        )) : "No user selected"}
+      </Modal>
+
     </div>
   );
 }

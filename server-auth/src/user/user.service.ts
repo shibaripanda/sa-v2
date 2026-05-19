@@ -16,8 +16,26 @@ export class UserService {
     console.log('UserService initialized');
   }
 
-  async getUsersAdmin() {
-    return await this.userModel.find();
+  async getUsersAdmin(query: { page: number; limit: number }) {
+    const { page, limit } = query;
+
+    const skip = (page - 1) * limit;
+
+    const [items, total] = await Promise.all([
+      this.userModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+
+      this.userModel.countDocuments(),
+    ]);
+
+    return {
+      items,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async getUserById(_id: ObjID) {

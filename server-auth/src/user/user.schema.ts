@@ -14,18 +14,18 @@ export class User {
   email?: string;
 
   @Prop()
-  name: string;
+  name!: string;
 
   @Prop()
-  telegramUserName: string;
+  telegramUserName!: string;
 
   @Prop({ default: '12h' })
-  timeLiveToken: string;
+  timeLiveToken!: string;
 
   @Prop({ default: [] })
-  historyLogin: [HistoryLogin];
+  historyLogin!: [HistoryLogin];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-// UserSchema.index({ subscriptionExpiresAt: 1, status: 1 });
+UserSchema.index({ createdAt: -1 });

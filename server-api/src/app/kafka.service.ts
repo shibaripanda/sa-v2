@@ -9,7 +9,7 @@ export class KafkaService implements OnModuleInit {
   }
 
   onModuleInit() {
-    const admin = ['getUsersAdmin'];
+    const admin = ['getUsersAdmin', 'getCompaniesAdmin'];
     const auth = [
       'googleLoginReg',
       'googleLoginEnter',
