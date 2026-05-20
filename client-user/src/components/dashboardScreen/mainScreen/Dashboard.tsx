@@ -13,6 +13,7 @@ import { CompanyClass } from '../../../classes/CompanyClass';
 import { ServiceClass } from '../../../classes/ServiceClass';
 import { StaffUserClass } from '../../../classes/StaffUserClass';
 import { socket } from '../../../utils/socket';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const orderViewVariants = ['Table default', 'Cards (1 line)', 'Cards (2 line)', 'Cards (3 line)', 'Cards (4 line)', 'Cards (5 line)', 'Cards (6 line)', 'Cards (8 line)', 'Cards (10 line)']
 
@@ -244,6 +245,7 @@ export function Dashboard(props: DashScreenInterface) {
   }, [activOrderView])
 
   return (
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_TOKEN}>
     <AppShell
       padding="15px"
       header={{ height: 45 }}
@@ -289,5 +291,6 @@ export function Dashboard(props: DashScreenInterface) {
         </AppShell.Footer>
 
     </AppShell>
+    </GoogleOAuthProvider>
   );
 }

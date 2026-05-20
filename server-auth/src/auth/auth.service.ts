@@ -12,6 +12,7 @@ import { AuthDataValidator } from '@telegram-auth/server';
 import { urlStrToAuthDataMap } from '@telegram-auth/server/utils';
 import { ConfigService } from '@nestjs/config';
 import { LoginData } from './auth.kafka.controller';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,35 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
+
+  async telegramLoginAdd(data: object, _id: Types.ObjectId) {
+    console.log('telegramLoginAdd', _id);
+    const telegramUserData = await this.telegramAuth(data);
+    if (telegramUserData) {
+      const user: UserDocument | null = await this.userService.getTelegramUser(telegramUserData);
+      if (user) {
+        return { status: false, message: 'User already exists :-/' };
+      }
+      return { status: true, message: 'Your account is linked and will appear on your next login!' };
+    }
+    return { status: false, message: 'Error :-/' };
+  }
+
+  async googleLoginAdd(data: LoginData, _id: Types.ObjectId) {
+    console.log('googleLoginAdd', _id);
+    const googleUserData = await this.verifyIdTokenGoogle(data);
+    if (googleUserData) {
+      const user: UserDocument | null = await this.userService.getGoogleUser({
+        email: googleUserData.email,
+        name: googleUserData?.name,
+      });
+      if (user) {
+        return { status: false, message: 'User already exists :-/' };
+      }
+      return { status: true, message: 'Your account is linked and will appear on your next login!' };
+    }
+    return { status: false, message: 'Error :-/' };
+  }
 
   async telegramLoginEnter(data: object, ip: string) {
     const telegramUserData = await this.telegramAuth(data);

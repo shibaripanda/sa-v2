@@ -91,6 +91,30 @@ export class AxiosClass {
     }
   }
 
+  async axiosTelegramRequestAdd(credentialResponse: object, enterReg: string) {
+    return await axios({
+      method: 'POST',
+      url: this.api + '/auth/telegramLoginAdd',
+      data: {user: credentialResponse, enterReg},
+      headers: {
+          "Authorization": `Bearer ${this.token}`
+      },
+      timeout: 10000
+    })
+  }
+
+  async axiosGoogleRequestAdd(credentialResponse: string, enterReg: string) {
+    return await axios({
+      method: 'POST',
+      url: this.api + '/auth/googleLoginAdd',
+      data: {access_token: credentialResponse, enterReg},
+      headers: {
+          "Authorization": `Bearer ${this.token}`
+      },
+      timeout: 10000
+    })
+  }
+
   async axiosTelegramRequest(credentialResponse: object, enterReg: string) {
     return await axios({
       method: 'POST',

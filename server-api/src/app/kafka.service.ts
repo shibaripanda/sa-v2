@@ -16,6 +16,8 @@ export class KafkaService implements OnModuleInit {
       'telegramLoginReg',
       'telegramLoginEnter',
       'googleLoginEnterAdmin',
+      'telegramLoginAdd',
+      'googleLoginAdd',
     ];
     const text = ['textavailable', 'textlib'];
     const user = ['update-user', 'delete-account'];
@@ -37,18 +39,7 @@ export class KafkaService implements OnModuleInit {
       'update-field-line',
       'update-company',
     ];
-    const patterns = [
-      ...auth,
-      ...text,
-      ...user,
-      ...comps,
-      ...status,
-      ...device,
-      ...field,
-      ...service,
-      ...order,
-      ...admin,
-    ];
+    const patterns = [...auth, ...text, ...user, ...comps, ...status, ...device, ...field, ...service, ...order, ...admin];
 
     patterns.forEach((p) => this.kafkaClient.subscribeToResponseOf(p));
   }

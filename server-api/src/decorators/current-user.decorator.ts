@@ -16,20 +16,18 @@ interface RequestWithUser extends Request {
  * Универсальный декоратор для получения текущего пользователя
  * Работает и в HTTP, и в WebSocket контекстах.
  */
-export const CurrentUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext): User | undefined => {
-    const type = context.getType<'http' | 'ws'>();
+export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext): User | undefined => {
+  const type = context.getType<'http' | 'ws'>();
 
-    if (type === 'http') {
-      const request = context.switchToHttp().getRequest<RequestWithUser>();
-      return request.user;
-    }
+  if (type === 'http') {
+    const request = context.switchToHttp().getRequest<RequestWithUser>();
+    return request.user;
+  }
 
-    // if (type === 'ws') {
-    //   const client = context.switchToWs().getClient<SocketWithUser>();
-    //   return client.data.user;
-    // }
+  // if (type === 'ws') {
+  //   const client = context.switchToWs().getClient<SocketWithUser>();
+  //   return client.data.user;
+  // }
 
-    return undefined;
-  },
-);
+  return undefined;
+});

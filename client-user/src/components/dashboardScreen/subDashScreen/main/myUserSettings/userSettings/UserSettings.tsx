@@ -4,6 +4,8 @@ import { UpdateStringValue } from '../../../../../subComponents/updateStringValu
 import { TableHistoryLocation } from '.././tableHistoryLocation/TableHistoryLocation';
 import { IconCancel, IconCircleCheck } from '@tabler/icons-react';
 import { useState } from 'react';
+import { GoogleButtonAdd } from '../../../../../authScreen/subAuthScreen/GoogleButtonAdd';
+import { TelegramButtonAdd } from '../../../../../authScreen/subAuthScreen/TelegramButtonAdd';
 
 export function UserSettings(props: MainInterface) {
 
@@ -68,13 +70,15 @@ export function UserSettings(props: MainInterface) {
             props.user.email ? <IconCircleCheck key='1' size={45} color='green'/> : <IconCancel key='1' size={45} color='red'/>
           ],
           [
-            props.user.email ? props.user.email : props.text?.connect,
-          ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>),
-          // [
-          //   props.user.email ? 'Disconect' : 'Connect'
-          // ]
+            props.user.email ? props.user.email : '',
+          ],
+          [
+            !props.user.email ? 
+            <Button disabled={!props.user.telegramId} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
+            <GoogleButtonAdd title={props.text?.connect || 'Connect'} disabled={false}/>,
+          ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>)
         ].map((item, i) => 
-          <Grid.Col key={`main-${i}`} span={{ base: 12, sm: 6 }}>
+          <Grid.Col key={`main-${i}`} span={{ base: 12, sm: 4 }}>
             <Flex direction="column" align="center" justify="center" h="100%">
               {item}
             </Flex>
@@ -89,13 +93,16 @@ export function UserSettings(props: MainInterface) {
             props.user.telegramId ? <IconCircleCheck key='1' size={45} color='green'/> : <IconCancel key='1' size={45} color='red'/>
           ],
           [
-            props.user.telegramId ? '@' + props.user.telegramUserName || props.user.telegramId : props.text?.connect,
-          ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>),
-          // [
-          //   props.user.telegramId ? 'Disconect' : 'Connect'
-          // ]
+            props.user.telegramId ? props.user.telegramUserName || props.user.telegramId : '',
+          ],
+          [
+            props.user.telegramId ? 
+            <Button disabled={!props.user.email} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
+            <TelegramButtonAdd title={props.text?.connect || 'Connect'} disabled={false}/>,
+          ]
+          .map((item, i) => <Text key={`2-${i}`}>{item}</Text>)
         ].map((item, i) => 
-          <Grid.Col  key={`main-${i}`} span={{ base: 12, sm: 6 }}>
+          <Grid.Col  key={`main-${i}`} span={{ base: 12, sm: 4 }}>
             <Flex direction="column" align="center" justify="center" h="100%">
               {item}
             </Flex>

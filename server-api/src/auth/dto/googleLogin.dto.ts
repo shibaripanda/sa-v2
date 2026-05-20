@@ -6,5 +6,5 @@ export class GoogleLoginDto {
   readonly access_token!: string;
   @IsNotEmpty()
   @IsString()
-  readonly enterReg!: 'enter' | 'reg';
+  readonly enterReg!: 'enter' | 'reg' | 'add';
 }

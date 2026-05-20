@@ -85,6 +85,8 @@ export function Companies(props: MainInterface) {
         </Table.Tr>
       );
     });
+
+    // const links = props.companies.items.map((item) => <LinksGroup {...item} key={item.label} />);
     
     return (
       <div>
@@ -132,9 +134,10 @@ export function Companies(props: MainInterface) {
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
           </Table>
+          {/* <div className={classes.linksInner}>{links}</div> */}
         </Table.ScrollContainer>
   
-        <Modal size="70%" opened={opened} onClose={handleRowClickClose} title="Authentication">
+        <Modal fullScreen opened={opened} onClose={handleRowClickClose} title="Authentication">
           {selectedItem ? Object.keys(selectedItem).map((key) => (
             <div key={key}>
               <strong>{key}:</strong> {JSON.stringify(selectedItem[key])}

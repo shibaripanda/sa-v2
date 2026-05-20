@@ -21,57 +21,31 @@ export class CompanyService {
     return await this.companyModel.updateOne({ _id }, data);
   }
 
-  async addDeviceToCompany(
-    company_id: Types.ObjectId,
-    device_id: Types.ObjectId,
-    session: ClientSession,
-  ) {
+  async addDeviceToCompany(company_id: Types.ObjectId, device_id: Types.ObjectId, session: ClientSession) {
     return await this.companyModel
       .updateOne({ _id: company_id }, { $addToSet: { devices_ids: device_id } })
       .session(session);
   }
 
-  async addStatusToCompany(
-    company_id: Types.ObjectId,
-    status_id: Types.ObjectId,
-    session: ClientSession,
-  ) {
+  async addStatusToCompany(company_id: Types.ObjectId, status_id: Types.ObjectId, session: ClientSession) {
     return await this.companyModel
-      .updateOne(
-        { _id: company_id },
-        { $addToSet: { statuses_ids: status_id } },
-      )
+      .updateOne({ _id: company_id }, { $addToSet: { statuses_ids: status_id } })
       .session(session);
   }
 
-  async addFieldToCompany(
-    company_id: Types.ObjectId,
-    field_id: Types.ObjectId,
-    session: ClientSession,
-  ) {
+  async addFieldToCompany(company_id: Types.ObjectId, field_id: Types.ObjectId, session: ClientSession) {
     return await this.companyModel
       .updateOne({ _id: company_id }, { $addToSet: { fields_ids: field_id } })
       .session(session);
   }
 
-  async addServiceToCompany(
-    company_id: Types.ObjectId,
-    service_id: Types.ObjectId,
-    session: ClientSession,
-  ) {
+  async addServiceToCompany(company_id: Types.ObjectId, service_id: Types.ObjectId, session: ClientSession) {
     return await this.companyModel
-      .updateOne(
-        { _id: company_id },
-        { $addToSet: { services_ids: service_id } },
-      )
+      .updateOne({ _id: company_id }, { $addToSet: { services_ids: service_id } })
       .session(session);
   }
 
-  async getCompanyesWhereStaff(
-    user_staff_ids: Types.ObjectId[],
-    comp_ids: Types.ObjectId[],
-    user_id: Types.ObjectId,
-  ) {
+  async getCompanyesWhereStaff(user_staff_ids: Types.ObjectId[], comp_ids: Types.ObjectId[], user_id: Types.ObjectId) {
     const res = await this.companyModel.find({
       staff_users_ids: { $in: user_staff_ids },
       _id: { $nin: comp_ids },
@@ -79,12 +53,8 @@ export class CompanyService {
     // const res = await this.companyModel.find({ user_owner_id: user_id });
     if (!res.length) return [];
     for (const c of res) {
-      c.staff_users_ids = c.staff_users_ids.filter(
-        (us) => us.origin_user_id.toString() === user_id.toString(),
-      );
-      c.services_ids = c.services_ids.filter(
-        (ser) => !c.staff_users_ids[0].userStaffServices.includes(ser._id),
-      );
+      c.staff_users_ids = c.staff_users_ids.filter((us) => us.origin_user_id.toString() === user_id.toString());
+      c.services_ids = c.services_ids.filter((ser) => !c.staff_users_ids[0].userStaffServices.includes(ser._id));
     }
     return res;
   }
@@ -97,10 +67,7 @@ export class CompanyService {
     return await this.companyModel.find({ user_owner_id });
   }
 
-  async getCompanyForDelete(
-    user_owner_id: Types.ObjectId,
-    session: ClientSession,
-  ) {
+  async getCompanyForDelete(user_owner_id: Types.ObjectId, session: ClientSession) {
     return await this.companyModel.find({ user_owner_id }).session(session);
   }
 
