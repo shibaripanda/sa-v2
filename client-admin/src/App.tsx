@@ -10,6 +10,7 @@ import { LoaderModal } from "./components/subComponents/loader/LoaderModal";
 import { useIdleTimer } from 'react-idle-timer';
 import { Dashboard } from "./components/dashboardScreen/mainScreen/Dashboard";
 import { UserClass } from "./classes/UserClass";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function App() {
 
@@ -91,8 +92,10 @@ export default function App() {
   
   return (
   <MantineProvider theme={theme}>
-    {screenActiv()}
-    <LoaderModal text={loadingText} loaderShow={loaderShow} setLoaderShow={setLoaderShow} errorStatus={errorStatus} setErrorStatus={setErrorStatus}/>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_TOKEN}>
+      {screenActiv()}
+      <LoaderModal text={loadingText} loaderShow={loaderShow} setLoaderShow={setLoaderShow} errorStatus={errorStatus} setErrorStatus={setErrorStatus}/>
+    </GoogleOAuthProvider>
   </MantineProvider>
 );
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import {
     Checkbox,
-    Grid,
     Group,
     Paper,
     Space,
@@ -15,7 +14,6 @@ import mainPic from '../../../images/mainpic.png'
 import { ColorShema } from '../../subComponents/colorShema/ColorShema.tsx';
 import { GoogleButton } from '../subAuthScreen/GoogleButton.tsx';
 import { ActivUsersBlock } from '../subAuthScreen/ActivUsersBlock.tsx';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { User } from '../../../interfaces/user.ts';
 import { TelegramButton } from '../subAuthScreen/TelegramButton.tsx';
 import { LanguagePicker } from '../../subComponents/languagePicker/LanguagePicker.tsx';
@@ -59,7 +57,7 @@ export interface AuthScreenInterface {
     }
 
     return (
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_TOKEN}>
+      <div>
       <div className={classes.wrapper}  style={{ backgroundImage: `url(${mainPic}` }}>
         <Paper className={classes.form} p={30}>
           <Group justify="space-between">
@@ -108,6 +106,6 @@ export interface AuthScreenInterface {
         </Paper>
       </div>
       <ServiceModal {...props} serviseModal={serviseModal} setServiseModal={setServiseModal}/>
-      </GoogleOAuthProvider>
+      </div>
     )
   }

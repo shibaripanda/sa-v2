@@ -16,6 +16,7 @@ import { UserClass } from "./classes/UserClass";
 import { StaffUserClass } from "./classes/StaffUserClass";
 import { CompanyClass } from "./classes/CompanyClass";
 import { ServiceClass } from "./classes/ServiceClass";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function App() {
 
@@ -131,8 +132,10 @@ export default function App() {
   
   return (
   <MantineProvider theme={theme}>
-    {screenActiv()}
-    <LoaderModal text={loadingText} loaderShow={loaderShow} setLoaderShow={setLoaderShow} errorStatus={errorStatus} setErrorStatus={setErrorStatus}/>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_TOKEN}>
+      {screenActiv()}
+      <LoaderModal text={loadingText} loaderShow={loaderShow} setLoaderShow={setLoaderShow} errorStatus={errorStatus} setErrorStatus={setErrorStatus}/>
+    </GoogleOAuthProvider>
   </MantineProvider>
 );
 }

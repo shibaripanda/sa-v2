@@ -1,4 +1,4 @@
-import { Button, Checkbox, Divider, Flex, Grid, Paper, Space, Text, TextInput } from '@mantine/core';
+import { Box, Button, Checkbox, Divider, Flex, Grid, Paper, Space, Text, TextInput } from '@mantine/core';
 import { MainInterface } from '../../Main';
 import { UpdateStringValue } from '../../../../../subComponents/updateStringValue/UpdateStringValue';
 import { TableHistoryLocation } from '.././tableHistoryLocation/TableHistoryLocation';
@@ -76,7 +76,7 @@ export function UserSettings(props: MainInterface) {
             !props.user.email ? 
             <Button disabled={!props.user.telegramId} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
             <GoogleButtonAdd title={props.text?.connect || 'Connect'} disabled={false}/>,
-          ].map((item, i) => <Text key={`2-${i}`}>{item}</Text>)
+          ].map((item, i) => <Box key={`2-${i}`}>{item}</Box>)
         ].map((item, i) => 
           <Grid.Col key={`main-${i}`} span={{ base: 12, sm: 4 }}>
             <Flex direction="column" align="center" justify="center" h="100%">
@@ -99,8 +99,7 @@ export function UserSettings(props: MainInterface) {
             props.user.telegramId ? 
             <Button disabled={!props.user.email} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
             <TelegramButtonAdd title={props.text?.connect || 'Connect'} disabled={false}/>,
-          ]
-          .map((item, i) => <Text key={`2-${i}`}>{item}</Text>)
+          ].map((item, i) => <Box key={`2-${i}`}>{item}</Box>)
         ].map((item, i) => 
           <Grid.Col  key={`main-${i}`} span={{ base: 12, sm: 4 }}>
             <Flex direction="column" align="center" justify="center" h="100%">

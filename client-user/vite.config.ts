@@ -23,7 +23,7 @@ export default defineConfig({
   // в клиентском коде нужны с VITE_*
   server: {
     allowedHosts: [
-      'filly-optimum-ostrich.ngrok-free.app', // 👈 твой ngrok-хост
+      'filly-optimum-ostrich.ngrok-free.app', 'beverages-patricia-britannica-stamps.trycloudflare.com' // 👈 твой ngrok-хост
     ],
   },
 });

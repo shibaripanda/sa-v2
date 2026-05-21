@@ -31,6 +31,11 @@ export class AuthService {
       if (user) {
         return { status: false, message: 'User already exists :-/' };
       }
+      await this.userService.updateUserData(_id, {
+        $set: {
+          telegramId: telegramUserData.id,
+        },
+      });
       return { status: true, message: 'Your account is linked and will appear on your next login!' };
     }
     return { status: false, message: 'Error :-/' };
@@ -47,6 +52,11 @@ export class AuthService {
       if (user) {
         return { status: false, message: 'User already exists :-/' };
       }
+      await this.userService.updateUserData(_id, {
+        $set: {
+          email: googleUserData.email,
+        },
+      });
       return { status: true, message: 'Your account is linked and will appear on your next login!' };
     }
     return { status: false, message: 'Error :-/' };
