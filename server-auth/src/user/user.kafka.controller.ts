@@ -1,11 +1,26 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { ObjID } from './interfaces/ObjID';
+import { Types } from 'mongoose';
 
 @Controller()
 export class UserKafkaController {
   constructor(private userService: UserService) {}
+
+  @MessagePattern('getPhotos_auth')
+  async getPhotos(@Payload() value: { _id: ObjID }) {
+    const res = await this.userService.getPhotos(value._id);
+    return {
+      value: { photos: res?.photos },
+      key: 'getPhotos_auth',
+    };
+  }
+
+  @EventPattern('addNewPhoto_auth')
+  async addNewPhoto(@Payload() data: { _id: Types.ObjectId; photo: string }) {
+    await this.userService.addNewPhoto(data._id, data.photo);
+  }
 
   @MessagePattern('getUserByTgId')
   async getUserByTgId(@Payload() value: { telegramId: number }) {
@@ -42,6 +57,7 @@ export class UserKafkaController {
       data: { [key: string]: string };
     },
   ) {
+    // await this.userService.testUser();
     const user = await this.userService.getUserById(value.user_id);
     if (!user) throw new RpcException('USER_NOT_FOUND');
     const res = await this.userService.updateUserData(value.user_id, value.data);

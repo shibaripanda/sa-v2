@@ -23,6 +23,9 @@ export class User {
   timeLiveToken!: string;
 
   @Prop({ default: [] })
+  photos!: [string];
+
+  @Prop({ default: [] })
   historyLogin!: [HistoryLogin];
 }
 

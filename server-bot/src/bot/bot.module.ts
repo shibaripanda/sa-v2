@@ -9,6 +9,7 @@ import { UserContext } from './interfaces/MyContext';
 import { TelegramGateway } from './bot.telegram.gateway';
 import { BotLifecycleService } from './bot.lifecycle.service';
 import { BotService } from './bot.service';
+import { BotKafkaController } from './bot.kafka.controller';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { BotService } from './bot.service';
       }),
     }),
   ],
+  controllers: [BotKafkaController],
   providers: [TelegramGateway, BotLifecycleService, BotService],
   exports: [],
 })

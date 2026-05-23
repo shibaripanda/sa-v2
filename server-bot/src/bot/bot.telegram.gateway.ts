@@ -35,7 +35,6 @@ export class TelegramGateway {
 
   @On('photo')
   async addNewPhoto(@Ctx() ctx: UserContext) {
-    console.log(ctx.user);
     await this.botService.addNewPhoto(
       ctx.user._id,
       ctx.message.photo[ctx.message.photo.length - 1].file_id,

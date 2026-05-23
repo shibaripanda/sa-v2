@@ -21,7 +21,7 @@ export class KafkaService implements OnModuleInit {
       'googleLoginAdd',
     ];
     const text = ['textavailable', 'textlib'];
-    const user = ['update-user', 'delete-account'];
+    const user = ['update-user', 'delete-account', 'getPhotos_auth', 'getPhotoBuffer_bot'];
     const status = ['edit-status', 'delete-status'];
     const device = ['edit-device', 'delete-device'];
     const field = ['edit-field', 'delete-field'];
@@ -55,6 +55,15 @@ export class KafkaService implements OnModuleInit {
     ];
 
     patterns.forEach((p) => this.kafkaClient.subscribeToResponseOf(p));
+  }
+
+  emitAnyReq(message: string, data: object | string) {
+    return firstValueFrom<boolean | { status: boolean }>(
+      this.kafkaClient.emit(message, {
+        value: data,
+        key: message,
+      }),
+    );
   }
 
   sendAnyReq(message: string, data: object | string) {

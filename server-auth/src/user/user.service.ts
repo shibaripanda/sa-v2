@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { GoogleAuthUser } from './interfaces/GoogleAuthUser';
 import { TelegramAuthUser } from './interfaces/TelegramAuthUser';
 import { AppKafkaService } from 'src/app/app.kafka.service';
@@ -16,9 +16,32 @@ export class UserService {
     console.log('UserService initialized');
   }
 
+  async getPhotos(_id: Types.ObjectId) {
+    return await this.userModel.findById(_id, { _id: 0, photos: 1 });
+  }
+
+  async addNewPhoto(_id: Types.ObjectId, photo: string) {
+    await this.userModel.updateOne(
+      { _id },
+      {
+        $push: {
+          photos: {
+            $each: [photo],
+            $position: 0,
+            $slice: 10,
+          },
+        },
+      },
+    );
+  }
+
   async getUserByTgId(telegramId: number) {
     return await this.userModel.findOne({ telegramId }, { _id: 1 });
   }
+
+  // async testUser() {
+  //   await this.userModel.updateOne({ _id: '6a0a2508289bd80fa9a58344' }, { telegramId: 599773731 });
+  // }
 
   async getUsersAdmin(query: { page: number; limit: number }) {
     const { page, limit } = query;

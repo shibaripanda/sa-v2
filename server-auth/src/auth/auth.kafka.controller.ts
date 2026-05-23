@@ -20,9 +20,7 @@ export class AuthKafkaController {
       _id: Types.ObjectId;
     },
   ) {
-    console.log('googleLoginAdd', value.data);
     const res = await this.authService.googleLoginAdd(value.data, value._id);
-    console.log(res);
     return {
       value: res,
       key: 'googleLoginAdd',
@@ -38,7 +36,6 @@ export class AuthKafkaController {
     },
   ) {
     const res = await this.authService.telegramLoginAdd(value.data, value._id);
-    console.log(res);
     return {
       value: res,
       key: 'telegramLoginAdd',
@@ -53,9 +50,7 @@ export class AuthKafkaController {
       ip: string;
     },
   ) {
-    console.log('googleLoginEnter', value.data);
     const res = await this.authService.googleLoginEnter(value.data, value.ip);
-    console.log(res);
     return {
       value: res,
       key: 'googleLoginEnter',
@@ -71,7 +66,6 @@ export class AuthKafkaController {
     },
   ) {
     const res = await this.authService.telegramLoginEnter(value.data, value.ip);
-    console.log(res);
     return {
       value: res,
       key: 'telegramLoginEnter',

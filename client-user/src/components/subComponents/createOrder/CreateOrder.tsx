@@ -1,13 +1,16 @@
-import { Autocomplete, Button, Center, Grid, Group, Modal, Space, TextInput } from "@mantine/core";
+import { Autocomplete, Button, Center, Grid, Modal, Space, TextInput } from "@mantine/core";
 import { DashScreenInterface } from "../../dashboardScreen/mainScreen/Dashboard";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Field } from "../../../interfaces/field";
 import { Device } from "../../../interfaces/device";
+import { socket } from '../../../utils/socket';
 
 export function CreateOrder(props: DashScreenInterface) {
   const [opened, { open, close }] = useDisclosure(false);
   const [_selectedDevice_, _setSelectedDevice_] = useState<Device | null>(sessionStorage.getItem('_selectedDevice_') ? JSON.parse(sessionStorage.getItem('_selectedDevice_')!) : null)
+
+  // const [photos, setPhotos] = useState(props.user.photos)
 
   const newOrderData = () => {
     const orderFields = [...props.comp.fields_ids]
@@ -19,9 +22,16 @@ export function CreateOrder(props: DashScreenInterface) {
 
   const [newOrder, setNewOrder] = useState<Field[]>(newOrderData())
 
-  // console.log('fffffffffffffffffffffff')
-  console.log(props.comp)
-  // console.log('fffffffffffffffffffffff')
+  const test = () => {
+    console.log("ddd");
+  };
+
+  useEffect(() => {
+    socket.on("test", test);
+    return () => {
+      socket.off("test", test);
+    };
+  }, []);
 
   const updateNewOrder = (fieldName: string, newValue: string | number) => {
     console.log(fieldName, newValue)
@@ -34,8 +44,6 @@ export function CreateOrder(props: DashScreenInterface) {
     }
   }
 
-  console.log(newOrder)
-
   const onClearNewOrder = () => {
     // _setSelectedDevice_(null)
     // sessionStorage.removeItem('_selectedDevice_')
@@ -44,7 +52,6 @@ export function CreateOrder(props: DashScreenInterface) {
       return {...f, currentData: null}
     }))
   }
-
   const onCancelNewOrderClose = () => {
     _setSelectedDevice_(null)
     sessionStorage.removeItem('_selectedDevice_')
@@ -54,7 +61,6 @@ export function CreateOrder(props: DashScreenInterface) {
     }))
     close()
   }
-
   const onCloseNewOrderClose = () => {
     close()
   }
@@ -62,6 +68,8 @@ export function CreateOrder(props: DashScreenInterface) {
     _setSelectedDevice_(device)
     sessionStorage.setItem('_selectedDevice_', JSON.stringify(device))
   }
+
+  console.log(newOrder)
  
   return (
     <>

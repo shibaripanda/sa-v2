@@ -187,6 +187,9 @@ export function Dashboard(props: DashScreenInterface) {
   const [navBarData, setNavBarData] = useState(navBarData_Test)
   const [headerMenuData, setHeaderMenuData] = useState<DropHeadMenu>([])
 
+  const [photos, setPhotos] = useState<string[]>([])
+  const [bufferPhoto, setBufferPhoto] = useState<any[]>([])
+
   const [activOrderView, setActivOrderView] = useState(0)
 
   const headerMenuData_Test = [
@@ -206,10 +209,18 @@ export function Dashboard(props: DashScreenInterface) {
       console.log("disconnected", reason);
     };
 
+    // const test = () => {
+    // console.log("ddd");
+    // };
+
+    // socket.on("test", test);
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
     return () => {
+      // socket.off("test", test);
+
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
     };
@@ -223,13 +234,28 @@ export function Dashboard(props: DashScreenInterface) {
 
       if (!socket.connected) {
         socket.connect();
+        socket.emit('getPhotos', (res: {photos: string[]}) => {
+          setPhotos(res.photos)
+          console.log(res.photos)
+          for(const f of res.photos) {
+            socket.emit('getPhotoBuffer', {photo: f}, (res: any) => {
+              console.log(res)
+            })
+          }
+        })
+        // if(photos.length) {
+        //   const ar = []
+        //   for(const f of photos) {
+        //     socket.emit('getPhotoBuffer', {photo: f}, (res: any) => {
+        //       console.log(res)
+        //     })
+        //   }
+        // }
       }
 
       return;
     }
   }, [])
-
-  
 
   useEffect(() => {
     setOrders(orders_Test)
@@ -242,6 +268,14 @@ export function Dashboard(props: DashScreenInterface) {
   useEffect(() => {
     setHeaderMenuData(headerMenuData_Test)
   }, [activOrderView])
+
+  // useEffect(() => {
+  //   if(socket.connected) {
+  //     socket.emit('getPhotos', (res: string[]) => {
+  //       console.log(res)
+  //     })
+  //   }
+  // }, [])
 
   return (
     <AppShell

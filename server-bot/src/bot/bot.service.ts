@@ -11,17 +11,23 @@ export class BotService {
     private kafkaService: KafkaService,
   ) {}
 
+  async getBuffer(photo: string) {
+    const url = await this.bot.telegram.getFileLink(photo);
+    const buffer = await (await fetch(url.href)).arrayBuffer();
+    return { image: Buffer.from(buffer).toString('base64') };
+  }
+
   async addNewPhoto(_id: string, photo: string) {
     const url = await this.bot.telegram.getFileLink(photo);
     const buffer = await (await fetch(url.href)).arrayBuffer();
 
-    console.log(_id);
-
-    // await this.kafkaService.emitAnyReq('newphoto', { hello: 'ssssss' });
-
-    await this.kafkaService.emitAnyReq('newphoto', {
+    await this.kafkaService.emitAnyReq('addNewPhoto_auth', {
+      _id,
+      photo,
+    });
+    await this.kafkaService.emitAnyReq('newPhoto_api', {
       image: Buffer.from(buffer).toString('base64'),
-      _id: _id,
+      _id,
     });
   }
 }

@@ -4,7 +4,7 @@ import { Server, Socket } from 'socket.io';
 
 export interface MySocket extends Socket {
   data: {
-    user: { userId: string; iat: number; exp: number };
+    user: { _id: string; iat: number; exp: number; name: string };
   };
 }
 
@@ -23,17 +23,17 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.disconnect();
       return;
     }
-    const user: { userId: string; iat: number; exp: number } = this.jwt.verify(token);
+    const user: { _id: string; iat: number; exp: number; name: string } = this.jwt.verify(token);
     if (!user) {
       client.disconnect();
       return;
     }
     client.data.user = user;
-    await client.join(user.userId);
-    console.log('connected:', client.id, user.userId);
+    await client.join(user._id);
+    console.log('connected:', client.id, user.name);
   }
 
   handleDisconnect(client: MySocket) {
-    console.log('disconnected:', client.id, client.data.user.userId);
+    console.log('disconnected:', client.id, client.data.user._id);
   }
 }
