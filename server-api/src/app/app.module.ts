@@ -16,6 +16,7 @@ import { ServiceController } from './service.controller';
 import { OrderModule } from 'src/order/order.module';
 import { AppGateway } from './app.gateway';
 import { AppAdminGateway } from './app.admin.gateway';
+import { KafkaController } from './kafka.controller';
 
 @Global()
 @Module({
@@ -54,6 +55,7 @@ import { AppAdminGateway } from './app.admin.gateway';
     DeviceController,
     FieldController,
     ServiceController,
+    KafkaController,
   ],
   providers: [KafkaService, AppGateway, AppAdminGateway],
   exports: [KafkaService],

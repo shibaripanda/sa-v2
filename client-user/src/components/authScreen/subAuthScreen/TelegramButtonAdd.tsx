@@ -4,10 +4,15 @@ import { AxiosClass } from "../../../classes/AxiosClass";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCancel, IconCircleCheck } from '@tabler/icons-react';
+import { User } from '../../../interfaces/user';
 
 interface TelegramButtonAddInterface {
     title: string;
     disabled: boolean;
+    action: string;
+    userId: string;
+    setLoginedUsers: any;
+    exit: () => void;
 }
 
 interface StatusMessage {
@@ -23,28 +28,18 @@ export function TelegramButtonAdd(props: TelegramButtonAddInterface) {
 
         const axiosClass = new AxiosClass()
 
-        return await axiosClass.axiosTelegramRequestAdd(credentialResponse, 'add')
+        return await axiosClass.axiosTelegramRequestAdd(credentialResponse, props.action)
         .then(async (res) => {
             console.log(res.data)
             setErrorMessage(res.data)
             open()
             if(res.data.status){
-                // console.log(jwtDecode(res.data.token))
-                // const newUser: User = {...jwtDecode(res.data.token), token: res.data['token']}
-                // const existUsers: User[] = sessionStorage.getItem('loginedUsers') ? JSON.parse(sessionStorage.getItem('loginedUsers')!) : []
-                // if(!existUsers){
-                //     sessionStorage.setItem('loginedUsers', JSON.stringify([newUser]))
-                // }
-                // else if(existUsers.map(user => user._id).includes(newUser._id)) {
-                //     sessionStorage.setItem('loginedUsers', JSON.stringify([newUser, ...existUsers.filter(user => user._id !== newUser._id)]))
-                // }
-                // else{
-                //     sessionStorage.setItem('loginedUsers', JSON.stringify([newUser, ...existUsers]))
-                // }
-                // props.setAgreement(false)
-                // props.setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
-                // props.pickUser(newUser)
-                // props.setServiseModal.open()
+                const existUsers: User[] = sessionStorage.getItem('loginedUsers') ? JSON.parse(sessionStorage.getItem('loginedUsers')!) : []
+                if(existUsers.map(user => user._id).includes(props.userId)) {
+                    sessionStorage.setItem('loginedUsers', JSON.stringify([...existUsers.filter(user => user._id !== props.userId)]))
+                }
+                props.setLoginedUsers(JSON.parse(sessionStorage.getItem('loginedUsers')!))
+                props.exit()
                 return
             }
         })
@@ -65,6 +60,7 @@ export function TelegramButtonAdd(props: TelegramButtonAddInterface) {
                 disabled={props.disabled}
                 variant='default'
                 fullWidth
+                size='xs'
                 onClick={openPopup}>
                 {props.title}
             </Button>

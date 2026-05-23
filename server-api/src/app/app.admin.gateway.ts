@@ -1,5 +1,5 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common';
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { GetUsersAdminDto } from 'src/user/dto/getUsersAdmin.dto';
 import { KafkaService } from './kafka.service';
@@ -16,8 +16,6 @@ export interface MySocket extends Socket {
 export class AppAdminGateway {
   constructor(private kafkaService: KafkaService) {}
 
-  @WebSocketServer()
-  // server: Server;
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('getCompaniesAdmin')
   async getCompaniesAdmin(@MessageBody() messageBody: GetUsersAdminDto) {

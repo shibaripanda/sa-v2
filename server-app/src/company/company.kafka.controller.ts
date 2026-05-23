@@ -12,10 +12,7 @@ export class CompanyKafkaController {
 
   @MessagePattern('update-device-line')
   async updateDeviceLine(@Payload() data: UpdateCompanyDeviceLine) {
-    const res = await this.companyService.updateCompanyData(
-      data._id,
-      data.requestData,
-    );
+    const res = await this.companyService.updateCompanyData(data._id, data.requestData);
     return {
       value: res,
       key: Date.now(),
@@ -24,10 +21,7 @@ export class CompanyKafkaController {
 
   @MessagePattern('update-field-line')
   async updateFieldLine(@Payload() data: UpdateCompanyFieldLine) {
-    const res = await this.companyService.updateCompanyData(
-      data._id,
-      data.requestData,
-    );
+    const res = await this.companyService.updateCompanyData(data._id, data.requestData);
     return {
       value: res,
       key: Date.now(),
@@ -36,10 +30,7 @@ export class CompanyKafkaController {
 
   @MessagePattern('update-status-line')
   async updateStatusLine(@Payload() data: UpdateCompanyStatusLine) {
-    const res = await this.companyService.updateCompanyData(
-      data._id,
-      data.requestData,
-    );
+    const res = await this.companyService.updateCompanyData(data._id, data.requestData);
     return {
       value: res,
       key: Date.now(),
@@ -48,10 +39,7 @@ export class CompanyKafkaController {
 
   @MessagePattern('update-company')
   async updateCompanyData(@Payload() data: UpdateCompanyDataDto) {
-    const res = await this.companyService.updateCompanyData(
-      data._id,
-      data.requestData,
-    );
+    const res = await this.companyService.updateCompanyData(data._id, data.requestData);
     return {
       value: res,
       key: Date.now(),

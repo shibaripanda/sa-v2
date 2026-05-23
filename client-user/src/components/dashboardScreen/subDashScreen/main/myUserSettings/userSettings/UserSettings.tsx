@@ -34,6 +34,8 @@ export function UserSettings(props: MainInterface) {
       props.setLoaderShow.close()
     }
 
+    console.log(!!props.user.email, !!props.user.telegramId, !props.user.email, !props.user.telegramId)
+
   return (
     <Paper withBorder radius="md" p="xs">
       <Text>{props.text?.userSettings}</Text>
@@ -73,9 +75,15 @@ export function UserSettings(props: MainInterface) {
             props.user.email ? props.user.email : '',
           ],
           [
-            !props.user.email ? 
-            <Button disabled={!props.user.telegramId} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
-            <GoogleButtonAdd title={props.text?.connect || 'Connect'} disabled={false}/>,
+            // !props.user.email ? 
+            // <Button disabled={!props.user.telegramId} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
+            <div>
+              <GoogleButtonAdd title={'Подключить'} setLoginedUsers={props.setLoginedUsers} userId={props.user._id} action={'add'} disabled={!!props.user.email} exit={props.exit}/>
+                <Space h='xs'/> 
+              <GoogleButtonAdd title={'Сменить'} setLoginedUsers={props.setLoginedUsers} userId={props.user._id} action={'add'} disabled={!props.user.email} exit={props.exit}/> 
+                <Space h='xs'/>
+              <GoogleButtonAdd title={'Отключить'} setLoginedUsers={props.setLoginedUsers} userId={props.user._id} action={'delete'} disabled={!props.user.email || !props.user.telegramId} exit={props.exit}/>
+            </div>,
           ].map((item, i) => <Box key={`2-${i}`}>{item}</Box>)
         ].map((item, i) => 
           <Grid.Col key={`main-${i}`} span={{ base: 12, sm: 4 }}>
@@ -85,7 +93,7 @@ export function UserSettings(props: MainInterface) {
           </Grid.Col>
         )}
       </Grid>
-
+        
       <Divider my="lg" label="Telegram Auth" labelPosition="left" />
       <Grid w="100%" gutter="md">
         {[
@@ -96,9 +104,17 @@ export function UserSettings(props: MainInterface) {
             props.user.telegramId ? props.user.telegramUserName || props.user.telegramId : '',
           ],
           [
-            props.user.telegramId ? 
-            <Button disabled={!props.user.email} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
-            <TelegramButtonAdd title={props.text?.connect || 'Connect'} disabled={false}/>,
+            <div>
+              <TelegramButtonAdd title={'Подключить'} setLoginedUsers={props.setLoginedUsers} userId={props.user._id} action={'add'} disabled={!!props.user.telegramId} exit={props.exit}/>
+                <Space h='xs'/> 
+              <TelegramButtonAdd title={'Сменить'} setLoginedUsers={props.setLoginedUsers} userId={props.user._id} action={'add'} disabled={!props.user.telegramId} exit={props.exit}/> 
+                <Space h='xs'/>
+              <TelegramButtonAdd title={'Отключить'} setLoginedUsers={props.setLoginedUsers} userId={props.user._id} action={'delete'} disabled={!props.user.telegramId || !props.user.email} exit={props.exit}/>
+            </div>,
+
+            // props.user.telegramId ? 
+            // <Button disabled={!props.user.email} variant='default' key='1' onClick={() => {}}>{props.text?.disconect}</Button> : 
+            // <TelegramButtonAdd title={props.text?.connect || 'Connect'} action={'add'} disabled={false}/>,
           ].map((item, i) => <Box key={`2-${i}`}>{item}</Box>)
         ].map((item, i) => 
           <Grid.Col  key={`main-${i}`} span={{ base: 12, sm: 4 }}>

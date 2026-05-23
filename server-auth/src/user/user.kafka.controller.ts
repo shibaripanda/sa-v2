@@ -7,6 +7,15 @@ import { ObjID } from './interfaces/ObjID';
 export class UserKafkaController {
   constructor(private userService: UserService) {}
 
+  @MessagePattern('getUserByTgId')
+  async getUserByTgId(@Payload() value: { telegramId: number }) {
+    const res = await this.userService.getUserByTgId(value.telegramId);
+    return {
+      value: { user: res },
+      key: 'getUserByTgId',
+    };
+  }
+
   @MessagePattern('getUserById')
   async getUserById(@Payload() value: { user_id: ObjID }) {
     const res = await this.userService.getUserById(value.user_id);

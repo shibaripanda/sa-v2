@@ -16,6 +16,10 @@ export class UserService {
     console.log('UserService initialized');
   }
 
+  async getUserByTgId(telegramId: number) {
+    return await this.userModel.findOne({ telegramId }, { _id: 1 });
+  }
+
   async getUsersAdmin(query: { page: number; limit: number }) {
     const { page, limit } = query;
 

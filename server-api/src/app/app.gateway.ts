@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 export interface MySocket extends Socket {
   data: {
@@ -15,8 +15,9 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private jwt: JwtService) {}
 
   @WebSocketServer()
-  // server: Server;
-  handleConnection(client: MySocket) {
+  server!: Server;
+
+  async handleConnection(client: MySocket) {
     const token: string = client.handshake.auth?.token as string;
     if (!token) {
       client.disconnect();
@@ -28,6 +29,7 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
     client.data.user = user;
+    await client.join(user.userId);
     console.log('connected:', client.id, user.userId);
   }
 

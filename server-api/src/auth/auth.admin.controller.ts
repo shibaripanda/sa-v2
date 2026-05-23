@@ -9,8 +9,6 @@ export class AuthAdminController {
 
   @Post('/googleLogin')
   async googleLogin(@Body() data: GoogleLoginDto, @Ip() ip: string) {
-    console.log('/googleLogin', data);
-    // if (data.enterReg === 'reg') return await this.kafkaService.sendAnyReq('googleLoginReg', { data, ip });
     if (data.enterReg === 'enter') return await this.kafkaService.sendAnyReq('googleLoginEnterAdmin', { data, ip });
     return { status: false, message: 'Invalid enterReg value' };
   }
