@@ -11,7 +11,12 @@ export class KafkaController {
   ) {}
 
   @EventPattern('newPhoto_api')
-  newphoto(@Payload() data: { image: string; _id: string; photo: string }) {
-    this.socket.server.to(data._id).emit('test', { image: data.image });
+  newphoto(@Payload() data: { _id: string }) {
+    this.socket.server.to(data._id).emit('updatePhotos_client');
   }
+
+  // @EventPattern('newPhoto_api')
+  // newphoto(@Payload() data: { image: string; _id: string; photo: string }) {
+  //   this.socket.server.to(data._id).emit('test', { image: data.image });
+  // }
 }

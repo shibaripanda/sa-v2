@@ -1,7 +1,7 @@
 import { IconChevronDown, IconFilter, IconHome2, IconSquareRoundedPlus } from '@tabler/icons-react';
-import { ActionIcon, Avatar, Box, Burger, Button, Center, Divider, Group, Menu, Modal, Text, TextInput, Tooltip, UnstyledButton } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Burger, Center, Divider, Group, Menu, Modal, Text, TextInput, Tooltip, UnstyledButton } from '@mantine/core';
 import classes from './Header.module.css';
-import { DashScreenInterface } from '../../mainScreen/Dashboard';
+import { DashScreenInterface, Photos } from '../../mainScreen/Dashboard';
 import { useDisclosure } from '@mantine/hooks';
 import { NavbarLinkProps } from '../navBar/NavBar';
 import { Exit } from '../../../subComponents/exit/Exit';
@@ -9,7 +9,7 @@ import { LanguagePicker } from '../../../subComponents/languagePicker/LanguagePi
 import { ColorShema } from '../../../subComponents/colorShema/ColorShema';
 import { CreateOrder } from '../../../subComponents/createOrder/CreateOrder';
 
-interface HeaderInterface extends DashScreenInterface {
+export interface HeaderInterface extends DashScreenInterface {
     headerMenuData: {
       link: string,
       label: string,
@@ -20,6 +20,8 @@ interface HeaderInterface extends DashScreenInterface {
     navBarData: { icon: typeof IconHome2, label: string }[];
     activeNavBar: number;
     setActiveNavBar: (index: number) => void;
+    photos: Photos;
+    setPhotos: any;
 }
 
 function NavbarLink({ icon: Icon, label, active, onClick}: NavbarLinkProps) {

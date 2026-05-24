@@ -16,7 +16,19 @@ export class UserService {
     console.log('UserService initialized');
   }
 
+  async deletePhoto(_id: Types.ObjectId, deletePhoto: string) {
+    return await this.userModel.findByIdAndUpdate(
+      _id,
+      { $pull: { photos: deletePhoto } },
+      {
+        new: true,
+        projection: { photos: 1, _id: 0 },
+      },
+    );
+  }
+
   async getPhotos(_id: Types.ObjectId) {
+    // await this.userModel.updateOne({ _id: '6a0a2508289bd80fa9a58344' }, { photos: [] });
     return await this.userModel.findById(_id, { _id: 0, photos: 1 });
   }
 

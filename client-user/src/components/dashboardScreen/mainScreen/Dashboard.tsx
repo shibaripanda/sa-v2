@@ -157,6 +157,8 @@ export interface Order {
   status: string;
 }
 
+export type Photos = {photo: string; image: any}[]
+
 export interface DashScreenInterface {
     user: UserClass;
     service: ServiceClass;
@@ -178,6 +180,8 @@ export interface DashScreenInterface {
 }
 
 export function Dashboard(props: DashScreenInterface) {
+
+  console.log('Dashboard', props)
   
   const isMobile = useMediaQuery('(max-width: 48em)')
   const [openedBurgerMainMenu, toggleOpenedBurgerMainMenu ] = useDisclosure();
@@ -187,8 +191,8 @@ export function Dashboard(props: DashScreenInterface) {
   const [navBarData, setNavBarData] = useState(navBarData_Test)
   const [headerMenuData, setHeaderMenuData] = useState<DropHeadMenu>([])
 
-  const [photos, setPhotos] = useState<string[]>([])
-  const [bufferPhoto, setBufferPhoto] = useState<any[]>([])
+  const [photos, setPhotos] = useState<Photos>([])
+  // const [bufferPhoto, setBufferPhoto] = useState<any[]>([])
 
   const [activOrderView, setActivOrderView] = useState(0)
 
@@ -234,23 +238,8 @@ export function Dashboard(props: DashScreenInterface) {
 
       if (!socket.connected) {
         socket.connect();
-        socket.emit('getPhotos', (res: {photos: string[]}) => {
-          setPhotos(res.photos)
-          console.log(res.photos)
-          for(const f of res.photos) {
-            socket.emit('getPhotoBuffer', {photo: f}, (res: any) => {
-              console.log(res)
-            })
-          }
-        })
-        // if(photos.length) {
-        //   const ar = []
-        //   for(const f of photos) {
-        //     socket.emit('getPhotoBuffer', {photo: f}, (res: any) => {
-        //       console.log(res)
-        //     })
-        //   }
-        // }
+        props.user.onSocket({...props, photos, setPhotos })
+        props.user.getImages({...props, photos, setPhotos })
       }
 
       return;
@@ -259,9 +248,6 @@ export function Dashboard(props: DashScreenInterface) {
 
   useEffect(() => {
     setOrders(orders_Test)
-  }, [])
-
-  useEffect(() => {
     setNavBarData(navBarData_Test)
   }, [])
 
@@ -269,13 +255,7 @@ export function Dashboard(props: DashScreenInterface) {
     setHeaderMenuData(headerMenuData_Test)
   }, [activOrderView])
 
-  // useEffect(() => {
-  //   if(socket.connected) {
-  //     socket.emit('getPhotos', (res: string[]) => {
-  //       console.log(res)
-  //     })
-  //   }
-  // }, [])
+  console.log(photos)
 
   return (
     <AppShell
@@ -296,6 +276,8 @@ export function Dashboard(props: DashScreenInterface) {
             navBarData={navBarData} 
             activeNavBar={activeNavBar} 
             setActiveNavBar={setActiveNavBar}
+            photos={photos}
+            setPhotos={setPhotos}
             />
         </AppShell.Header>
 

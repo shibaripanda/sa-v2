@@ -18,16 +18,21 @@ export class BotService {
   }
 
   async addNewPhoto(_id: string, photo: string) {
-    const url = await this.bot.telegram.getFileLink(photo);
-    const buffer = await (await fetch(url.href)).arrayBuffer();
+    // const url = await this.bot.telegram.getFileLink(photo);
+    // const buffer = await (await fetch(url.href)).arrayBuffer();
 
     await this.kafkaService.emitAnyReq('addNewPhoto_auth', {
       _id,
       photo,
     });
+
     await this.kafkaService.emitAnyReq('newPhoto_api', {
-      image: Buffer.from(buffer).toString('base64'),
+      // image: Buffer.from(buffer).toString('base64'),
       _id,
     });
+    // await this.kafkaService.emitAnyReq('newPhoto_api', {
+    //   image: Buffer.from(buffer).toString('base64'),
+    //   _id,
+    // });
   }
 }

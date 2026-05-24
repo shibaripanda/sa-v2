@@ -1,16 +1,18 @@
-import { Autocomplete, Button, Center, Grid, Modal, Space, TextInput } from "@mantine/core";
-import { DashScreenInterface } from "../../dashboardScreen/mainScreen/Dashboard";
+import { ActionIcon, Autocomplete, Button, Center, Grid, Group, Image, Indicator, Modal, Space, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Field } from "../../../interfaces/field";
 import { Device } from "../../../interfaces/device";
-import { socket } from '../../../utils/socket';
+import { HeaderInterface } from "../../dashboardScreen/subDashScreen/header/Header";
+import { IconX } from "@tabler/icons-react";
 
-export function CreateOrder(props: DashScreenInterface) {
+export function CreateOrder(props: HeaderInterface) {
   const [opened, { open, close }] = useDisclosure(false);
   const [_selectedDevice_, _setSelectedDevice_] = useState<Device | null>(sessionStorage.getItem('_selectedDevice_') ? JSON.parse(sessionStorage.getItem('_selectedDevice_')!) : null)
 
   // const [photos, setPhotos] = useState(props.user.photos)
+  const [fullPhoto,  setFullPhoto ] = useDisclosure(false);
+  const [photo,  setPhoto ] = useState<string>('');
 
   const newOrderData = () => {
     const orderFields = [...props.comp.fields_ids]
@@ -21,17 +23,6 @@ export function CreateOrder(props: DashScreenInterface) {
   }
 
   const [newOrder, setNewOrder] = useState<Field[]>(newOrderData())
-
-  const test = () => {
-    console.log("ddd");
-  };
-
-  useEffect(() => {
-    socket.on("test", test);
-    return () => {
-      socket.off("test", test);
-    };
-  }, []);
 
   const updateNewOrder = (fieldName: string, newValue: string | number) => {
     console.log(fieldName, newValue)
@@ -69,7 +60,18 @@ export function CreateOrder(props: DashScreenInterface) {
     sessionStorage.setItem('_selectedDevice_', JSON.stringify(device))
   }
 
-  console.log(newOrder)
+  const showFullPhoto = (photo: string) => {
+    setPhoto(photo)
+    setFullPhoto.open()
+  }
+
+  const deeleteAllPhoto = () => {
+    for (const p of props.photos) {
+      props.user.deletePhoto({ ...props, deletePhoto: p.photo })
+    }
+  }
+
+  console.log(props.photos)
  
   return (
     <>
@@ -115,7 +117,7 @@ export function CreateOrder(props: DashScreenInterface) {
                   }
                 </Grid.Col>)
               }
-            </Grid> : 'Выбери устройство'}
+            </Grid> : ''}
         </Center>
 
         <Space h='xl'/>
@@ -126,7 +128,7 @@ export function CreateOrder(props: DashScreenInterface) {
               <Button fullWidth size='xs' color="grey">Заполнить по фото</Button>
             </Grid.Col>
             <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-              <Button fullWidth size='xs' color="grey">Очистить фото</Button>
+              <Button fullWidth size='xs' color="red" disabled={!props.photos.length} onClick={deeleteAllPhoto}>Очистить фото</Button>
             </Grid.Col>
             <Grid.Col key={'2'} span={{ base: 12, sm: 4}}>
               <Button fullWidth size='xs' color="green">Создать заказ</Button>
@@ -138,6 +140,59 @@ export function CreateOrder(props: DashScreenInterface) {
               <Button onClick={onCancelNewOrderClose} fullWidth size='xs' color="red">Отмена</Button>
             </Grid.Col>
           </Grid> : null}
+
+          <Space h='xl'/>
+
+          {props.photos.length ?
+            <Center> 
+              <Group  
+                wrap="nowrap"
+                // style={{
+                //   overflow: 'hidden',
+                //   width: '100%',
+                // }}
+                >{props.photos.map((p, index) =>
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <Image
+                  h={150}
+                  w={150}
+                  fit="cover"
+                  radius="md"
+                  src={`data:image/jpeg;base64,${p.image}`}
+                  onClick={() => showFullPhoto(p.image)}
+                />
+
+                <ActionIcon
+                  color="red"
+                  variant="filled"
+                  size="xs"
+                  style={{
+                    position: 'absolute',
+                    bottom: 6,
+                    right: 6,
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    props.user.deletePhoto({ ...props, deletePhoto: p.photo });
+                  }}
+                >
+                  <IconX size={12} />
+                </ActionIcon>
+              </div>
+              )}
+              </Group>
+              <Modal opened={fullPhoto} onClose={setFullPhoto.close} title="Photo" fullScreen> 
+                <Center>
+                  <Image
+                    h={'auto'}
+                    w="70%"
+                    radius="md"
+                    src={`data:image/jpeg;base64,${photo}`}
+                  />
+                </Center>
+              </Modal>
+            </Center> : null
+          }
 
       </Modal>
 

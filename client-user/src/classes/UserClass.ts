@@ -1,10 +1,75 @@
+import { DashScreenInterface, Photos } from "../components/dashboardScreen/mainScreen/Dashboard"
 import type { User } from "../interfaces/user"
+import { socket } from "../utils/socket"
 import { AxiosClass } from "./AxiosClass"
 import { Model, ModelWithData } from "./interfacesClass"
+
+interface DashData extends DashScreenInterface {
+  setPhotos: any
+  photos: Photos
+  deletePhoto?: string
+}
 
 export class UserClass extends (Model as new (data: User) => ModelWithData<User>) {
 
   private axiosClass = new AxiosClass()
+
+  onSocket(dashData: DashData) {
+    console.log('onSocket')
+
+    const handler_UpdatePhotos = () => this.updatePhotos(dashData)
+
+    socket.on("updatePhotos_client", handler_UpdatePhotos);
+
+    return () => {
+      socket.off("updatePhotos_client", handler_UpdatePhotos);
+    };
+  }
+
+  deletePhoto(dashData: DashData) {
+    socket.emit('deletePhoto', { deletePhoto: dashData.deletePhoto }, (res: {photos: string[]}) => {
+      console.log('deletePhoto', res)
+      const updatedUser = { ...this, photos: res.photos };
+      this.photos = res.photos
+      dashData.pickUser(updatedUser)
+      this.updateLoginedUsers(updatedUser, dashData.setLoginedUsers)
+      this.getImages(dashData)
+    })
+  }
+
+  async getImages(dashData: DashData) {
+    const targetSet = new Set(this.photos)
+    const basePhotos = dashData.photos.filter(p => targetSet.has(p.photo))
+    const existingSet = new Set(basePhotos.map(p => p.photo))
+
+    const missing = this.photos.filter(p => !existingSet.has(p))
+    const loaded = await Promise.all(
+      missing.map(photo =>
+        new Promise<{ photo: string; image: any }>(resolve => {
+          socket.emit('getPhotoBuffer', { photo }, (res: any) => {
+            resolve({
+              photo,
+              image: res.image
+            })
+          })
+        })
+      )
+    )
+    const newPhotos = [...basePhotos, ...loaded]
+    console.log('newPhotos', newPhotos)
+    dashData.setPhotos(newPhotos)
+  }
+
+  updatePhotos(dashData: DashData) {
+    socket.emit('getPhotos', (res: {photos: string[]}) => {
+      console.log('updatePhotos', res)
+      const updatedUser = { ...this, photos: res.photos };
+      this.photos = res.photos
+      dashData.pickUser(updatedUser)
+      this.updateLoginedUsers(updatedUser, dashData.setLoginedUsers)
+      this.getImages(dashData)
+    })
+  }
 
   getDateSessionEnd() {
     return new Date(this.exp * 1000).toLocaleString()
