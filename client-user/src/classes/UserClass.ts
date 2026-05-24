@@ -1,4 +1,5 @@
 import { DashScreenInterface, Photos } from "../components/dashboardScreen/mainScreen/Dashboard"
+import { Field } from "../interfaces/field"
 import type { User } from "../interfaces/user"
 import { socket } from "../utils/socket"
 import { AxiosClass } from "./AxiosClass"
@@ -13,6 +14,20 @@ interface DashData extends DashScreenInterface {
 export class UserClass extends (Model as new (data: User) => ModelWithData<User>) {
 
   private axiosClass = new AxiosClass()
+
+  async analyzPhotos(fields: string[], setNewOrder: ([]) => void, newOrder: Field[]) {
+    return socket.emit('analyzPhotos', {photos: this.photos, fields}, (res: {analyzData: {status: boolean, data: object}}) => {
+      if (res.analyzData.status) {
+        const anData = res.analyzData.data
+        for (const f of newOrder) {
+          console.log(anData[f.name])
+          f.currentData = anData[f.name] ? anData[f.name] : ''
+        }
+        setNewOrder([...newOrder])
+      }
+      
+    })
+  }
 
   onSocket(dashData: DashData) {
     console.log('onSocket')

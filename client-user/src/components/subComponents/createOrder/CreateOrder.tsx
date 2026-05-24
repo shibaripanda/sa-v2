@@ -1,6 +1,6 @@
-import { ActionIcon, Autocomplete, Button, Center, Grid, Group, Image, Indicator, Modal, Space, TextInput } from "@mantine/core";
+import { ActionIcon, Autocomplete, Button, Center, Divider, Grid, Group, Image, Modal, Space, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Field } from "../../../interfaces/field";
 import { Device } from "../../../interfaces/device";
 import { HeaderInterface } from "../../dashboardScreen/subDashScreen/header/Header";
@@ -9,8 +9,6 @@ import { IconX } from "@tabler/icons-react";
 export function CreateOrder(props: HeaderInterface) {
   const [opened, { open, close }] = useDisclosure(false);
   const [_selectedDevice_, _setSelectedDevice_] = useState<Device | null>(sessionStorage.getItem('_selectedDevice_') ? JSON.parse(sessionStorage.getItem('_selectedDevice_')!) : null)
-
-  // const [photos, setPhotos] = useState(props.user.photos)
   const [fullPhoto,  setFullPhoto ] = useDisclosure(false);
   const [photo,  setPhoto ] = useState<string>('');
 
@@ -19,10 +17,14 @@ export function CreateOrder(props: HeaderInterface) {
     for(const f of orderFields){
       f['currentData'] = sessionStorage.getItem(f.name) ?? null
     }
-    return orderFields
+    return _selectedDevice_ ? orderFields.filter(f => !_selectedDevice_!.blockFields.includes(f._id)) : orderFields
   }
 
-  const [newOrder, setNewOrder] = useState<Field[]>(newOrderData())
+  const [newOrder, setNewOrder] = useState<Field[]>([])
+
+  useEffect(() => {
+    setNewOrder(newOrderData())
+  }, [_selectedDevice_])
 
   const updateNewOrder = (fieldName: string, newValue: string | number) => {
     console.log(fieldName, newValue)
@@ -33,6 +35,13 @@ export function CreateOrder(props: HeaderInterface) {
       newOrder[index].currentData = newValue
       setNewOrder([...newOrder])
     }
+  }
+  const activCreateOrderBut = () => {
+    const count = newOrder.filter(no => no.mustHave).length
+    // console.log(count)
+    const myCount = newOrder.filter(no => no.currentData).length
+    // console.log(myCount)
+    return !(count == myCount)
   }
 
   const onClearNewOrder = () => {
@@ -59,19 +68,20 @@ export function CreateOrder(props: HeaderInterface) {
     _setSelectedDevice_(device)
     sessionStorage.setItem('_selectedDevice_', JSON.stringify(device))
   }
-
   const showFullPhoto = (photo: string) => {
     setPhoto(photo)
     setFullPhoto.open()
   }
-
   const deeleteAllPhoto = () => {
     for (const p of props.photos) {
       props.user.deletePhoto({ ...props, deletePhoto: p.photo })
     }
   }
+  const analyzPhotos = async () => {
+    await props.user.analyzPhotos(newOrder.map(no => no.name), setNewOrder, newOrder)
+  }
 
-  console.log(props.photos)
+  console.log('newOrder', newOrder)
  
   return (
     <>
@@ -86,76 +96,52 @@ export function CreateOrder(props: HeaderInterface) {
             }
           </Grid>
         </Center>
-
-        <Space h='xl'/>
-
-        <Center>
-          {_selectedDevice_ ?
-            <Grid justify="flex-start" align="stretch" w="100%">
-              {newOrder.filter(f => !_selectedDevice_.blockFields.includes(f._id)).map(d => 
-                <Grid.Col key={`Fildes-${d._id}`} span={{ base: 12, sm: 4}}>
-                  {d.variants ?
-                    <Autocomplete
-                    // onChange={(v) => updateNewOrder(d.name, v)} 
-                    onChange={(v) => {
-                      updateNewOrder(d.name, v)
-                      console.log('variants', v)
-                    }}
-                    label={d.name + (d.onlyNumber ? ' (only numbers)' : '')}
-                    value={d.currentData?.toString() ?? ''} 
-                    size='xs' 
-                    withAsterisk={d.mustHave}
-                    data={['dddd', 'eeee']}/>  
-                    // data={d.data.map(s => s.toString())}/> 
-                    :
-                    <TextInput 
-                    onChange={(v) => updateNewOrder(d.name, v.target.value)} 
-                    label={d.name + (d.onlyNumber ? ' (only numbers)' : '')} 
-                    value={d.currentData ?? ''} 
-                    size='xs' 
-                    withAsterisk={d.mustHave}/>
-                  }
-                </Grid.Col>)
-              }
-            </Grid> : ''}
-        </Center>
-
-        <Space h='xl'/>
-
+ 
         {_selectedDevice_ ?
-          <Grid justify="flex-start" align="stretch" w="100%">
-            <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-              <Button fullWidth size='xs' color="grey">Заполнить по фото</Button>
-            </Grid.Col>
-            <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-              <Button fullWidth size='xs' color="red" disabled={!props.photos.length} onClick={deeleteAllPhoto}>Очистить фото</Button>
-            </Grid.Col>
-            <Grid.Col key={'2'} span={{ base: 12, sm: 4}}>
-              <Button fullWidth size='xs' color="green">Создать заказ</Button>
-            </Grid.Col>
-            <Grid.Col key={'3'} span={{ base: 12, sm: 2}}>
-              <Button onClick={onClearNewOrder} disabled={!newOrder.some(f => f.currentData !== null)} fullWidth size='xs' color="red">Очистить поля</Button>
-            </Grid.Col>
-            <Grid.Col key={'4'} span={{ base: 12, sm: 2}}>
-              <Button onClick={onCancelNewOrderClose} fullWidth size='xs' color="red">Отмена</Button>
-            </Grid.Col>
-          </Grid> : null}
-
-          <Space h='xl'/>
+          <div>
+            <Space h='xl'/>
+            <Divider my="xs" label={_selectedDevice_ ?_selectedDevice_.name : ''} labelPosition="left" />
+            <Center>
+              <Grid justify="flex-start" align="stretch" w="100%">
+                {newOrder.filter(f => !_selectedDevice_.blockFields.includes(f._id)).map(d => 
+                  <Grid.Col key={`Fildes-${d._id}`} span={{ base: 12, sm: 4}}>
+                    {d.variants ?
+                      <Autocomplete
+                      onChange={(v) => {
+                        updateNewOrder(d.name, v)
+                        console.log('variants', v)
+                      }}
+                      label={d.name + (d.onlyNumber ? ' (only numbers)' : '')}
+                      value={d.currentData?.toString() ?? ''} 
+                      size='xs' 
+                      withAsterisk={d.mustHave}
+                      data={['dddd', 'eeee']}/> 
+                      :
+                      <TextInput 
+                      onChange={(v) => updateNewOrder(d.name, v.target.value)} 
+                      label={d.name + (d.onlyNumber ? ' (only numbers)' : '')} 
+                      value={d.currentData ?? ''} 
+                      size='xs' 
+                      withAsterisk={d.mustHave}/>
+                    }
+                  </Grid.Col>)}
+              </Grid> 
+            </Center>
+            <Space h='xl'/>
+          </div> : ''}
 
           {props.photos.length ?
+          <div>
+            <Divider my="xs" label="Photos" labelPosition="left" />
             <Center> 
               <Group  
                 wrap="nowrap"
-                // style={{
-                //   overflow: 'hidden',
-                //   width: '100%',
-                // }}
                 >{props.photos.map((p, index) =>
-              <div style={{ position: 'relative', display: 'inline-block' }}>
+              <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
                 <Image
-                  h={150}
-                  w={150}
+                  style={{cursor: 'pointer'}}
+                  h={100}
+                  w={100}
                   fit="cover"
                   radius="md"
                   src={`data:image/jpeg;base64,${p.image}`}
@@ -191,8 +177,28 @@ export function CreateOrder(props: HeaderInterface) {
                   />
                 </Center>
               </Modal>
-            </Center> : null
-          }
+            </Center>
+          </div> : null}
+          
+        {_selectedDevice_ ?
+        <> <Space h='xl'/>
+          <Grid justify="flex-start" align="stretch" w="100%">
+            <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
+              <Button fullWidth size='xs' color="grey" disabled={!props.photos.length} onClick={analyzPhotos}>Заполнить по фото</Button>
+            </Grid.Col>
+            <Grid.Col key={'2'} span={{ base: 12, sm: 2}}>
+              <Button fullWidth size='xs' color="red" disabled={!props.photos.length} onClick={deeleteAllPhoto}>Очистить фото</Button>
+            </Grid.Col>
+            <Grid.Col key={'3'} span={{ base: 12, sm: 4}}>
+              <Button fullWidth size='xs' color="green" disabled={activCreateOrderBut()}>Создать заказ</Button>
+            </Grid.Col>
+            <Grid.Col key={'4'} span={{ base: 12, sm: 2}}>
+              <Button onClick={onClearNewOrder} disabled={!newOrder.some(f => f.currentData !== null)} fullWidth size='xs' color="red">Очистить поля</Button>
+            </Grid.Col>
+            <Grid.Col key={'5'} span={{ base: 12, sm: 2}}>
+              <Button onClick={onCancelNewOrderClose} fullWidth size='xs' color="red">Отмена</Button>
+            </Grid.Col>
+          </Grid></> : null}
 
       </Modal>
 

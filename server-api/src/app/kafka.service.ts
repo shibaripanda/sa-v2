@@ -26,7 +26,7 @@ export class KafkaService implements OnModuleInit {
     const device = ['edit-device', 'delete-device'];
     const field = ['edit-field', 'delete-field'];
     const service = ['update-service', 'delete-service'];
-    const order = ['create-order'];
+    const order = ['create-order', 'analyzPhotos_openai'];
     const comps = [
       'get-all-my-comps',
       'create-new-service',

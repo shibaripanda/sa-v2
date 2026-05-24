@@ -6,22 +6,17 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class OpenAIKafkaController {
   constructor(private openaiService: OpenAIService) {}
 
-  // @MessagePattern('textavailable')
-  // getTextAvailable() {
-  //   const res = { res: 'res' };
-  //   return {
-  //     value: res,
-  //     key: 'textavailable',
-  //   };
-  // }
-
-  @MessagePattern('create-order')
-  createOrder(@Payload() newOrder: object) {
+  @MessagePattern('analyzPhotos_openai')
+  async analyz(@Payload() newOrder: { photos: string[]; fields: string[] }) {
     console.log(newOrder);
-    // const res = { res: true };
+    const res = await this.openaiService.analyz(
+      newOrder.photos,
+      newOrder.fields,
+    );
+    console.log(res);
     return {
-      value: true,
-      key: 'create-order',
+      value: { analyzData: res },
+      key: 'analyzPhotos_openai',
     };
   }
 }
