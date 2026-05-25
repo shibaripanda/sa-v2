@@ -1,4 +1,4 @@
-import { ActionIcon, Autocomplete, Button, Center, Divider, Grid, Group, Image, Modal, Space, TextInput } from "@mantine/core";
+import { ActionIcon, Autocomplete, Button, Center, Divider, Grid, Group, Image, Modal, Slider, Space, Text, TextInput, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { Field } from "../../../interfaces/field";
@@ -11,6 +11,7 @@ export function CreateOrder(props: HeaderInterface) {
   const [_selectedDevice_, _setSelectedDevice_] = useState<Device | null>(sessionStorage.getItem('_selectedDevice_') ? JSON.parse(sessionStorage.getItem('_selectedDevice_')!) : null)
   const [fullPhoto,  setFullPhoto ] = useDisclosure(false);
   const [photo,  setPhoto ] = useState<string>('');
+  const [value, setValue] = useState(props.user.sizeNewOrderForm);
 
   const newOrderData = () => {
     const orderFields = [...props.comp.fields_ids]
@@ -78,8 +79,20 @@ export function CreateOrder(props: HeaderInterface) {
     }
   }
   const analyzPhotos = async () => {
-    await props.user.analyzPhotos(newOrder.map(no => no.name), setNewOrder, newOrder)
+    const device = _selectedDevice_ ? _selectedDevice_.name : 'Device'
+    await props.user.analyzPhotos(newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name), device, props.leng, newOrder, setNewOrder)
   }
+  const setSIzeForm = (size: number) => {
+    setValue(size)
+    props.user.updateUser('sizeNewOrderForm', size, props.pickUser, props.setLoginedUsers)
+  }
+  const marks = [
+    { value: 0, label: 'xs' },
+    { value: 25, label: 'sm' },
+    { value: 50, label: 'md' },
+    { value: 75, label: 'lg' },
+    { value: 100, label: 'xl' },
+  ];
 
   console.log('newOrder', newOrder)
  
@@ -106,28 +119,42 @@ export function CreateOrder(props: HeaderInterface) {
                 {newOrder.filter(f => !_selectedDevice_.blockFields.includes(f._id)).map(d => 
                   <Grid.Col key={`Fildes-${d._id}`} span={{ base: 12, sm: 4}}>
                     {d.variants ?
+                    <Tooltip label={d.currentData?.toString() ?? ''} disabled={d.currentData ? d.currentData?.toString().length < 25 : true}>
                       <Autocomplete
+                      rightSection={d.ai && '🤖'}
                       onChange={(v) => {
                         updateNewOrder(d.name, v)
                         console.log('variants', v)
                       }}
                       label={d.name + (d.onlyNumber ? ' (only numbers)' : '')}
                       value={d.currentData?.toString() ?? ''} 
-                      size='xs' 
+                      size={marks.find(m => m.value === value)?.label as any} 
                       withAsterisk={d.mustHave}
-                      data={['dddd', 'eeee']}/> 
+                      data={['dddd', 'eeee']}/></Tooltip> 
                       :
-                      <TextInput 
+                      <TextInput
+                      rightSection={d.ai && '🤖'} 
                       onChange={(v) => updateNewOrder(d.name, v.target.value)} 
                       label={d.name + (d.onlyNumber ? ' (only numbers)' : '')} 
                       value={d.currentData ?? ''} 
-                      size='xs' 
+                      size='sm' 
                       withAsterisk={d.mustHave}/>
                     }
                   </Grid.Col>)}
               </Grid> 
             </Center>
-            <Space h='xl'/>
+            <Space h='xs'/>
+            <Slider
+              size={'sm'}
+              onChange={(v) => setSIzeForm(v)}
+              value={value}
+              label={(val) => marks.find((mark) => mark.value === val)!.label}
+              step={25}
+              marks={marks}
+              style={{width: '30%'}}
+              styles={{ markLabel: { display: 'none' } }}
+              />
+            <Space h='xs'/>
           </div> : ''}
 
           {props.photos.length ?

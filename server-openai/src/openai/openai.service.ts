@@ -9,14 +9,14 @@ export class OpenAIService {
     private config: ConfigService,
   ) {}
 
-  async analyz(photos: string[], fields: string[]) {
+  async analyz(photos: string[], fields: string[], device: string, leng: string) {
     const buffs: Buffer[] = [];
     for (const photo of photos) {
       const buf = await this.downloadTelegramFile(photo);
       buffs.push(buf);
     }
 
-    return await this.analyzeDeviceImages(buffs, fields);
+    return await this.analyzeDeviceImages(buffs, fields, device, leng);
   }
 
   async downloadTelegramFile(fileId: string): Promise<Buffer> {
@@ -32,16 +32,14 @@ export class OpenAIService {
     const filePath = fileData.result.file_path;
 
     // 2. download file
-    const downloadResponse = await fetch(
-      `https://api.telegram.org/file/bot${this.config.get<string>('BOT_TOKEN')!}/${filePath}`,
-    );
+    const downloadResponse = await fetch(`https://api.telegram.org/file/bot${this.config.get<string>('BOT_TOKEN')!}/${filePath}`);
 
     const arrayBuffer = await downloadResponse.arrayBuffer();
 
     return Buffer.from(arrayBuffer);
   }
 
-  async analyzeDeviceImages(images: Buffer[], fields: string[]) {
+  async analyzeDeviceImages(images: Buffer[], fields: string[], device: string, leng: string) {
     const imagesBase64 = images.map((buffer) => ({
       type: 'image_url' as const,
       image_url: {
@@ -58,9 +56,7 @@ export class OpenAIService {
           name: 'device_analysis',
           schema: {
             type: 'object',
-            properties: Object.fromEntries(
-              fields.map((f) => [f, { type: ['string', 'null'] }]),
-            ),
+            properties: Object.fromEntries(fields.map((f) => [f, { type: ['string', 'null'] }])),
             required: fields,
             additionalProperties: false,
           },
@@ -70,23 +66,25 @@ export class OpenAIService {
         {
           role: 'system',
           content: `
-            Система анализа изображений техники для акта приёмки в ремонт.
+            Система анализа изображений техники (${device}) для акта приёмки в ремонт.
 
             Задача:
             Определить устройство и заполнить поля акта на основании фотографий.
             Определить точную модель по внешнему виду, если даже не видно маркировки.
-            Особенно отмечай следы использования, потертости, маленькие царапины и сколы.
-            Не заостряй внимание на цвете устройствы, если это не пятна чего либо.
+            Особенно отмечай следы использования, потертости, даже маленькие царапины и сколы.
+            Не заостряй внимание на цвете устройства, если это не пятна чего либо.
+            Перед началом анализа, внимательно изучи все фото, чтобы составить полное представление о состоянии устройства.
 
             Правила:
-            - Используй только визуально подтверждённые данные
-            - Не выдумывай серийные номера и точные модели
-            - Если информация отсутствует или не читается — ставь null
-            - Если серийный номер не указан ставь --
-            - Модель можно указывать только при уверенной визуальной идентификации
-            - Игнорируй все посторонние объекты на изображении
-            - Возвращай только данные для заполнения формы
-            - Будь краток для максимальной точности и лаконичности
+            - Используй только визуально подтверждённые данные.
+            - Не выдумывай серийные номера и точные модели.
+            - Если информация отсутствует или не читается — ставь null.
+            - Если серийный номер не указан ставь --.
+            - Модель можно указывать только при уверенной визуальной идентификации.
+            - Игнорируй все посторонние объекты на изображении.
+            - Возвращай только данные для заполнения формы.
+            - Будь краток и точен.
+            - Ответ должен быть на ${leng} языке.
             `.trim(),
         },
         {
@@ -103,6 +101,7 @@ export class OpenAIService {
     });
 
     const content = response.choices?.[0]?.message?.content;
+    console.log(response.usage);
 
     if (!content) {
       return { status: false, data: {} };

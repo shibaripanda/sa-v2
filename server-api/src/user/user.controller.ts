@@ -40,6 +40,7 @@ export class UserController {
     // @Ip() ip: string,
   ) {
     try {
+      console.log(data);
       return await this.kafkaService.sendAnyReq('update-user', {
         user_id: user._id,
         data: data.requestData,

@@ -76,11 +76,18 @@ export function ModalEditField(props: ModalEditFieldInterface) {
                         onChange={(event) => editField('variants', event.currentTarget.checked)}
                         /> 
                         Подгружать варианты
-                    </Group>  
+                    </Group>
+                    <Group>
+                        <Checkbox 
+                        checked={props.selectedField.ai}
+                        onChange={(event) => editField('ai', event.currentTarget.checked)}
+                        /> 
+                        Заполнять ИИ по фото
+                    </Group>    
                     <Space h='lg'/>
                     <Space h='lg'/>
                     <Group justify='flex-end'>
-                        {props.comp.statuses_ids.length > 1 && (<Button size="xs" color='red' onClick={deleteField}>{props.text?.delete}</Button>)}
+                        {props.comp.fields_ids.length > 1 && (<Button size="xs" color='red' onClick={deleteField}>{props.text?.delete}</Button>)}
                     </Group>
                 </Modal>
             </>

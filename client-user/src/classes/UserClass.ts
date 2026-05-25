@@ -15,17 +15,25 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
 
   private axiosClass = new AxiosClass()
 
-  async analyzPhotos(fields: string[], setNewOrder: ([]) => void, newOrder: Field[]) {
-    return socket.emit('analyzPhotos', {photos: this.photos, fields}, (res: {analyzData: {status: boolean, data: object}}) => {
+  async analyzPhotos(fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any) {
+    console.log('analyzPhotos', fields, device, leng)
+    return socket.emit('analyzPhotos', {photos: this.photos, fields, device, leng}, (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
       if (res.analyzData.status) {
         const anData = res.analyzData.data
-        for (const f of newOrder) {
-          console.log(anData[f.name])
-          f.currentData = anData[f.name] ? anData[f.name] : ''
+        for(const d of fields) {
+          const f = newOrder.find(i => i.name == d)
+          if(f) {
+            f.currentData = anData[d] ? anData[d] : ''
+          }
+          // newOrder.find(i => i.name == d)?.currentData = anData[d] ? anData[d] : ''
         }
+        // const anData = res.analyzData.data
+        // for (const f of newOrder) {
+        //   console.log(anData[f.name])
+        //   f.currentData = anData[f.name] ? anData[f.name] : ''
+        // }
         setNewOrder([...newOrder])
       }
-      
     })
   }
 
@@ -90,7 +98,7 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
     return new Date(this.exp * 1000).toLocaleString()
   }
 
-  async updateUser(dataName: string, newValue: string, pickUser: (user: User) => void, setLoginedUsers: (user: User) => void) {
+  async updateUser(dataName: string, newValue: string | number, pickUser: (user: User) => void, setLoginedUsers: (user: User) => void) {
     const res = await this.axiosClass.axiosAuthServer('POST', '/update-user', dataName, {[dataName]: newValue})
     if (!res) return false
     const updatedUser = { ...this, [dataName]: newValue };

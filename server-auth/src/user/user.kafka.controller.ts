@@ -63,10 +63,11 @@ export class UserKafkaController {
     @Payload()
     value: {
       user_id: ObjID;
-      data: { [key: string]: string };
+      data: { [key: string]: string | number };
     },
   ) {
     // await this.userService.testUser();
+    console.log(value.data);
     const user = await this.userService.getUserById(value.user_id);
     if (!user) throw new RpcException('USER_NOT_FOUND');
     const res = await this.userService.updateUserData(value.user_id, value.data);

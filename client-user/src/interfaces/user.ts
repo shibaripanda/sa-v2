@@ -12,6 +12,7 @@ export interface User {
     telegramUserName: string;
     timeLiveToken: string;
     historyLogin: HistoryLogin[];
+    sizeNewOrderForm: number;
     photos: string[];
 
     updatedAt: string;

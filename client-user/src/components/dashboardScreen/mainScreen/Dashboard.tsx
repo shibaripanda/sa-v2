@@ -255,8 +255,6 @@ export function Dashboard(props: DashScreenInterface) {
     setHeaderMenuData(headerMenuData_Test)
   }, [activOrderView])
 
-  console.log(photos)
-
   return (
     <AppShell
       padding="15px"

@@ -4,10 +4,7 @@ import { CompSettings } from './compSettings/CompSettings';
 
 export function CompanySettings(props: MainInterface) {
 
-  console.log(props.service)
-  console.log(props.comp)
-  console.log(props.user)
-  console.log(props.staffUser)
+  console.log('CompanySettings', props)
   
   return (
     <>

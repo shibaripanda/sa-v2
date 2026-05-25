@@ -21,7 +21,7 @@ export class RequestGuard implements CanActivate {
       const request: RequestWithUser = context.switchToHttp().getRequest();
       const requestName = request.body['requestName'];
       // const requestData = request.body['requestData'];
-      const alowedRequests = ['name', 'timeLiveToken', 'delete-user'];
+      const alowedRequests = ['name', 'timeLiveToken', 'delete-user', 'sizeNewOrderForm'];
       if (
         !requestName ||
         // !requestData ||

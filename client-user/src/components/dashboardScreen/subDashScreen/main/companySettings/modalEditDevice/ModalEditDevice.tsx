@@ -96,7 +96,7 @@ export function ModalEditDevice(props: ModalEditDeviceInterface) {
                             {props.text?.original}
                         </Button>
                         ) : (<div></div>)}
-                        {props.comp.statuses_ids.length > 1 && (<Button size="xs" color='red' onClick={deleteDevice}>{props.text?.delete}</Button>)}
+                        {props.comp.devices_ids.length > 1 && (<Button size="xs" color='red' onClick={deleteDevice}>{props.text?.delete}</Button>)}
                     </Group>
                 </Modal>
             </>

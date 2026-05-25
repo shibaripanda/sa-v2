@@ -22,6 +22,9 @@ export class User {
   @Prop({ default: '12h' })
   timeLiveToken!: string;
 
+  @Prop({ default: 50 })
+  sizeNewOrderForm!: number;
+
   @Prop({ default: [] })
   photos!: [string];
 

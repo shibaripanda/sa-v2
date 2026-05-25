@@ -4,10 +4,7 @@ import { ServSettings } from './servSettings/ServSettings';
 
 export function ServiceSettings(props: MainInterface) {
 
-  console.log(props.service)
-  console.log(props.comp)
-  console.log(props.user)
-  console.log(props.staffUser)
+  console.log('ServiceSettings', props)
   
   return (
     <>

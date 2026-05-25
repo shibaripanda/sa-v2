@@ -23,11 +23,15 @@ export class OrderGateway {
   @UseGuards(UniversalJwtGuard)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('analyzPhotos')
-  async analyzPhotos(@CurrentUser() user: User, @MessageBody() messageBody: { photos: string[]; fields: string[] }) {
+  async analyzPhotos(
+    @CurrentUser() user: User,
+    @MessageBody() messageBody: { photos: string[]; fields: string[]; device: string; leng: string },
+  ) {
     return await this.kafkaService.sendAnyReq('analyzPhotos_openai', {
-      // _id: user._id,
       photos: messageBody.photos,
       fields: messageBody.fields,
+      device: messageBody.device,
+      leng: messageBody.leng,
     });
   }
 }
