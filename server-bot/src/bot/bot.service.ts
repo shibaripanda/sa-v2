@@ -17,22 +17,19 @@ export class BotService {
     return { image: Buffer.from(buffer).toString('base64') };
   }
 
-  async addNewPhoto(_id: string, photo: string) {
-    // const url = await this.bot.telegram.getFileLink(photo);
-    // const buffer = await (await fetch(url.href)).arrayBuffer();
+  async addNewVoice(_id: string, voice: string) {
+    await this.kafkaService.emitAnyReq('analyzVoice_openai', {
+      _id,
+      voice,
+    });
+    await this.kafkaService.emitAnyReq('newVoice_api', { _id });
+  }
 
+  async addNewPhoto(_id: string, photo: string) {
     await this.kafkaService.emitAnyReq('addNewPhoto_auth', {
       _id,
       photo,
     });
-
-    await this.kafkaService.emitAnyReq('newPhoto_api', {
-      // image: Buffer.from(buffer).toString('base64'),
-      _id,
-    });
-    // await this.kafkaService.emitAnyReq('newPhoto_api', {
-    //   image: Buffer.from(buffer).toString('base64'),
-    //   _id,
-    // });
+    await this.kafkaService.emitAnyReq('newPhoto_api', { _id });
   }
 }

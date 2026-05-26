@@ -6,8 +6,13 @@ import { Device } from "../../../interfaces/device";
 import { HeaderInterface } from "../../dashboardScreen/subDashScreen/header/Header";
 import { IconX } from "@tabler/icons-react";
 
-export function CreateOrder(props: HeaderInterface) {
-  const [opened, { open, close }] = useDisclosure(false);
+interface CreateOrder extends HeaderInterface {
+  createOrder: boolean;
+  setCreateOrder: any;
+}
+
+export function CreateOrder(props: CreateOrder) {
+  // const [opened, { open, close }] = useDisclosure(true);
   const [_selectedDevice_, _setSelectedDevice_] = useState<Device | null>(sessionStorage.getItem('_selectedDevice_') ? JSON.parse(sessionStorage.getItem('_selectedDevice_')!) : null)
   const [fullPhoto,  setFullPhoto ] = useDisclosure(false);
   const [photo,  setPhoto ] = useState<string>('');
@@ -44,7 +49,6 @@ export function CreateOrder(props: HeaderInterface) {
     // console.log(myCount)
     return !(count == myCount)
   }
-
   const onClearNewOrder = () => {
     // _setSelectedDevice_(null)
     // sessionStorage.removeItem('_selectedDevice_')
@@ -60,11 +64,11 @@ export function CreateOrder(props: HeaderInterface) {
       sessionStorage.removeItem(f.name)
       return {...f, currentData: null}
     }))
-    close()
+    props.setCreateOrder.close()
   }
-  const onCloseNewOrderClose = () => {
-    close()
-  }
+  // const onCloseNewOrderClose = () => {
+  //   close()
+  // }
   const setAndSaveSelectedDevice = (device: Device) => {
     _setSelectedDevice_(device)
     sessionStorage.setItem('_selectedDevice_', JSON.stringify(device))
@@ -86,6 +90,9 @@ export function CreateOrder(props: HeaderInterface) {
     setValue(size)
     props.user.updateUser('sizeNewOrderForm', size, props.pickUser, props.setLoginedUsers)
   }
+  const sizeElement = () => {
+    return marks.find(m => m.value === value)?.label as any
+  }
   const marks = [
     { value: 0, label: 'xs' },
     { value: 25, label: 'sm' },
@@ -98,13 +105,26 @@ export function CreateOrder(props: HeaderInterface) {
  
   return (
     <>
-      <Modal opened={opened} onClose={onCloseNewOrderClose} title={props.text?.newOrder} size="100%">
+      <Modal opened={props.createOrder} onClose={props.setCreateOrder.close} title={props.text?.newOrder} size="100%">
 
+        <Group justify={"space-between"}>
+          <div></div>
+          <Slider size={'sm'}
+            onChange={(v) => setSIzeForm(v)}
+            value={value}
+            label={(val) => marks.find((mark) => mark.value === val)!.label}
+            step={25}
+            marks={marks}
+            style={{width: '10%'}}
+            styles={{ markLabel: { display: 'none' } }}
+            />
+        </Group>
+        
         <Center>
           <Grid justify="flex-start" align="stretch" w="100%">
             {props.comp.devices_ids.map(d => 
               <Grid.Col key={`Devices-${d._id}`} span={{ base: 4, sm: 1.5}}>
-                <Button fullWidth onClick={() => {setAndSaveSelectedDevice(d)}} size='xs' color={_selectedDevice_?._id == d._id ? 'green' : 'gray'}>{d.name}</Button>
+                <Button fullWidth onClick={() => {setAndSaveSelectedDevice(d)}} size={sizeElement()} color={_selectedDevice_?._id == d._id ? 'green' : 'gray'}>{d.name}</Button>
               </Grid.Col>)
             }
           </Grid>
@@ -128,7 +148,7 @@ export function CreateOrder(props: HeaderInterface) {
                       }}
                       label={d.name + (d.onlyNumber ? ' (only numbers)' : '')}
                       value={d.currentData?.toString() ?? ''} 
-                      size={marks.find(m => m.value === value)?.label as any} 
+                      size={sizeElement()} 
                       withAsterisk={d.mustHave}
                       data={['dddd', 'eeee']}/></Tooltip> 
                       :
@@ -137,27 +157,17 @@ export function CreateOrder(props: HeaderInterface) {
                       onChange={(v) => updateNewOrder(d.name, v.target.value)} 
                       label={d.name + (d.onlyNumber ? ' (only numbers)' : '')} 
                       value={d.currentData ?? ''} 
-                      size='sm' 
+                      size={sizeElement()}  
                       withAsterisk={d.mustHave}/>
                     }
                   </Grid.Col>)}
               </Grid> 
             </Center>
-            <Space h='xs'/>
-            <Slider
-              size={'sm'}
-              onChange={(v) => setSIzeForm(v)}
-              value={value}
-              label={(val) => marks.find((mark) => mark.value === val)!.label}
-              step={25}
-              marks={marks}
-              style={{width: '30%'}}
-              styles={{ markLabel: { display: 'none' } }}
-              />
+            <Space h='md'/>
             <Space h='xs'/>
           </div> : ''}
 
-          {props.photos.length ?
+        {props.photos.length ?
           <div>
             <Divider my="xs" label="Photos" labelPosition="left" />
             <Center> 
@@ -205,31 +215,32 @@ export function CreateOrder(props: HeaderInterface) {
                 </Center>
               </Modal>
             </Center>
-          </div> : null}
+          </div> : <Center><Text size="sm" c="dimmed">{props.text?.SendPhotoToBot}</Text></Center>}
           
         {_selectedDevice_ ?
-        <> <Space h='xl'/>
-          <Grid justify="flex-start" align="stretch" w="100%">
-            <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-              <Button fullWidth size='xs' color="grey" disabled={!props.photos.length} onClick={analyzPhotos}>Заполнить по фото</Button>
-            </Grid.Col>
-            <Grid.Col key={'2'} span={{ base: 12, sm: 2}}>
-              <Button fullWidth size='xs' color="red" disabled={!props.photos.length} onClick={deeleteAllPhoto}>Очистить фото</Button>
-            </Grid.Col>
-            <Grid.Col key={'3'} span={{ base: 12, sm: 4}}>
-              <Button fullWidth size='xs' color="green" disabled={activCreateOrderBut()}>Создать заказ</Button>
-            </Grid.Col>
-            <Grid.Col key={'4'} span={{ base: 12, sm: 2}}>
-              <Button onClick={onClearNewOrder} disabled={!newOrder.some(f => f.currentData !== null)} fullWidth size='xs' color="red">Очистить поля</Button>
-            </Grid.Col>
-            <Grid.Col key={'5'} span={{ base: 12, sm: 2}}>
-              <Button onClick={onCancelNewOrderClose} fullWidth size='xs' color="red">Отмена</Button>
-            </Grid.Col>
-          </Grid></> : null}
+          <><Space h='xl'/>
+            <Grid justify="flex-start" align="stretch" w="100%">
+              <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
+                <Button fullWidth size={sizeElement()} disabled={!props.photos.length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
+              </Grid.Col>
+              <Grid.Col key={'2'} span={{ base: 12, sm: 2}}>
+                <Button fullWidth size={sizeElement()} color="orange" disabled={!props.photos.length} onClick={deeleteAllPhoto}>{props.text?.clear} 🖼</Button>
+              </Grid.Col>
+              <Grid.Col key={'3'} span={{ base: 12, sm: 4}}>
+                <Button fullWidth size={sizeElement()} color="green" disabled={activCreateOrderBut()}>{props.text?.createOrder}</Button>
+              </Grid.Col>
+              <Grid.Col key={'4'} span={{ base: 12, sm: 2}}>
+                <Button onClick={onClearNewOrder} disabled={!newOrder.some(f => f.currentData !== null)} fullWidth size={sizeElement()} color="red">{props.text?.clear}</Button>
+              </Grid.Col>
+              <Grid.Col key={'5'} span={{ base: 12, sm: 2}}>
+                <Button onClick={onCancelNewOrderClose} fullWidth size={sizeElement()} color="red">{props.text?.cancel}</Button>
+              </Grid.Col>
+            </Grid>
+          </> : null}
 
       </Modal>
 
-      <Button size='xs' visibleFrom="sm" c='green' variant='default' onClick={open}>{props.text?.createOrder}</Button>
+      {/* <Button size='xs' visibleFrom="sm" c='green' variant='default' onClick={props.setCreateOrder.open}>{props.text?.createOrder}</Button> */}
     </>
     
   );

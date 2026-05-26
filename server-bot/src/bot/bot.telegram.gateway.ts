@@ -35,9 +35,19 @@ export class TelegramGateway {
 
   @On('photo')
   async addNewPhoto(@Ctx() ctx: UserContext) {
-    await this.botService.addNewPhoto(
-      ctx.user._id,
-      ctx.message.photo[ctx.message.photo.length - 1].file_id,
-    );
+    await this.botService.addNewPhoto(ctx.user._id, ctx.message.photo[ctx.message.photo.length - 1].file_id);
+  }
+
+  @On('voice')
+  async onVoice(@Ctx() ctx: UserContext) {
+    const voice = ctx.message['voice'];
+    const maxLengthVoiceMessage = Number(this.config.get<string>('MAX_LENGTH_VOICE_MESSAGE_SECONDS')!);
+    console.log('DURATION:', voice.duration, '/', maxLengthVoiceMessage);
+
+    if (voice.duration > maxLengthVoiceMessage) {
+      await ctx.reply(`Alert, too long voice message\nMax length: ${maxLengthVoiceMessage} seconds`);
+      return;
+    }
+    await this.botService.addNewVoice(ctx.user._id, ctx.message.voice.file_id);
   }
 }

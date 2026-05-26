@@ -1,5 +1,5 @@
 import { IconChevronDown, IconFilter, IconHome2, IconSquareRoundedPlus } from '@tabler/icons-react';
-import { ActionIcon, Avatar, Box, Burger, Center, Divider, Group, Menu, Modal, Text, TextInput, Tooltip, UnstyledButton } from '@mantine/core';
+import { ActionIcon, Avatar, Box, Burger, Button, Center, Divider, Group, Menu, Modal, Text, TextInput, Tooltip, UnstyledButton } from '@mantine/core';
 import classes from './Header.module.css';
 import { DashScreenInterface, Photos } from '../../mainScreen/Dashboard';
 import { useDisclosure } from '@mantine/hooks';
@@ -36,6 +36,8 @@ function NavbarLink({ icon: Icon, label, active, onClick}: NavbarLinkProps) {
 
 export function Header(props: HeaderInterface) {
   const [navbarMebu, {open, close} ] = useDisclosure();
+  // const [createOrder, setCreateOrder ] = useState(false);
+  const [createOrder, setCreateOrder ] = useDisclosure(false);
 
   const items = props.headerMenuData.map((link) => {
     const menuItems = link.links?.map((item) => (
@@ -99,7 +101,8 @@ export function Header(props: HeaderInterface) {
                 <Text size='sm'>{props.user.name}</Text>
             </Box>
             {/* <Button size='xs' visibleFrom="sm" c='green' variant='default'>Создать заказ</Button> */}
-            <CreateOrder {...props}/>
+            {createOrder ? <CreateOrder {...props} createOrder={createOrder} setCreateOrder={setCreateOrder}/> : null}
+            <Button size='xs' visibleFrom="sm" c='green' variant='default' onClick={() => setCreateOrder.open()}>{props.text?.createOrder}</Button>
         </Group>
 
         <Avatar radius="sm" alt={props.user.name} size='sm' name={props.user.name} color="initials" hiddenFrom="sm"/>

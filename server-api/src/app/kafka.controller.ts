@@ -15,8 +15,8 @@ export class KafkaController {
     this.socket.server.to(data._id).emit('updatePhotos_client');
   }
 
-  // @EventPattern('newPhoto_api')
-  // newphoto(@Payload() data: { image: string; _id: string; photo: string }) {
-  //   this.socket.server.to(data._id).emit('test', { image: data.image });
-  // }
+  @EventPattern('newVoice_api')
+  newVoice(@Payload() data: { _id: string }) {
+    this.socket.server.to(data._id).emit('get_data_for_new_voice_client');
+  }
 }

@@ -40,11 +40,14 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
   onSocket(dashData: DashData) {
     console.log('onSocket')
 
+    const handler_GetFieldsForVoice = () => {}
     const handler_UpdatePhotos = () => this.updatePhotos(dashData)
 
+    socket.on("get_data_for_new_voice_client", handler_GetFieldsForVoice);
     socket.on("updatePhotos_client", handler_UpdatePhotos);
 
     return () => {
+      socket.off("get_data_for_new_voice_client", handler_GetFieldsForVoice);
       socket.off("updatePhotos_client", handler_UpdatePhotos);
     };
   }
