@@ -16,7 +16,7 @@ export class KafkaController {
   }
 
   @EventPattern('newVoice_api')
-  newVoice(@Payload() data: { _id: string }) {
-    this.socket.server.to(data._id).emit('get_data_for_new_voice_client');
+  newVoice(@Payload() data: { _id: string; voice: string }) {
+    this.socket.server.to(data._id).emit('get_data_for_new_voice_client', data.voice);
   }
 }

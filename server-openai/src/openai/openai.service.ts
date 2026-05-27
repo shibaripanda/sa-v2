@@ -13,10 +13,10 @@ export class OpenAIService {
     private config: ConfigService,
   ) {}
 
-  async analyzVoice(voice: string) {
+  async analyzVoice(voice: string, fields: string[], device: string, leng: string) {
     const voiseBuffer = await this.downloadTelegramFile(voice);
     const textFromVoice = await this.transcribe(voiseBuffer);
-    return await this.analyzeDeviceVoice(textFromVoice, ['Клиент', 'Адрес']);
+    return await this.analyzeDeviceVoice(textFromVoice, fields, device, leng);
   }
 
   async analyzImages(photos: string[], fields: string[], device: string, leng: string) {
@@ -28,132 +28,374 @@ export class OpenAIService {
     return await this.analyzeDeviceImages(buffs, fields, device, leng);
   }
 
-  private async analyzeDeviceVoice(textFromVoice: string, fields: string[]) {
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
-      temperature: 0,
+  private async analyzeDeviceVoice(textFromVoice: string, fields: string[], device: string, lang: string) {
+    try {
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4o',
+        temperature: 0,
 
-      response_format: {
-        type: 'json_schema',
-        json_schema: {
-          name: 'voice_analysis',
-          schema: {
-            type: 'object',
-            properties: Object.fromEntries(fields.map((f) => [f, { type: ['string', 'null'] }])),
-            required: fields,
-            additionalProperties: false,
-          },
-        },
-      },
+        response_format: {
+          type: 'json_schema',
+          json_schema: {
+            name: 'voice_analysis',
+            strict: true,
+            schema: {
+              type: 'object',
 
-      messages: [
-        {
-          role: 'system',
-          content: `
-          Система анализа голосового описания устройства.
+              properties: Object.fromEntries(fields.map((f) => [f, { type: ['string', 'null'] }])),
 
-          Задача:
-          Извлечь данные для акта приёмки техники из текста.
-
-          Правила:
-          - Используй только явно сказанную информацию.
-          - Не выдумывай данные.
-          - Если данных нет — ставь null.
-          - Возвращай только JSON.
-        `.trim(),
-        },
-        {
-          role: 'user',
-          content: textFromVoice,
-        },
-      ],
-    });
-
-    const content = response.choices?.[0]?.message?.content;
-
-    if (!content) {
-      return { status: false, data: {} };
-    }
-
-    return {
-      status: true,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      data: JSON.parse(content),
-    };
-  }
-
-  private async analyzeDeviceImages(images: Buffer[], fields: string[], device: string, leng: string) {
-    const imagesBase64 = images.map((buffer) => ({
-      type: 'image_url' as const,
-      image_url: {
-        url: `data:image/jpeg;base64,${buffer.toString('base64')}`,
-      },
-    }));
-
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
-      temperature: 0,
-      response_format: {
-        type: 'json_schema',
-        json_schema: {
-          name: 'device_analysis',
-          schema: {
-            type: 'object',
-            properties: Object.fromEntries(fields.map((f) => [f, { type: ['string', 'null'] }])),
-            required: fields,
-            additionalProperties: false,
-          },
-        },
-      },
-      messages: [
-        {
-          role: 'system',
-          content: `
-            Система анализа изображений техники (${device}) для акта приёмки в ремонт.
-
-            Задача:
-            Определить устройство и заполнить поля акта на основании фотографий.
-            Определить точную модель по внешнему виду, если даже не видно маркировки.
-            Особенно отмечай следы использования, потертости, даже маленькие царапины и сколы.
-            Не заостряй внимание на цвете устройства, если это не пятна чего либо.
-            Перед началом анализа, внимательно изучи все фото, чтобы составить полное представление о состоянии устройства.
-
-            Правила:
-            - Используй только визуально подтверждённые данные.
-            - Не выдумывай серийные номера и точные модели.
-            - Если информация отсутствует или не читается — ставь null.
-            - Если серийный номер не указан ставь --.
-            - Модель можно указывать только при уверенной визуальной идентификации.
-            - Игнорируй все посторонние объекты на изображении.
-            - Игнорируй такие отметки как отпечатки пальцев.
-            - Возвращай только данные для заполнения формы.
-            - Будь краток и точен.
-            - Ответ должен быть на ${leng} языке.
-            `.trim(),
-        },
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: 'Анализируй устройство по этим фото',
+              required: fields,
+              additionalProperties: false,
             },
-            ...imagesBase64,
-          ],
+          },
         },
-      ],
-    });
 
-    const content = response.choices?.[0]?.message?.content;
-    console.log(response.usage);
+        messages: [
+          {
+            role: 'system',
+            content: `
+Система анализа голосового описания техники (${device}) для акта приёмки в ремонт.
 
-    if (!content) {
-      return { status: false, data: {} };
+Задача:
+Извлечь структурированные данные из текста пользователя.
+
+Правила:
+- Используй только явно сказанную информацию
+- Не делай предположений и не додумывай
+- Если данные отсутствуют — используй null
+- Ответ должен быть строго структурирован
+- Ответ на языке: ${lang} кроме общепринятых названий моделей техники
+          `.trim(),
+          },
+          {
+            role: 'user',
+            content: textFromVoice,
+          },
+        ],
+      });
+
+      /**
+       * Usage log (optional but useful)
+       */
+      const usage = response.usage;
+
+      if (usage) {
+        console.log('OPENAI_USAGE', {
+          prompt_tokens: usage.prompt_tokens,
+          completion_tokens: usage.completion_tokens,
+          total_tokens: usage.total_tokens,
+        });
+      }
+
+      /**
+       * Safe extraction
+       */
+      const content = response.choices?.[0]?.message?.content;
+
+      if (!content) {
+        return {
+          status: false,
+          error: 'EMPTY_RESPONSE',
+          data: {},
+        };
+      }
+
+      /**
+       * Safe JSON parse
+       */
+      let parsed: unknown;
+
+      try {
+        parsed = JSON.parse(content);
+      } catch (e) {
+        console.error('INVALID_OPENAI_JSON_VOICE', content, e);
+
+        return {
+          status: false,
+          error: 'INVALID_JSON',
+          data: {},
+        };
+      }
+
+      return {
+        status: true,
+        data: parsed,
+      };
+    } catch (error) {
+      /**
+       * Never leak raw OpenAI/Kafka/Nest errors upward
+       */
+      console.error('ANALYZE_DEVICE_VOICE_FAILED', error);
+
+      return {
+        status: false,
+        error: 'INTERNAL_ERROR',
+        data: {},
+      };
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return { status: true, data: JSON.parse(content) };
   }
+
+  // private async analyzeDeviceVoice(textFromVoice: string, fields: string[], device: string, leng: string) {
+  //   const response = await this.openai.chat.completions.create({
+  //     model: 'gpt-4o',
+  //     temperature: 0,
+
+  //     response_format: {
+  //       type: 'json_schema',
+  //       json_schema: {
+  //         name: 'voice_analysis',
+  //         schema: {
+  //           type: 'object',
+  //           properties: Object.fromEntries(fields.map((f) => [f, { type: ['string', 'null'] }])),
+  //           required: fields,
+  //           additionalProperties: false,
+  //         },
+  //       },
+  //     },
+
+  //     messages: [
+  //       {
+  //         role: 'system',
+  //         content: `
+  //         Система анализа голосового описания (${device}) для акта приёмки в ремонт.
+
+  //         Задача:
+  //         Извлечь данные для акта приёмки техники из текста.
+
+  //         Правила:
+  //         - Используй только явно сказанную информацию.
+  //         - Не выдумывай данные.
+  //         - Если данных нет — ставь null.
+  //         - Возвращай только JSON.
+  //         - Ответ должен быть на ${leng} языке.
+  //       `.trim(),
+  //       },
+  //       {
+  //         role: 'user',
+  //         content: textFromVoice,
+  //       },
+  //     ],
+  //   });
+
+  //   const content = response.choices?.[0]?.message?.content;
+  //   console.log(response.usage);
+
+  //   if (!content) {
+  //     return { status: false, data: {} };
+  //   }
+
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   return { status: true, data: JSON.parse(content) };
+  // }
+
+  private async analyzeDeviceImages(images: Buffer[], fields: string[], device: string, lang: string) {
+    try {
+      /**
+       * Base64 images (NO compression)
+       */
+      const imagesBase64 = images.map((buffer) => ({
+        type: 'image_url' as const,
+        image_url: {
+          url: `data:image/jpeg;base64,${buffer.toString('base64')}`,
+          detail: 'low' as const,
+        },
+      }));
+
+      /**
+       * OpenAI request
+       */
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4o',
+        temperature: 0,
+
+        response_format: {
+          type: 'json_schema',
+          json_schema: {
+            name: 'device_analysis',
+            strict: true,
+            schema: {
+              type: 'object',
+
+              properties: Object.fromEntries(fields.map((f) => [f, { type: ['string', 'null'] }])),
+
+              required: fields,
+              additionalProperties: false,
+            },
+          },
+        },
+
+        messages: [
+          {
+            role: 'system',
+            content: `
+Система анализа техники для акта приёмки в ремонт.
+
+Тип устройства: ${device}
+
+Задача:
+Проанализировать фотографии устройства и заполнить поля формы строго по визуально подтверждённым данным.
+Определить точную модель по внешнему виду, если даже не видно маркировки.
+
+Правила:
+- Используй только то, что видно на изображениях
+- Не выдумывай серийные номера
+- Если значение невозможно определить — используй null
+- Допускается приблизительное определение модели только при высокой уверенности
+- Игнорируй посторонние объекты (фон, отпечатки пальцев и т.д.)
+- Фокус на состоянии устройства:
+  царапины, сколы, трещины, потертости, следы использования
+- Ответ краткий и структурированный
+- Ответ на языке: ${lang} кроме общепринятых названий моделей техники
+          `.trim(),
+          },
+
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: 'Проанализируй устройство по фотографиям и заполни поля формы.',
+              },
+              ...imagesBase64,
+            ],
+          },
+        ],
+      });
+
+      /**
+       * Usage (tokens + cost)
+       */
+      const usage = response.usage;
+
+      if (usage) {
+        const inputCost = (usage.prompt_tokens / 1_000_000) * 5;
+        const outputCost = (usage.completion_tokens / 1_000_000) * 15;
+
+        console.log('OPENAI_USAGE', {
+          prompt_tokens: usage.prompt_tokens,
+          completion_tokens: usage.completion_tokens,
+          total_tokens: usage.total_tokens,
+          estimated_cost_usd: Number((inputCost + outputCost).toFixed(6)),
+        });
+      }
+
+      /**
+       * Safe extraction
+       */
+      const content = response.choices?.[0]?.message?.content;
+
+      if (!content) {
+        return {
+          status: false,
+          error: 'EMPTY_RESPONSE',
+          data: {},
+        };
+      }
+
+      /**
+       * Safe JSON parsing
+       */
+      let parsed: unknown;
+
+      try {
+        parsed = JSON.parse(content);
+      } catch (e) {
+        console.error('INVALID_JSON_FROM_OPENAI', content, e);
+
+        return {
+          status: false,
+          error: 'INVALID_JSON',
+          data: {},
+        };
+      }
+
+      return {
+        status: true,
+        data: parsed,
+      };
+    } catch (error) {
+      console.error('ANALYZE_DEVICE_IMAGES_FAILED', error);
+
+      return {
+        status: false,
+        error: 'INTERNAL_ERROR',
+        data: {},
+      };
+    }
+  }
+
+  // private async analyzeDeviceImages(images: Buffer[], fields: string[], device: string, leng: string) {
+  //   const imagesBase64 = images.map((buffer) => ({
+  //     type: 'image_url' as const,
+  //     image_url: {
+  //       url: `data:image/jpeg;base64,${buffer.toString('base64')}`,
+  //     },
+  //   }));
+
+  //   const response = await this.openai.chat.completions.create({
+  //     model: 'gpt-4o',
+  //     temperature: 0,
+  //     response_format: {
+  //       type: 'json_schema',
+  //       json_schema: {
+  //         name: 'device_analysis',
+  //         schema: {
+  //           type: 'object',
+  //           properties: Object.fromEntries(fields.map((f) => [f, { type: ['string', 'null'] }])),
+  //           required: fields,
+  //           additionalProperties: false,
+  //         },
+  //       },
+  //     },
+  //     messages: [
+  //       {
+  //         role: 'system',
+  //         content: `
+  //           Система анализа изображений техники (${device}) для акта приёмки в ремонт.
+
+  //           Задача:
+  //           Определить устройство и заполнить поля акта на основании фотографий.
+  //           Определить точную модель по внешнему виду, если даже не видно маркировки.
+  //           Особенно отмечай следы использования, потертости, даже маленькие царапины и сколы.
+  //           Не заостряй внимание на цвете устройства, если это не пятна чего либо.
+  //           Перед началом анализа, внимательно изучи все фото, чтобы составить полное представление о состоянии устройства.
+
+  //           Правила:
+  //           - Используй только визуально подтверждённые данные.
+  //           - Не выдумывай серийные номера и точные модели.
+  //           - Если информация отсутствует или не читается — ставь null.
+  //           - Если серийный номер не указан ставь --.
+  //           - Модель можно указывать только при уверенной визуальной идентификации.
+  //           - Игнорируй все посторонние объекты на изображении.
+  //           - Игнорируй такие отметки как отпечатки пальцев.
+  //           - Возвращай только данные для заполнения формы.
+  //           - Будь краток и точен.
+  //           - Ответ должен быть на ${leng} языке.
+  //           `.trim(),
+  //       },
+  //       {
+  //         role: 'user',
+  //         content: [
+  //           {
+  //             type: 'text',
+  //             text: 'Анализируй устройство по этим фото',
+  //           },
+  //           ...imagesBase64,
+  //         ],
+  //       },
+  //     ],
+  //   });
+
+  //   const content = response.choices?.[0]?.message?.content;
+  //   console.log(response.usage);
+
+  //   if (!content) {
+  //     return { status: false, data: {} };
+  //   }
+
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   return { status: true, data: JSON.parse(content) };
+  // }
 
   private async downloadTelegramFile(fileId: string): Promise<Buffer> {
     // 1. getFile

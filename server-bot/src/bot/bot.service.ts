@@ -18,11 +18,7 @@ export class BotService {
   }
 
   async addNewVoice(_id: string, voice: string) {
-    await this.kafkaService.emitAnyReq('analyzVoice_openai', {
-      _id,
-      voice,
-    });
-    await this.kafkaService.emitAnyReq('newVoice_api', { _id });
+    await this.kafkaService.emitAnyReq('newVoice_api', { _id, voice });
   }
 
   async addNewPhoto(_id: string, photo: string) {

@@ -34,6 +34,21 @@ export const myLengs: LengIndexes[] = [
 
 export const myLib: LengInstruction[] = [
   {
+    rutext: 'Голосовое',
+    index: 'voice',
+    update: false,
+  },
+  {
+    rutext: 'Фото',
+    index: 'photo',
+    update: false,
+  },
+  {
+    rutext: 'Фото или голосовое',
+    index: 'photoOrVoice',
+    update: false,
+  },
+  {
     rutext: 'Отправь фото в бот',
     index: 'SendPhotoToBot',
     update: false,

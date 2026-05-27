@@ -24,30 +24,63 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
           const f = newOrder.find(i => i.name == d)
           if(f) {
             f.currentData = anData[d] ? anData[d] : ''
+            sessionStorage.setItem(d, anData[d] ? anData[d] : '')
           }
-          // newOrder.find(i => i.name == d)?.currentData = anData[d] ? anData[d] : ''
         }
-        // const anData = res.analyzData.data
-        // for (const f of newOrder) {
-        //   console.log(anData[f.name])
-        //   f.currentData = anData[f.name] ? anData[f.name] : ''
-        // }
         setNewOrder([...newOrder])
       }
     })
   }
 
-  onSocket(dashData: DashData) {
-    console.log('onSocket')
+  async analyzVoice(fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any, voice: string) {
+    console.log('analyzVoice', fields, device, leng)
+    return socket.emit('analyzVoice', {voice, fields, device, leng}, (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
+      console.log('analyzVoice', res);
+      if (res.analyzData.status) {
+        const anData = res.analyzData.data
+        for(const d of fields) {
+          const f = newOrder.find(i => i.name == d)
+          if(f) {
+            f.currentData = anData[d] ? anData[d] : ''
+            sessionStorage.setItem(d, anData[d] ? anData[d] : '')
+          }
+        }
+        setNewOrder([...newOrder])
+      }
+    })
+  }
 
-    const handler_GetFieldsForVoice = () => {}
-    const handler_UpdatePhotos = () => this.updatePhotos(dashData)
+  onSocketCreateOrder(getFields: () => {fields: string[], newOrder: Field[]}, device: string, leng: string, setNewOrder: any) {
+
+    const handler_GetFieldsForVoice = async (voice: string) => {
+
+      const { fields, newOrder } = getFields()
+
+      await this.analyzVoice(
+        fields,
+        device,
+        leng,
+        newOrder,
+        setNewOrder,
+        voice
+      )
+    }
 
     socket.on("get_data_for_new_voice_client", handler_GetFieldsForVoice);
-    socket.on("updatePhotos_client", handler_UpdatePhotos);
 
     return () => {
       socket.off("get_data_for_new_voice_client", handler_GetFieldsForVoice);
+    };
+  }
+
+  onSocket(dashData: DashData) {
+    console.log('onSocket')
+
+    const handler_UpdatePhotos = async() => await this.updatePhotos(dashData)
+
+    socket.on("updatePhotos_client", handler_UpdatePhotos);
+
+    return () => {
       socket.off("updatePhotos_client", handler_UpdatePhotos);
     };
   }
@@ -86,7 +119,7 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
     dashData.setPhotos(newPhotos)
   }
 
-  updatePhotos(dashData: DashData) {
+  async updatePhotos(dashData: DashData) {
     socket.emit('getPhotos', (res: {photos: string[]}) => {
       console.log('updatePhotos', res)
       const updatedUser = { ...this, photos: res.photos };

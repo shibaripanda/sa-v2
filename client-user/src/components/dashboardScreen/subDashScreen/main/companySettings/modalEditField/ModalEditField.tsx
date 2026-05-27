@@ -83,7 +83,14 @@ export function ModalEditField(props: ModalEditFieldInterface) {
                         onChange={(event) => editField('ai', event.currentTarget.checked)}
                         /> 
                         Заполнять ИИ по фото
-                    </Group>     
+                    </Group>
+                    <Group>
+                        <Checkbox 
+                        checked={props.selectedField.aiVoice}
+                        onChange={(event) => editField('aiVoice', event.currentTarget.checked)}
+                        /> 
+                        Заполнять ИИ по voice
+                    </Group>      
                     <Space h='lg'/>
                     <Space h='lg'/>
                     <Group justify='flex-end'>

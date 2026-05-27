@@ -192,7 +192,6 @@ export function Dashboard(props: DashScreenInterface) {
   const [headerMenuData, setHeaderMenuData] = useState<DropHeadMenu>([])
 
   const [photos, setPhotos] = useState<Photos>([])
-  // const [bufferPhoto, setBufferPhoto] = useState<any[]>([])
 
   const [activOrderView, setActivOrderView] = useState(0)
 
@@ -213,17 +212,10 @@ export function Dashboard(props: DashScreenInterface) {
       console.log("disconnected", reason);
     };
 
-    // const test = () => {
-    // console.log("ddd");
-    // };
-
-    // socket.on("test", test);
-
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
 
     return () => {
-      // socket.off("test", test);
 
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -236,15 +228,18 @@ export function Dashboard(props: DashScreenInterface) {
     if (token) {
       socket.auth = { token };
 
+      console.log('uoLoad photos')
+
       if (!socket.connected) {
         socket.connect();
+        console.log('uoLoad photos')
         props.user.onSocket({...props, photos, setPhotos })
         props.user.getImages({...props, photos, setPhotos })
       }
 
       return;
     }
-  }, [])
+  }, [props.user.token])
 
   useEffect(() => {
     setOrders(orders_Test)

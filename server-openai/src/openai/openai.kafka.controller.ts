@@ -11,16 +11,18 @@ export class OpenAIKafkaController {
     @Payload()
     newVoice: {
       voice: string;
-      _id: string;
+      fields: string[];
+      device: string;
+      leng: string;
     },
   ) {
     console.log(newVoice);
-    const res = await this.openaiService.analyzVoice(newVoice.voice);
+    const res = await this.openaiService.analyzVoice(newVoice.voice, newVoice.fields, newVoice.device, newVoice.leng);
     console.log(res);
-    // return {
-    //   value: { analyzData: res },
-    //   key: 'analyzPhotos_openai',
-    // };
+    return {
+      value: { analyzData: res },
+      key: 'analyzVoice_openai',
+    };
   }
 
   @MessagePattern('analyzPhotos_openai')

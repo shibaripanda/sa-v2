@@ -17,6 +17,9 @@ export class Field {
   @Prop({ required: true, default: true })
   ai!: boolean;
 
+  @Prop({ required: true, default: false })
+  aiVoice!: boolean;
+
   @Prop({ required: true, default: true })
   variants!: boolean;
 

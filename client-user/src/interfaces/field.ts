@@ -7,6 +7,7 @@ export interface Field {
     mustHave: boolean;
     variants: boolean;
     ai: boolean;
+    aiVoice: boolean;
     data: string[] | number[];
 
     currentData?: string | number | null

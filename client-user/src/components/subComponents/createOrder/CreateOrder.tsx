@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Field } from "../../../interfaces/field";
 import { Device } from "../../../interfaces/device";
 import { HeaderInterface } from "../../dashboardScreen/subDashScreen/header/Header";
-import { IconX } from "@tabler/icons-react";
+import { IconSquareX, IconX } from "@tabler/icons-react";
 
 interface CreateOrder extends HeaderInterface {
   createOrder: boolean;
@@ -12,7 +12,6 @@ interface CreateOrder extends HeaderInterface {
 }
 
 export function CreateOrder(props: CreateOrder) {
-  // const [opened, { open, close }] = useDisclosure(true);
   const [_selectedDevice_, _setSelectedDevice_] = useState<Device | null>(sessionStorage.getItem('_selectedDevice_') ? JSON.parse(sessionStorage.getItem('_selectedDevice_')!) : null)
   const [fullPhoto,  setFullPhoto ] = useDisclosure(false);
   const [photo,  setPhoto ] = useState<string>('');
@@ -27,6 +26,29 @@ export function CreateOrder(props: CreateOrder) {
   }
 
   const [newOrder, setNewOrder] = useState<Field[]>([])
+
+  useEffect(() => {
+    if (!_selectedDevice_) return
+
+    const device = _selectedDevice_.name
+
+    const unsubscribe = props.user.onSocketCreateOrder(
+      () => ({
+        fields: newOrder
+          .filter(n => !n.currentData)
+          .filter(n => n.aiVoice)
+          .map(n => n.name),
+
+        newOrder
+      }),
+    device,
+    props.leng,
+    setNewOrder
+  )
+
+  return unsubscribe
+
+}, [_selectedDevice_, newOrder])
 
   useEffect(() => {
     setNewOrder(newOrderData())
@@ -66,9 +88,6 @@ export function CreateOrder(props: CreateOrder) {
     }))
     props.setCreateOrder.close()
   }
-  // const onCloseNewOrderClose = () => {
-  //   close()
-  // }
   const setAndSaveSelectedDevice = (device: Device) => {
     _setSelectedDevice_(device)
     sessionStorage.setItem('_selectedDevice_', JSON.stringify(device))
@@ -100,6 +119,13 @@ export function CreateOrder(props: CreateOrder) {
     { value: 75, label: 'lg' },
     { value: 100, label: 'xl' },
   ];
+  const aiStatus = (f: Field) => {
+    if(f.ai && f.aiVoice && !f.currentData) return <Tooltip label={props.text?.photoOrVoice}><div>🤖*</div></Tooltip>
+    if(f.ai && !f.currentData) return <Tooltip label={props.text?.photo}><div>🤖</div></Tooltip>
+    if(f.aiVoice && !f.currentData) return <Tooltip label={props.text?.voice}><div>💬</div></Tooltip>
+    if(f.currentData) return <Tooltip label={props.text?.clear}><IconSquareX style={{cursor: 'pointer'}} onClick={() => updateNewOrder(f.name, '')}/></Tooltip>
+    return ''
+  }
 
   console.log('newOrder', newOrder)
  
@@ -141,7 +167,7 @@ export function CreateOrder(props: CreateOrder) {
                     {d.variants ?
                     <Tooltip label={d.currentData?.toString() ?? ''} disabled={d.currentData ? d.currentData?.toString().length < 25 : true}>
                       <Autocomplete
-                      rightSection={d.ai && '🤖'}
+                      rightSection={aiStatus(d)} 
                       onChange={(v) => {
                         updateNewOrder(d.name, v)
                         console.log('variants', v)
@@ -153,7 +179,7 @@ export function CreateOrder(props: CreateOrder) {
                       data={['dddd', 'eeee']}/></Tooltip> 
                       :
                       <TextInput
-                      rightSection={d.ai && '🤖'} 
+                      rightSection={aiStatus(d)} 
                       onChange={(v) => updateNewOrder(d.name, v.target.value)} 
                       label={d.name + (d.onlyNumber ? ' (only numbers)' : '')} 
                       value={d.currentData ?? ''} 
@@ -215,13 +241,13 @@ export function CreateOrder(props: CreateOrder) {
                 </Center>
               </Modal>
             </Center>
-          </div> : <Center><Text size="sm" c="dimmed">{props.text?.SendPhotoToBot}</Text></Center>}
+          </div> : <Center><Text size="sm" c="dimmed">{_selectedDevice_ ? props.text?.SendPhotoToBot : ''}</Text></Center>}
           
         {_selectedDevice_ ?
           <><Space h='xl'/>
             <Grid justify="flex-start" align="stretch" w="100%">
               <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-                <Button fullWidth size={sizeElement()} disabled={!props.photos.length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
+                <Button fullWidth size={sizeElement()} disabled={!props.photos.length || !newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name).length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
               </Grid.Col>
               <Grid.Col key={'2'} span={{ base: 12, sm: 2}}>
                 <Button fullWidth size={sizeElement()} color="orange" disabled={!props.photos.length} onClick={deeleteAllPhoto}>{props.text?.clear} 🖼</Button>
@@ -239,8 +265,6 @@ export function CreateOrder(props: CreateOrder) {
           </> : null}
 
       </Modal>
-
-      {/* <Button size='xs' visibleFrom="sm" c='green' variant='default' onClick={props.setCreateOrder.open}>{props.text?.createOrder}</Button> */}
     </>
     
   );
