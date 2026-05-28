@@ -15,9 +15,9 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
 
   private axiosClass = new AxiosClass()
 
-  async analyzPhotos(fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any) {
+  async analyzPhotos(photos: string[], fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any) {
     console.log('analyzPhotos', fields, device, leng)
-    return socket.emit('analyzPhotos', {photos: this.photos, fields, device, leng}, (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
+    return socket.emit('analyzPhotos', {photos, fields, device, leng}, (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
       if (res.analyzData.status) {
         const anData = res.analyzData.data
         for(const d of fields) {
@@ -104,11 +104,12 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
     const missing = this.photos.filter(p => !existingSet.has(p))
     const loaded = await Promise.all(
       missing.map(photo =>
-        new Promise<{ photo: string; image: any }>(resolve => {
+        new Promise<{ photo: string; image: any; activ: boolean }>(resolve => {
           socket.emit('getPhotoBuffer', { photo }, (res: any) => {
             resolve({
               photo,
-              image: res.image
+              image: res.image,
+              activ: true
             })
           })
         })

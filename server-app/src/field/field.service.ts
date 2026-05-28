@@ -21,8 +21,20 @@ export class FieldService {
       .lean();
   }
 
+  // async deleteField(field_id: Types.ObjectId) {
+  //   return this.fieldModel.updateOne(
+  //     {
+  //       _id: field_id,
+  //       deletedAt: null, // защита от повторного удаления
+  //     },
+  //     {
+  //       $set: { deletedAt: new Date() },
+  //     },
+  //   );
+  // }
+
   async deleteField(field_id: Types.ObjectId) {
-    return await this.fieldModel.deleteOne({ _id: field_id });
+    return await this.fieldModel.deleteOne({ _id: field_id }, { $set: { deletedAt: new Date() } });
   }
 
   async deleteManyFields(ids: Types.ObjectId[], session?: ClientSession) {
@@ -36,9 +48,7 @@ export class FieldService {
     return res[0]._id;
   }
 
-  async createNewFieldsForNewCompany(
-    session?: ClientSession,
-  ): Promise<Types.ObjectId[]> {
+  async createNewFieldsForNewCompany(session?: ClientSession): Promise<Types.ObjectId[]> {
     const stats = [
       {
         name: 'Model',

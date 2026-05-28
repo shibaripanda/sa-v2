@@ -1,13 +1,27 @@
 
-export interface Order {
-    _id: string;
-    
-    _deviceId_: string;
-    _statusId_: string;
-    _createrStaffId_: string;
-    _createrOriginId_: string;
-    _createrName_: string;
+export type FieldValue = string | number | boolean | null;
 
-    createdAt: string;
-    updatedAt: string;
+export interface FieldSnapshot {
+  label: string;
+  type?: string;
+  value: FieldValue;
+}
+
+export interface Order {
+
+  deviceId: string;
+  statusId: string;
+
+  createrStaffId: string;
+  createrOriginId: string;
+  createrName: string;
+  
+  photos: string[];
+
+  fields: Record<string, FieldValue>;
+  snapshot: Record<string, FieldSnapshot>;
+
+  createdAt: string;
+  updatedAt: string;
+
 }

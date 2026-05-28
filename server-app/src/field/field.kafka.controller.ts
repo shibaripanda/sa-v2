@@ -10,10 +10,7 @@ export class FieldKafkaController {
 
   @MessagePattern('edit-field')
   async editStatus(@Payload() data: EditFieldDto) {
-    const res = await this.fieldService.editField(
-      data.requestData.field_id,
-      data.requestData.data,
-    );
+    const res = await this.fieldService.editField(data.requestData.field_id, data.requestData.data);
     console.log(data);
     return {
       value: res,

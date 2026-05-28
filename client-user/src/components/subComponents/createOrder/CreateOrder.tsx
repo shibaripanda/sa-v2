@@ -1,10 +1,12 @@
-import { ActionIcon, Autocomplete, Button, Center, Divider, Grid, Group, Image, Modal, Slider, Space, Text, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, AspectRatio, Autocomplete, Box, Button, Center, Divider, Grid, Group, Image, Modal, Overlay, Slider, Space, Text, TextInput, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { Field } from "../../../interfaces/field";
 import { Device } from "../../../interfaces/device";
 import { HeaderInterface } from "../../dashboardScreen/subDashScreen/header/Header";
-import { IconSquareX, IconX } from "@tabler/icons-react";
+import { IconLockOpen, IconSquareX, IconX } from "@tabler/icons-react";
+import { Photos } from "../../dashboardScreen/mainScreen/Dashboard";
+import { OrderClass } from "../../../classes/OrderClass";
 
 interface CreateOrder extends HeaderInterface {
   createOrder: boolean;
@@ -17,6 +19,8 @@ export function CreateOrder(props: CreateOrder) {
   const [photo,  setPhoto ] = useState<string>('');
   const [value, setValue] = useState(props.user.sizeNewOrderForm);
 
+  
+
   const newOrderData = () => {
     const orderFields = [...props.comp.fields_ids]
     for(const f of orderFields){
@@ -24,8 +28,9 @@ export function CreateOrder(props: CreateOrder) {
     }
     return _selectedDevice_ ? orderFields.filter(f => !_selectedDevice_!.blockFields.includes(f._id)) : orderFields
   }
-
   const [newOrder, setNewOrder] = useState<Field[]>([])
+
+  const order = new OrderClass(null)
 
   useEffect(() => {
     if (!_selectedDevice_) return
@@ -103,7 +108,7 @@ export function CreateOrder(props: CreateOrder) {
   }
   const analyzPhotos = async () => {
     const device = _selectedDevice_ ? _selectedDevice_.name : 'Device'
-    await props.user.analyzPhotos(newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name), device, props.leng, newOrder, setNewOrder)
+    await props.user.analyzPhotos(props.photos.filter(n => n.activ).map(n => n.photo), newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name), device, props.leng, newOrder, setNewOrder)
   }
   const setSIzeForm = (size: number) => {
     setValue(size)
@@ -201,32 +206,72 @@ export function CreateOrder(props: CreateOrder) {
                 wrap="nowrap"
                 >{props.photos.map((p, index) =>
               <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
-                <Image
-                  style={{cursor: 'pointer'}}
-                  h={100}
-                  w={100}
-                  fit="cover"
-                  radius="md"
-                  src={`data:image/jpeg;base64,${p.image}`}
-                  onClick={() => showFullPhoto(p.image)}
-                />
+                <Box pos="relative" w={100} h={100}>
+                  <Image
+                    style={{ cursor: 'pointer' }}
+                    h={100}
+                    w={100}
+                    fit="cover"
+                    radius="md"
+                    src={`data:image/jpeg;base64,${p.image}`}
+                    onClick={() => showFullPhoto(p.image)}
+                  />
 
-                <ActionIcon
-                  color="red"
-                  variant="filled"
-                  size="xs"
-                  style={{
-                    position: 'absolute',
-                    bottom: 6,
-                    right: 6,
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    props.user.deletePhoto({ ...props, deletePhoto: p.photo });
-                  }}
-                >
-                  <IconX size={12} />
-                </ActionIcon>
+                  {!p.activ && (
+                    <Overlay
+                      onClick={() => showFullPhoto(p.image)}
+                      color="#000000"
+                      backgroundOpacity={0.85}
+                      radius="md"
+                      zIndex={1}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  )}
+
+                  <ActionIcon
+                    color={p.activ ? "blue" : "green"}
+                    variant="filled"
+                    size="xs"
+                    style={{
+                      position: 'absolute',
+                      bottom: 6,
+                      left: 6,
+                      zIndex: 2,
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                       props.setPhotos((prev: {photo: string; activ: boolean}[]) =>
+                        prev.map(photo =>
+                          photo.photo === p.photo
+                            ? { ...photo, activ: !photo.activ }
+                            : photo
+                        )
+                      );
+                    }}
+                  >
+                    {p.activ ? <IconX size={12} /> : <IconLockOpen size={12} />}
+                  </ActionIcon>
+
+                  <Tooltip label={props.text?.delete}>
+                    <ActionIcon
+                      color="red"
+                      variant="filled"
+                      size="xs"
+                      style={{
+                        position: 'absolute',
+                        bottom: 6,
+                        right: 6,
+                        zIndex: 2,
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        props.user.deletePhoto({ ...props, deletePhoto: p.photo });
+                      }}
+                    >
+                      <IconX size={12} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Box>
               </div>
               )}
               </Group>
@@ -247,13 +292,13 @@ export function CreateOrder(props: CreateOrder) {
           <><Space h='xl'/>
             <Grid justify="flex-start" align="stretch" w="100%">
               <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-                <Button fullWidth size={sizeElement()} disabled={!props.photos.length || !newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name).length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
+                <Button fullWidth size={sizeElement()} disabled={!props.photos.filter(p => p.activ).length || !newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name).length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
               </Grid.Col>
               <Grid.Col key={'2'} span={{ base: 12, sm: 2}}>
                 <Button fullWidth size={sizeElement()} color="orange" disabled={!props.photos.length} onClick={deeleteAllPhoto}>{props.text?.clear} 🖼</Button>
               </Grid.Col>
               <Grid.Col key={'3'} span={{ base: 12, sm: 4}}>
-                <Button fullWidth size={sizeElement()} color="green" disabled={activCreateOrderBut()}>{props.text?.createOrder}</Button>
+                <Button  onClick={() => order.createNewOrder({...props, newOrder, _selectedDevice_})} fullWidth size={sizeElement()} color="green" disabled={activCreateOrderBut()}>{props.text?.createOrder}</Button>
               </Grid.Col>
               <Grid.Col key={'4'} span={{ base: 12, sm: 2}}>
                 <Button onClick={onClearNewOrder} disabled={!newOrder.some(f => f.currentData !== null)} fullWidth size={sizeElement()} color="red">{props.text?.clear}</Button>

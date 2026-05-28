@@ -157,7 +157,7 @@ export interface Order {
   status: string;
 }
 
-export type Photos = {photo: string; image: any}[]
+export type Photos = {photo: string; image: any; activ: boolean}[]
 
 export interface DashScreenInterface {
     user: UserClass;
@@ -181,7 +181,7 @@ export interface DashScreenInterface {
 
 export function Dashboard(props: DashScreenInterface) {
 
-  console.log('Dashboard', props)
+  // console.log('Dashboard', props)
   
   const isMobile = useMediaQuery('(max-width: 48em)')
   const [openedBurgerMainMenu, toggleOpenedBurgerMainMenu ] = useDisclosure();
@@ -228,14 +228,11 @@ export function Dashboard(props: DashScreenInterface) {
     if (token) {
       socket.auth = { token };
 
-      console.log('uoLoad photos')
-
       if (!socket.connected) {
         socket.connect();
-        console.log('uoLoad photos')
-        props.user.onSocket({...props, photos, setPhotos })
-        props.user.getImages({...props, photos, setPhotos })
       }
+      props.user.onSocket({...props, photos, setPhotos })
+      props.user.getImages({...props, photos, setPhotos })
 
       return;
     }

@@ -15,8 +15,7 @@ export class Company {
 
   @Prop({
     required: true,
-    default:
-      'My Company, Luna, Krater st. 17, tax number: 11111111, SunBank, account: 987654321 - example',
+    default: 'My Company, Luna, Krater st. 17, tax number: 11111111, SunBank, account: 987654321 - example',
   })
   mainOfficeData!: string;
 
