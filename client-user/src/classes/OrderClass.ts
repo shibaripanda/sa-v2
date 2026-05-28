@@ -56,7 +56,7 @@ export class OrderClass extends (Model as new (order: Order | null) => ModelWith
 
     // socket.emit('createNewOrder', { deletePhoto: dashData.deletePhoto }, (res: {photos: string[]}) => {
     // })
-
+    const plain = this.toJSON();
     console.log(this)
   }
 }
