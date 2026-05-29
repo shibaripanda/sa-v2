@@ -13,115 +13,116 @@ import { CompanyClass } from '../../../classes/CompanyClass';
 import { ServiceClass } from '../../../classes/ServiceClass';
 import { StaffUserClass } from '../../../classes/StaffUserClass';
 import { socket } from '../../../utils/socket';
+import { OrderFactoryClass, OrderPagination } from '../../../classes/OrderFactoryClass';
 
 const orderViewVariants = ['Table default', 'Cards (1 line)', 'Cards (2 line)', 'Cards (3 line)', 'Cards (4 line)', 'Cards (5 line)', 'Cards (6 line)', 'Cards (8 line)', 'Cards (10 line)']
 
-const orders_Test = [
-    {
-      _id: 'khhMI848yismss23233',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-    {
-      _id: 'khhMI88yisms6s23233',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-    {
-      _id: 'khhMI88yism3ss23233',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-    {
-      _id: 'khhMIfghf88yismss23233',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-    {
-      _id: 'khhMI848ywfsfismss23233',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-    {
-      _id: 'khhMI88yisssfsms6s23233',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-    {
-      _id: 'khhMI88yidgsm3ss23233',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-    {
-      _id: 'khhMI88yismss2323df3',
-      device_id: '8302_JLA',
-      device: 'Ноутбук',
-      brend: 'Asus',
-      model: 'X550',
-      serial_number: 'MSL9779SYEO79FE9FXXL',
-      problem: 'Не загружается',
-      look: 'бу',
-      info: 'установить фотошоп',
-      client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-      status: 'new',
-    },
-];
+// const orders_Test = [
+//     {
+//       _id: 'khhMI848yismss23233',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+//     {
+//       _id: 'khhMI88yisms6s23233',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+//     {
+//       _id: 'khhMI88yism3ss23233',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+//     {
+//       _id: 'khhMIfghf88yismss23233',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+//     {
+//       _id: 'khhMI848ywfsfismss23233',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+//     {
+//       _id: 'khhMI88yisssfsms6s23233',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+//     {
+//       _id: 'khhMI88yidgsm3ss23233',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+//     {
+//       _id: 'khhMI88yismss2323df3',
+//       device_id: '8302_JLA',
+//       device: 'Ноутбук',
+//       brend: 'Asus',
+//       model: 'X550',
+//       serial_number: 'MSL9779SYEO79FE9FXXL',
+//       problem: 'Не загружается',
+//       look: 'бу',
+//       info: 'установить фотошоп',
+//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
+//       status: 'new',
+//     },
+// ];
 const navBarData_Test = [
     { icon: IconHome2, label: 'Dashboard' },
     { icon: IconUser, label: 'User settings' },
@@ -187,7 +188,7 @@ export function Dashboard(props: DashScreenInterface) {
   const [openedBurgerMainMenu, toggleOpenedBurgerMainMenu ] = useDisclosure();
   const [activeNavBar, setActiveNavBar] = useState(sessionStorage.getItem('activeNavBar') ? Number(sessionStorage.getItem('activeNavBar')) : 0);
 
-  const [orders, setOrders] = useState<Order[]>(orders_Test)
+  const [orders, setOrders] = useState<OrderPagination>({ items: [], meta: { limit: 100, page: 1, total: 0, totalPages: 0 } })
   const [navBarData, setNavBarData] = useState(navBarData_Test)
   const [headerMenuData, setHeaderMenuData] = useState<DropHeadMenu>([])
 
@@ -202,6 +203,8 @@ export function Dashboard(props: DashScreenInterface) {
       links: orderViewVariants.map((v, index) => ({name: activOrderView === index ? v + ' *' : v, action: () => setActivOrderView(index)}))
     },
   ];
+
+  const orderFactory = new OrderFactoryClass();
 
   useEffect(() => {
     const onConnect = () => {
@@ -239,7 +242,7 @@ export function Dashboard(props: DashScreenInterface) {
   }, [props.user.token])
 
   useEffect(() => {
-    setOrders(orders_Test)
+    orderFactory.getOrders(props, orders, setOrders);
     setNavBarData(navBarData_Test)
   }, [])
 
@@ -289,9 +292,9 @@ export function Dashboard(props: DashScreenInterface) {
         </AppShell.Main>
 
         <AppShell.Footer>
-            <FooterLine {...props} 
-            orders={orders}
-            />
+            {/* <FooterLine {...props} 
+            orders={orders}?
+            /> */}
         </AppShell.Footer>
 
     </AppShell>

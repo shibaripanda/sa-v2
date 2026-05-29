@@ -9,16 +9,22 @@ export interface FieldSnapshot {
 
 export interface Order {
 
+  _id: string;
+  order_id: string;
+
   deviceId: string;
   statusId: string;
 
   createrStaffId: string;
   createrOriginId: string;
   createrName: string;
+
+  compId: string;
+  serviceId: string;
   
   photos: string[];
 
-  fields: Record<string, FieldValue>;
+  data: Record<string, FieldValue>;
   snapshot: Record<string, FieldSnapshot>;
 
   createdAt: string;

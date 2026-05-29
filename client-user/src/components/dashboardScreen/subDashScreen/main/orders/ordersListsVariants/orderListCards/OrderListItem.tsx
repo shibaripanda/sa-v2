@@ -12,7 +12,7 @@ interface orderListItemInterface extends MainInterface {
 
 export function OrderListItem(props: orderListItemInterface) {
 
-  const orders = props.orders.map((order) => (
+  const orders = props.orders.items.map((order) => (
     <Grid.Col key={order._id} span={props.isMobile ? 12 : props.countItemsLime} 
     onClick={() => props.openOrderFullscreen(order)}
     style={{ cursor: 'pointer' }}

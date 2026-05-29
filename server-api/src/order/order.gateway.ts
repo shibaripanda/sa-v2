@@ -14,11 +14,34 @@ export interface MySocket extends Socket {
   };
 }
 
+export interface GetOrders {
+  page: number;
+  limit: number;
+  compId: string;
+  serviceId: string;
+}
+
 @WebSocketGateway({
   cors: { origin: '*' },
 })
 export class OrderGateway {
   constructor(private readonly kafkaService: KafkaService) {}
+
+  @UseGuards(UniversalJwtGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
+  @SubscribeMessage('createOrder')
+  async createOrder(@CurrentUser() user: User, @MessageBody() messageBody: object) {
+    console.log(user, messageBody);
+    return await this.kafkaService.sendAnyReq('createOrder_order', messageBody);
+  }
+
+  @UseGuards(UniversalJwtGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
+  @SubscribeMessage('getOrders')
+  async getOrders(@CurrentUser() user: User, @MessageBody() messageBody: GetOrders) {
+    console.log(user, messageBody);
+    return await this.kafkaService.sendAnyReq('getOrders_order', messageBody);
+  }
 
   @UseGuards(UniversalJwtGuard)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))

@@ -1,62 +1,83 @@
-import { DashScreenInterface, Photos } from "../components/dashboardScreen/mainScreen/Dashboard"
-import { Device } from "../interfaces/device"
-import { Field } from "../interfaces/field"
-import { Order } from "../interfaces/order"
-import { socket } from "../utils/socket"
-import { AxiosClass } from "./AxiosClass"
-import { Model, ModelWithData } from "./interfacesClass"
+import { Order } from "../interfaces/order";
+// import { socket } from "../utils/socket";
 
-interface CreateNewOrder extends DashScreenInterface {
-  _selectedDevice_: Device;
-  newOrder: Field[];
-  photos: Photos;
+export type FieldValue = string | number | boolean | null;
+export interface FieldSnapshot {
+  label: string;
+  type?: string;
+  value: FieldValue;
 }
 
-// _id: string;
-    
-// _deviceId_: string;
-// _statusId_: string;
-// _createrStaffId_: string;
-// _createrOriginId_: string;
-// _createrName_: string;
+export class OrderClass implements Order {
 
-// createdAt: string;
-// updatedAt: string;
+   _id: string;
+  order_id: string;
 
-export class OrderClass extends (Model as new (order: Order | null) => ModelWithData<Order>) {
-  
-  constructor(order: Order | null) {
-    super(order)
-    this.deviceId = order ? order.deviceId : ''
-    this.statusId = order ? order.statusId : ''
-    this.createrStaffId = order ? order.createrStaffId : ''
-    this.createrOriginId = order ? order.createrOriginId : ''
-    this.createrName = order ? order.createrName : ''
-    this.photos = order ? order.photos : []
-    
-    this.fields = order ? order.fields : {}
-    this.snapshot = order ? order.snapshot : {}
+  deviceId: string;
+  statusId: string;
+
+  createrStaffId: string;
+  createrOriginId: string;
+  createrName: string;
+
+  compId: string;
+  serviceId: string;
+
+  photos: string[];
+
+  data: Record<string, FieldValue>;
+  snapshot: Record<string, FieldSnapshot>;
+
+  createdAt: string;
+  updatedAt: string;
+
+  constructor(order: Partial<Order> | null = null) {
+
+    this._id = order?._id ?? '';
+    this.order_id = order?.order_id ?? '';
+
+    this.deviceId = order?.deviceId ?? '';
+    this.statusId = order?.statusId ?? '';
+
+    this.createrStaffId = order?.createrStaffId ?? '';
+    this.createrOriginId = order?.createrOriginId ?? '';
+    this.createrName = order?.createrName ?? '';
+
+    this.compId = order?.compId ?? '';
+    this.serviceId = order?.serviceId ?? '';
+
+    this.photos = order?.photos ?? [];
+
+    this.data = order?.data ?? {};
+    this.snapshot = order?.snapshot ?? {};
+
+    this.createdAt = order?.createdAt ?? '';
+    this.updatedAt = order?.updatedAt ?? '';
   }
-  
-  async createNewOrder(crData: CreateNewOrder) {
-    console.log(crData)
-    this.createrName = crData.user.name
-    this.createrOriginId = crData.user._id
-    this.createrStaffId = crData.staffUser._id
 
-    this.deviceId = crData._selectedDevice_._id
-    this.statusId = crData.comp.statuses_ids[0]._id
+  toJSON(): Order {
+    return {
 
-    for (const f of crData.newOrder) {
-      this.fields[f._id] = f.currentData ?? ''
-      this.snapshot[f._id] = {label: f.name, type: 'text', value: f.currentData ?? ''}
-    }
+      _id: this._id,
+      order_id: this.order_id,
 
-    this.photos = crData.photos.filter(f => f.activ).map(f => f.photo)
+      deviceId: this.deviceId,
+      statusId: this.statusId,
 
-    // socket.emit('createNewOrder', { deletePhoto: dashData.deletePhoto }, (res: {photos: string[]}) => {
-    // })
-    const plain = this.toJSON();
-    console.log(this)
+      createrStaffId: this.createrStaffId,
+      createrOriginId: this.createrOriginId,
+      createrName: this.createrName,
+
+      compId: this.compId,
+      serviceId: this.serviceId,
+
+      photos: this.photos,
+
+      data: this.data,
+      snapshot: this.snapshot,
+
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 }

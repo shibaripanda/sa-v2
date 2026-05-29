@@ -1,4 +1,5 @@
-import { DashScreenInterface, Order } from '../../mainScreen/Dashboard';
+import { OrderPagination } from '../../../../classes/OrderFactoryClass';
+import { DashScreenInterface } from '../../mainScreen/Dashboard';
 import { CompanySettings } from './companySettings/CompanySettings';
 import { LibrarySettings } from './librarySettings/LibrarySettings';
 import { MyUserSettings } from './myUserSettings/MyUserSettings';
@@ -6,7 +7,7 @@ import { Orders } from './orders/Orders';
 import { ServiceSettings } from './serviceSettings/ServiceSettings';
 
 export interface MainInterface extends DashScreenInterface {
-  orders: Order[];
+  orders: OrderPagination;
   orderView: string;
   isMobile: boolean;
   activeNavBar: number;
@@ -15,7 +16,7 @@ export interface MainInterface extends DashScreenInterface {
 export function Main(props: MainInterface) {
 
   const dashboards = [
-    <Orders {...props}/>,
+    // <Orders {...props}/>,
     <MyUserSettings {...props}/>,
     <CompanySettings {...props}/>,
     <ServiceSettings {...props}/>,

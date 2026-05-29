@@ -30,7 +30,7 @@ export class Order {
     type: Object,
     default: {},
   })
-  fields!: Record<string, any>;
+  data!: Record<string, any>;
 
   @Prop({
     type: Object,

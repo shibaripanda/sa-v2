@@ -5,8 +5,7 @@ import { Field } from "../../../interfaces/field";
 import { Device } from "../../../interfaces/device";
 import { HeaderInterface } from "../../dashboardScreen/subDashScreen/header/Header";
 import { IconLockOpen, IconSquareX, IconX } from "@tabler/icons-react";
-import { Photos } from "../../dashboardScreen/mainScreen/Dashboard";
-import { OrderClass } from "../../../classes/OrderClass";
+import { OrderFactoryClass } from "../../../classes/OrderFactoryClass";
 
 interface CreateOrder extends HeaderInterface {
   createOrder: boolean;
@@ -30,7 +29,7 @@ export function CreateOrder(props: CreateOrder) {
   }
   const [newOrder, setNewOrder] = useState<Field[]>([])
 
-  const order = new OrderClass(null)
+  const orderCreate = new OrderFactoryClass()
 
   useEffect(() => {
     if (!_selectedDevice_) return
@@ -298,7 +297,7 @@ export function CreateOrder(props: CreateOrder) {
                 <Button fullWidth size={sizeElement()} color="orange" disabled={!props.photos.length} onClick={deeleteAllPhoto}>{props.text?.clear} 🖼</Button>
               </Grid.Col>
               <Grid.Col key={'3'} span={{ base: 12, sm: 4}}>
-                <Button  onClick={() => order.createNewOrder({...props, newOrder, _selectedDevice_})} fullWidth size={sizeElement()} color="green" disabled={activCreateOrderBut()}>{props.text?.createOrder}</Button>
+                <Button  onClick={() => orderCreate.createNewOrder({...props, newOrder, _selectedDevice_})} fullWidth size={sizeElement()} color="green" disabled={activCreateOrderBut()}>{props.text?.createOrder}</Button>
               </Grid.Col>
               <Grid.Col key={'4'} span={{ base: 12, sm: 2}}>
                 <Button onClick={onClearNewOrder} disabled={!newOrder.some(f => f.currentData !== null)} fullWidth size={sizeElement()} color="red">{props.text?.clear}</Button>
