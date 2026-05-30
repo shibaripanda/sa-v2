@@ -8,6 +8,7 @@ import { ServiceSettings } from './serviceSettings/ServiceSettings';
 
 export interface MainInterface extends DashScreenInterface {
   orders: OrderPagination;
+  setOrders: any;
   orderView: string;
   isMobile: boolean;
   activeNavBar: number;
@@ -16,7 +17,7 @@ export interface MainInterface extends DashScreenInterface {
 export function Main(props: MainInterface) {
 
   const dashboards = [
-    // <Orders {...props}/>,
+    <Orders {...props}/>,
     <MyUserSettings {...props}/>,
     <CompanySettings {...props}/>,
     <ServiceSettings {...props}/>,

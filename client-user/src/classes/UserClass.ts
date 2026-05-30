@@ -1,11 +1,12 @@
 import { DashScreenInterface, Photos } from "../components/dashboardScreen/mainScreen/Dashboard"
+import { HeaderInterface } from "../components/dashboardScreen/subDashScreen/header/Header"
 import { Field } from "../interfaces/field"
 import type { User } from "../interfaces/user"
 import { socket } from "../utils/socket"
 import { AxiosClass } from "./AxiosClass"
 import { Model, ModelWithData } from "./interfacesClass"
 
-interface DashData extends DashScreenInterface {
+interface DashData extends HeaderInterface {
   setPhotos: any
   photos: Photos
   deletePhoto?: string
@@ -15,9 +16,15 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
 
   private axiosClass = new AxiosClass()
 
-  async analyzPhotos(photos: string[], fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any) {
-    console.log('analyzPhotos', fields, device, leng)
-    return socket.emit('analyzPhotos', {photos, fields, device, leng}, (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
+  async analyzPhotos(dashData: DashData, photos: string[], fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any) {
+
+    dashData.setLoadingText('Обрабатываем фото...')
+    dashData.setLoaderShow.open()
+
+    return socket.emit('analyzPhotos', {photos, fields, device, leng}, async (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
+      
+      // await new Promise(resolve => setTimeout(resolve, 1000))
+
       if (res.analyzData.status) {
         const anData = res.analyzData.data
         for(const d of fields) {
@@ -28,13 +35,26 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
           }
         }
         setNewOrder([...newOrder])
+        dashData.setLoadingText('Готово!')
       }
+
+      if(!res.analyzData.status) {
+        dashData.setErrorStatus(true)
+        dashData.setLoadingText('Ошибка!')
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      dashData.setLoaderShow.close()
     })
   }
 
-  async analyzVoice(fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any, voice: string) {
+  async analyzVoice(dashData: DashData, fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any, voice: string) {
+    dashData.setLoadingText('Обрабатываем голосовое...')
+    dashData.setLoaderShow.open()
+
     console.log('analyzVoice', fields, device, leng)
-    return socket.emit('analyzVoice', {voice, fields, device, leng}, (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
+    return socket.emit('analyzVoice', {voice, fields, device, leng}, async (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
       console.log('analyzVoice', res);
       if (res.analyzData.status) {
         const anData = res.analyzData.data
@@ -46,17 +66,28 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
           }
         }
         setNewOrder([...newOrder])
+        dashData.setLoadingText('Готово!')
       }
+
+      if(!res.analyzData.status) {
+        dashData.setErrorStatus(true)
+        dashData.setLoadingText('Ошибка!')
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      dashData.setLoaderShow.close()
     })
   }
 
-  onSocketCreateOrder(getFields: () => {fields: string[], newOrder: Field[]}, device: string, leng: string, setNewOrder: any) {
+  onSocketCreateOrder(props: DashData, getFields: () => {fields: string[], newOrder: Field[]}, device: string, leng: string, setNewOrder: any) {
 
     const handler_GetFieldsForVoice = async (voice: string) => {
 
       const { fields, newOrder } = getFields()
 
       await this.analyzVoice(
+        props,
         fields,
         device,
         leng,
@@ -116,7 +147,7 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
       )
     )
     const newPhotos = [...basePhotos, ...loaded]
-    console.log('newPhotos', newPhotos)
+    // console.log('newPhotos', newPhotos)
     dashData.setPhotos(newPhotos)
   }
 

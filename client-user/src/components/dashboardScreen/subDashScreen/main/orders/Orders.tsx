@@ -4,7 +4,7 @@ import { OrdersListTable } from './ordersListsVariants/orderListITable/OrdersLis
 import { MainInterface } from '../Main';
 import { OrderListItem } from './ordersListsVariants/orderListCards/OrderListItem';
 import { useDisclosure } from '@mantine/hooks';
-import { Order } from '../../../mainScreen/Dashboard';
+import { Order } from '../../../../../interfaces/order';
 
 export function Orders(props: MainInterface) {
   const [scrolled, setScrolled] = useState(false);
@@ -74,7 +74,7 @@ export function Orders(props: MainInterface) {
     <ScrollArea h="calc(100vh - 105px)" onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
       {activOrderView()}
     </ScrollArea>
-    <Modal radius={'10px'} opened={oneOpenOrder} title={openOrder?.device_id} withCloseButton={true}
+    <Modal radius={'10px'} opened={oneOpenOrder} title={openOrder?._id} withCloseButton={true}
         fullScreen
         onClose={() => {
           setOpenOrder(null)

@@ -4,6 +4,7 @@ import { Order, OrderDocument } from './order.schema';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { GetOrders } from './order.kafka.controller';
+import { getErrorMessage } from 'src/utils/Errors';
 
 @Injectable()
 export class OrderService {
@@ -14,9 +15,17 @@ export class OrderService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createOrder(order: object) {
-    const res = await this.orderModel.create(order);
-    return res;
+  private readonly letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  async createOrder(order: Order) {
+    try {
+      const order_id = await this.generateUniqueOrder_id(order.compId);
+      const res = await this.orderModel.create({ ...order, order_id });
+      return { status: true, order: res };
+    } catch (e) {
+      console.error('Mongo createOrder error:', e);
+      return { status: false, error: getErrorMessage(e) };
+    }
   }
 
   async getOrders(query: GetOrders) {
@@ -39,5 +48,25 @@ export class OrderService {
         totalPages: Math.ceil(total / limit),
       },
     };
+  }
+
+  async generateUniqueOrder_id(compId: string): Promise<string> {
+    let id = this.generate();
+    while (await this.orderModel.exists({ orderId: id, compId })) {
+      id = this.generate();
+    }
+    return id;
+  }
+
+  generate(): string {
+    let prefix = '';
+
+    for (let i = 0; i < 3; i++) {
+      prefix += this.letters[Math.floor(Math.random() * this.letters.length)];
+    }
+
+    const numbers = Math.floor(1000 + Math.random() * 9000);
+
+    return `${numbers}_${prefix}`;
   }
 }

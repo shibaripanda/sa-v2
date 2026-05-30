@@ -1,11 +1,12 @@
 import { DashScreenInterface, Photos } from "../components/dashboardScreen/mainScreen/Dashboard"
+import { HeaderInterface } from "../components/dashboardScreen/subDashScreen/header/Header";
 import { Device } from "../interfaces/device"
 import { Field } from "../interfaces/field"
 import { Order } from "../interfaces/order";
 import { socket } from "../utils/socket";
 import { OrderClass } from "./OrderClass";
 
-interface CreateNewOrder extends DashScreenInterface {
+interface CreateNewOrder extends HeaderInterface {
   _selectedDevice_: Device;
   newOrder: Field[];
   photos: Photos;
@@ -25,7 +26,7 @@ export class OrderFactoryClass {
   getOrders(dashBoard: DashScreenInterface, orders: OrderPagination, setOrders: any) {
     socket.emit('getOrders', { page: orders.meta.page, limit: orders.meta.limit, compId: dashBoard.comp._id, serviceId: dashBoard.service._id }, (res: {orders: OrderPagination}) => {
       console.log('getOrders', res)
-      setOrders(res)
+      setOrders(res.orders)
     })
   }
 
@@ -44,6 +45,8 @@ export class OrderFactoryClass {
 
     order.data = {};
     order.snapshot = {};
+
+    order.snapshot.createrName = {label: 'createrName', type: 'text', value: crData.user.name};
 
     for (const f of crData.newOrder) {
       const value = f.currentData ?? '';
@@ -65,8 +68,29 @@ export class OrderFactoryClass {
 
     console.log(newOrder)
 
-    socket.emit('createOrder', newOrder, (res: {orders: Order}) => {
-      console.log('getOrders', res);
+    crData.setLoadingText('Создаем заказ')
+    crData.setLoaderShow.open()
+
+    socket.emit('createOrder', newOrder, async (res: {order: Order; status: boolean}) => {
+      
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      if(res.status){
+        console.log('getOrders', res);
+        crData.setOrders((ex: OrderPagination) => {
+          return {...ex, items: [res.order, ...ex.items]}
+        })
+        crData.setLoadingText('Готово!')
+      }
+
+      if(!res.status){
+        crData.setErrorStatus(true)
+        crData.setLoadingText('Ошибка!')
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      crData.setLoaderShow.close()
     })
   }
 }

@@ -1,7 +1,7 @@
 import { Grid } from '@mantine/core';
 import { MainInterface } from '../../../Main';
-import { Order } from '../../../../../mainScreen/Dashboard';
 import { OrderListItemCard } from './OrderListItemCard';
+import { Order } from '../../../../../../../interfaces/order';
 
 interface orderListItemInterface extends MainInterface {
   scrolled: any;

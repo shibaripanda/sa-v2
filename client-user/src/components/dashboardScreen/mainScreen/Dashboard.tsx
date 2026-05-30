@@ -2,137 +2,18 @@ import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NavBar } from '../subDashScreen/navBar/NavBar';
 import { TextLib } from '../../../interfaces/textLib';
-import { IconBook, IconBuildingCastle, IconBuildingStore, IconBuildingWarehouse, IconCircles, IconHome2, IconMapPin, IconUser } from '@tabler/icons-react';
 import { Header } from '../subDashScreen/header/Header';
 import { useEffect, useState } from 'react';
 import { Main } from '../subDashScreen/main/Main';
 import { useMediaQuery } from '@mantine/hooks'
-import { FooterLine } from '../subDashScreen/footer/FooterLine';
+// import { FooterLine } from '../subDashScreen/footer/FooterLine';
 import { UserClass } from '../../../classes/UserClass';
 import { CompanyClass } from '../../../classes/CompanyClass';
 import { ServiceClass } from '../../../classes/ServiceClass';
 import { StaffUserClass } from '../../../classes/StaffUserClass';
 import { socket } from '../../../utils/socket';
 import { OrderFactoryClass, OrderPagination } from '../../../classes/OrderFactoryClass';
-
-const orderViewVariants = ['Table default', 'Cards (1 line)', 'Cards (2 line)', 'Cards (3 line)', 'Cards (4 line)', 'Cards (5 line)', 'Cards (6 line)', 'Cards (8 line)', 'Cards (10 line)']
-
-// const orders_Test = [
-//     {
-//       _id: 'khhMI848yismss23233',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-//     {
-//       _id: 'khhMI88yisms6s23233',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-//     {
-//       _id: 'khhMI88yism3ss23233',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-//     {
-//       _id: 'khhMIfghf88yismss23233',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-//     {
-//       _id: 'khhMI848ywfsfismss23233',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-//     {
-//       _id: 'khhMI88yisssfsms6s23233',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-//     {
-//       _id: 'khhMI88yidgsm3ss23233',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-//     {
-//       _id: 'khhMI88yismss2323df3',
-//       device_id: '8302_JLA',
-//       device: 'Ноутбук',
-//       brend: 'Asus',
-//       model: 'X550',
-//       serial_number: 'MSL9779SYEO79FE9FXXL',
-//       problem: 'Не загружается',
-//       look: 'бу',
-//       info: 'установить фотошоп',
-//       client: {name: 'Аркадий Сумкин', contact: '29 8348304'},
-//       status: 'new',
-//     },
-// ];
-const navBarData_Test = [
-    { icon: IconHome2, label: 'Dashboard' },
-    { icon: IconUser, label: 'User settings' },
-    { icon: IconBuildingCastle, label: 'Company settings' },
-    { icon: IconMapPin, label: 'Service settings' },
-    { icon: IconCircles, label: 'Roles settings' },
-    { icon: IconBook, label: 'Library' },
-    { icon: IconBuildingWarehouse, label: 'Warehouse' },
-    { icon: IconBuildingStore, label: 'Supplier' },
-];
+import { DefaultDataClass } from '../../../classes/DefaultDataClass';
 
 type DropHeadMenu = 
   {
@@ -143,20 +24,6 @@ type DropHeadMenu =
         action: () => void;
     }[];
 }[]
-
-export interface Order {
-  _id: string;
-  device_id: string;
-  device: string;
-  brend: string;
-  model: string;
-  serial_number: string;
-  problem: string;
-  look: string;
-  info: string;
-  client: {name:  string; contact:  string};
-  status: string;
-}
 
 export type Photos = {photo: string; image: any; activ: boolean}[]
 
@@ -182,30 +49,30 @@ export interface DashScreenInterface {
 
 export function Dashboard(props: DashScreenInterface) {
 
+  const defaultData = new DefaultDataClass()
+
   // console.log('Dashboard', props)
   
   const isMobile = useMediaQuery('(max-width: 48em)')
   const [openedBurgerMainMenu, toggleOpenedBurgerMainMenu ] = useDisclosure();
-  const [activeNavBar, setActiveNavBar] = useState(sessionStorage.getItem('activeNavBar') ? Number(sessionStorage.getItem('activeNavBar')) : 0);
+  const [activeNavBar, setActiveNavBar] = useState(defaultData.activeNavBarDefault);
+  const [activOrderView, setActivOrderView] = useState(defaultData.activOrderViewDefault)
 
-  const [orders, setOrders] = useState<OrderPagination>({ items: [], meta: { limit: 100, page: 1, total: 0, totalPages: 0 } })
-  const [navBarData, setNavBarData] = useState(navBarData_Test)
+  const [navBarData, setNavBarData] = useState(defaultData.navBarDataDefault)
   const [headerMenuData, setHeaderMenuData] = useState<DropHeadMenu>([])
 
+  const [orders, setOrders] = useState<OrderPagination>(defaultData.ordersDefault)
   const [photos, setPhotos] = useState<Photos>([])
-
-  const [activOrderView, setActivOrderView] = useState(0)
 
   const headerMenuData_Test = [
     {
       link: '#1',
       label: 'Orders view',
-      links: orderViewVariants.map((v, index) => ({name: activOrderView === index ? v + ' *' : v, action: () => setActivOrderView(index)}))
+      links: defaultData.orderViewVariantsDefault().map((v, index) => ({name: activOrderView === index ? v + ' *' : v, action: () => setActivOrderView(index)}))
     },
   ];
 
-  const orderFactory = new OrderFactoryClass();
-
+  
   useEffect(() => {
     const onConnect = () => {
       console.log("connected", socket.id);
@@ -242,8 +109,9 @@ export function Dashboard(props: DashScreenInterface) {
   }, [props.user.token])
 
   useEffect(() => {
+    const orderFactory = new OrderFactoryClass();
     orderFactory.getOrders(props, orders, setOrders);
-    setNavBarData(navBarData_Test)
+    setNavBarData(defaultData.navBarDataDefault)
   }, [])
 
   useEffect(() => {
@@ -271,6 +139,7 @@ export function Dashboard(props: DashScreenInterface) {
             setActiveNavBar={setActiveNavBar}
             photos={photos}
             setPhotos={setPhotos}
+            setOrders={setOrders}
             />
         </AppShell.Header>
 
@@ -285,8 +154,9 @@ export function Dashboard(props: DashScreenInterface) {
         <AppShell.Main>
             <Main {...props}
             activeNavBar={activeNavBar} 
-            orders={orders} 
-            orderView={orderViewVariants[activOrderView]} 
+            orders={orders}
+            setOrders={setOrders} 
+            orderView={defaultData.orderViewVariantsDefault()[activOrderView]} 
             isMobile={isMobile}
             />
         </AppShell.Main>

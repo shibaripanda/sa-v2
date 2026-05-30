@@ -22,6 +22,7 @@ export interface HeaderInterface extends DashScreenInterface {
     setActiveNavBar: (index: number) => void;
     photos: Photos;
     setPhotos: any;
+    setOrders: any;
 }
 
 function NavbarLink({ icon: Icon, label, active, onClick}: NavbarLinkProps) {

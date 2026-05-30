@@ -1,6 +1,7 @@
 import { Body, Controller } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Order } from './order.schema';
 
 export interface GetOrders {
   page: number;
@@ -14,11 +15,10 @@ export class OrderKafkaController {
   constructor(private orderService: OrderService) {}
 
   @MessagePattern('createOrder_order')
-  async createOrder(@Payload() newOrder: object) {
-    console.log(newOrder);
+  async createOrder(@Payload() newOrder: Order) {
     const res = await this.orderService.createOrder(newOrder);
     return {
-      value: { res },
+      value: res,
       key: 'createOrder_order',
     };
   }
@@ -29,7 +29,7 @@ export class OrderKafkaController {
     const res = await this.orderService.getOrders(query);
     console.log(res);
     return {
-      value: { res },
+      value: { orders: res },
       key: 'getOrders_order',
     };
   }

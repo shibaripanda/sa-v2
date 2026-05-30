@@ -37,6 +37,7 @@ export function CreateOrder(props: CreateOrder) {
     const device = _selectedDevice_.name
 
     const unsubscribe = props.user.onSocketCreateOrder(
+      props,
       () => ({
         fields: newOrder
           .filter(n => !n.currentData)
@@ -69,11 +70,12 @@ export function CreateOrder(props: CreateOrder) {
     }
   }
   const activCreateOrderBut = () => {
-    const count = newOrder.filter(no => no.mustHave).length
-    // console.log(count)
-    const myCount = newOrder.filter(no => no.currentData).length
-    // console.log(myCount)
-    return !(count == myCount)
+   for (const n of newOrder) {
+    if(n.mustHave && !n.currentData) {
+      return true
+    }
+   }
+   return false
   }
   const onClearNewOrder = () => {
     // _setSelectedDevice_(null)
@@ -107,7 +109,7 @@ export function CreateOrder(props: CreateOrder) {
   }
   const analyzPhotos = async () => {
     const device = _selectedDevice_ ? _selectedDevice_.name : 'Device'
-    await props.user.analyzPhotos(props.photos.filter(n => n.activ).map(n => n.photo), newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name), device, props.leng, newOrder, setNewOrder)
+    await props.user.analyzPhotos(props, props.photos.filter(n => n.activ).map(n => n.photo), newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name), device, props.leng, newOrder, setNewOrder)
   }
   const setSIzeForm = (size: number) => {
     setValue(size)
@@ -291,7 +293,7 @@ export function CreateOrder(props: CreateOrder) {
           <><Space h='xl'/>
             <Grid justify="flex-start" align="stretch" w="100%">
               <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-                <Button fullWidth size={sizeElement()} disabled={!props.photos.filter(p => p.activ).length || !newOrder.filter(n => !n.currentData).filter(n => n.ai).map(n => n.name).length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
+                <Button fullWidth size={sizeElement()} disabled={!props.photos.filter(p => p.activ).length || !newOrder.filter(n => n.ai).filter(n => !n.currentData).map(n => n.name).length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
               </Grid.Col>
               <Grid.Col key={'2'} span={{ base: 12, sm: 2}}>
                 <Button fullWidth size={sizeElement()} color="orange" disabled={!props.photos.length} onClick={deeleteAllPhoto}>{props.text?.clear} 🖼</Button>
