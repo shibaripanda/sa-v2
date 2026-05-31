@@ -17,8 +17,11 @@ import { StaffUserClass } from "./classes/StaffUserClass";
 import { CompanyClass } from "./classes/CompanyClass";
 import { ServiceClass } from "./classes/ServiceClass";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { DefaultDataClass } from "./classes/DefaultDataClass";
 
 export default function App() {
+
+  const defaultData = new DefaultDataClass()
 
   const [leng, setLeng] = useState<string>(sessionStorage.getItem('leng') ?? window.navigator.language.substring(0,2) ?? 'en')
   const [text, setText] = useState<TextLib | null>(JSON.parse(sessionStorage.getItem('text')!) ?? null)
@@ -46,7 +49,7 @@ export default function App() {
     }
   };
 
-  useIdleTimer({ timeout: 60000 * onIdleTime, onIdle });
+  useIdleTimer({ timeout: defaultData.timeForAutoExit() * onIdleTime, onIdle });
 
   const pickStaffUser = (staffUser: StaffUser | null) => {
     if(staffUser) sessionStorage.setItem('staffUser', JSON.stringify(staffUser))

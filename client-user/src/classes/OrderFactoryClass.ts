@@ -66,9 +66,7 @@ export class OrderFactoryClass {
 
     const { createdAt, updatedAt, order_id, _id, ...newOrder } = order.toJSON();
 
-    console.log(newOrder)
-
-    crData.setLoadingText('Создаем заказ')
+    crData.setLoadingText(crData.text?.greatingOrder)
     crData.setLoaderShow.open()
 
     socket.emit('createOrder', newOrder, async (res: {order: Order; status: boolean}) => {
@@ -76,16 +74,15 @@ export class OrderFactoryClass {
       await new Promise(resolve => setTimeout(resolve, 1000))
 
       if(res.status){
-        console.log('getOrders', res);
         crData.setOrders((ex: OrderPagination) => {
           return {...ex, items: [res.order, ...ex.items]}
         })
-        crData.setLoadingText('Готово!')
+        crData.setLoadingText(crData.text?.ready)
       }
 
       if(!res.status){
         crData.setErrorStatus(true)
-        crData.setLoadingText('Ошибка!')
+        crData.setLoadingText(crData.text?.error)
       }
 
       await new Promise(resolve => setTimeout(resolve, 500))

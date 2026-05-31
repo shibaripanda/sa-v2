@@ -1,12 +1,12 @@
 import { DashScreenInterface, Photos } from "../components/dashboardScreen/mainScreen/Dashboard"
-import { HeaderInterface } from "../components/dashboardScreen/subDashScreen/header/Header"
+// import { HeaderInterface } from "../components/dashboardScreen/subDashScreen/header/Header"
 import { Field } from "../interfaces/field"
 import type { User } from "../interfaces/user"
 import { socket } from "../utils/socket"
 import { AxiosClass } from "./AxiosClass"
 import { Model, ModelWithData } from "./interfacesClass"
 
-interface DashData extends HeaderInterface {
+interface DashData extends DashScreenInterface {
   setPhotos: any
   photos: Photos
   deletePhoto?: string
@@ -17,13 +17,10 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
   private axiosClass = new AxiosClass()
 
   async analyzPhotos(dashData: DashData, photos: string[], fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any) {
-
-    dashData.setLoadingText('Обрабатываем фото...')
+    dashData.setLoadingText(dashData.text?.processPhoto)
     dashData.setLoaderShow.open()
 
     return socket.emit('analyzPhotos', {photos, fields, device, leng}, async (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
-      
-      // await new Promise(resolve => setTimeout(resolve, 1000))
 
       if (res.analyzData.status) {
         const anData = res.analyzData.data
@@ -35,12 +32,12 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
           }
         }
         setNewOrder([...newOrder])
-        dashData.setLoadingText('Готово!')
+        dashData.setLoadingText(dashData.text?.ready)
       }
 
       if(!res.analyzData.status) {
         dashData.setErrorStatus(true)
-        dashData.setLoadingText('Ошибка!')
+        dashData.setLoadingText(dashData.text?.error)
       }
 
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -50,10 +47,9 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
   }
 
   async analyzVoice(dashData: DashData, fields: string[], device: string, leng: string, newOrder: Field[], setNewOrder: any, voice: string) {
-    dashData.setLoadingText('Обрабатываем голосовое...')
+    dashData.setLoadingText(dashData.text?.processVoice)
     dashData.setLoaderShow.open()
 
-    console.log('analyzVoice', fields, device, leng)
     return socket.emit('analyzVoice', {voice, fields, device, leng}, async (res: {analyzData: {status: boolean, data: { [key: string]: string | null }}}) => {
       console.log('analyzVoice', res);
       if (res.analyzData.status) {
@@ -66,12 +62,12 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
           }
         }
         setNewOrder([...newOrder])
-        dashData.setLoadingText('Готово!')
+        dashData.setLoadingText(dashData.text?.ready)
       }
 
       if(!res.analyzData.status) {
         dashData.setErrorStatus(true)
-        dashData.setLoadingText('Ошибка!')
+        dashData.setLoadingText(dashData.text?.error)
       }
 
       await new Promise(resolve => setTimeout(resolve, 500))

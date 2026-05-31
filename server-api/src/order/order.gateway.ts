@@ -31,7 +31,7 @@ export class OrderGateway {
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('createOrder')
   async createOrder(@CurrentUser() user: User, @MessageBody() messageBody: object) {
-    console.log(user, messageBody);
+    // console.log(user, messageBody);
     return await this.kafkaService.sendAnyReq('createOrder_order', messageBody);
   }
 
@@ -39,7 +39,7 @@ export class OrderGateway {
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('getOrders')
   async getOrders(@CurrentUser() user: User, @MessageBody() messageBody: GetOrders) {
-    console.log(user, messageBody);
+    // console.log(user, messageBody);
     return await this.kafkaService.sendAnyReq('getOrders_order', messageBody);
   }
 

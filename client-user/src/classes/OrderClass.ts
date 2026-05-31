@@ -10,7 +10,7 @@ export interface FieldSnapshot {
 
 export class OrderClass implements Order {
 
-   _id: string;
+  _id: string;
   order_id: string;
 
   deviceId: string;

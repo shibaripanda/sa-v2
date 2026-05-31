@@ -25,9 +25,7 @@ export class OrderKafkaController {
 
   @MessagePattern('getOrders_order')
   async getOrders(@Payload() query: GetOrders) {
-    console.log(query);
     const res = await this.orderService.getOrders(query);
-    console.log(res);
     return {
       value: { orders: res },
       key: 'getOrders_order',

@@ -28,10 +28,8 @@ export function OrdersListTable(props: OrderVar1) {
       <Table w={props.controlSize}>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: props.scrolled })}>
           <Table.Tr>
+            {props.comp.fields_ids.map(f => <Table.Th>{f.name}</Table.Th>)}
             <Table.Th>Name</Table.Th>
-            {/* <Table.Th>Email</Table.Th>
-            <Table.Th>Email</Table.Th>
-            <Table.Th>Company</Table.Th> */}
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>

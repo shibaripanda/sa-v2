@@ -165,11 +165,7 @@ export class AppService implements OnModuleInit {
 
     try {
       const status_id = await this.statusService.createNewOpenStatus(session);
-      await this.companyService.addStatusToCompany(
-        company_id,
-        status_id,
-        session,
-      );
+      await this.companyService.addStatusToCompany(company_id, status_id, session);
 
       await session.commitTransaction();
       const res = await this.companyService.getCompanyWithRelations(company_id);
@@ -189,11 +185,7 @@ export class AppService implements OnModuleInit {
 
     try {
       const status_id = await this.deviceService.createNewDevice(session);
-      await this.companyService.addDeviceToCompany(
-        company_id,
-        status_id,
-        session,
-      );
+      await this.companyService.addDeviceToCompany(company_id, status_id, session);
 
       await session.commitTransaction();
       const res = await this.companyService.getCompanyWithRelations(company_id);
@@ -213,11 +205,7 @@ export class AppService implements OnModuleInit {
 
     try {
       const status_id = await this.fieldService.createNewField(session);
-      await this.companyService.addFieldToCompany(
-        company_id,
-        status_id,
-        session,
-      );
+      await this.companyService.addFieldToCompany(company_id, status_id, session);
 
       await session.commitTransaction();
       const res = await this.companyService.getCompanyWithRelations(company_id);
@@ -237,10 +225,7 @@ export class AppService implements OnModuleInit {
 
     try {
       // Получаем компанию с дочерними объектами
-      const companyes = await this.companyService.getCompanyForDelete(
-        user_owner_id,
-        session,
-      );
+      const companyes = await this.companyService.getCompanyForDelete(user_owner_id, session);
       if (!companyes || !companyes.length) throw new Error('Company not found');
 
       for (const comp of companyes) {
@@ -327,8 +312,7 @@ export class AppService implements OnModuleInit {
   async getAllMyComps(user_id: Types.ObjectId) {
     const compsOwner = await this.companyService.getCompanyWhereOwner(user_id);
 
-    const myStaffUsers_ids =
-      await this.staffUserService.getMyStaffUsers_ids(user_id);
+    const myStaffUsers_ids = await this.staffUserService.getMyStaffUsers_ids(user_id);
 
     const compsStaff = await this.companyService.getCompanyesWhereStaff(
       myStaffUsers_ids,
@@ -347,11 +331,7 @@ export class AppService implements OnModuleInit {
     try {
       const service_id = await this.serviceService.createNewService(session);
 
-      await this.companyService.addServiceToCompany(
-        company_id,
-        service_id,
-        session,
-      );
+      await this.companyService.addServiceToCompany(company_id, service_id, session);
 
       await session.commitTransaction();
       return true;
@@ -371,11 +351,9 @@ export class AppService implements OnModuleInit {
     try {
       const role_id = await this.roleService.createNewRole(session);
       const shop_id = await this.shopService.createNewShop(session);
-      const device_id_arr =
-        await this.deviceService.createNewDevicesForNewCompany(session);
+      const device_id_arr = await this.deviceService.createNewDevicesForNewCompany(session);
       const status_id_arr = await this.statusService.createNewStatus(session);
-      const field_id_arr =
-        await this.fieldService.createNewFieldsForNewCompany(session);
+      const field_id_arr = await this.fieldService.createNewFieldsForNewCompany(session);
       const work_id = await this.workService.createNewWork(session);
       const service_id = await this.serviceService.createNewService(session);
 
@@ -383,14 +361,11 @@ export class AppService implements OnModuleInit {
         user_owner_id,
         role_id,
         service_id,
+        field_id_arr,
         session,
       );
 
-      const part_id = await this.partService.createNewPart(
-        shop_id,
-        service_id,
-        session,
-      );
+      const part_id = await this.partService.createNewPart(shop_id, service_id, session);
 
       const company = await this.companyService.createNewCompany(
         user_owner_id,

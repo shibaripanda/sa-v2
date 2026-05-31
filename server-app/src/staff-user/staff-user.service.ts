@@ -27,6 +27,7 @@ export class StaffUserService {
     origin_user_id: Types.ObjectId,
     role_id: Types.ObjectId,
     service_id: Types.ObjectId,
+    field_id_arr: Types.ObjectId[],
     session?: ClientSession,
   ): Promise<Types.ObjectId> {
     const res = await this.staffUserModel.create(
@@ -34,6 +35,7 @@ export class StaffUserService {
         {
           origin_user_id,
           userStaffServices: [service_id],
+          userStaffFieldsLine: field_id_arr,
           role_ids: [role_id],
         },
       ],

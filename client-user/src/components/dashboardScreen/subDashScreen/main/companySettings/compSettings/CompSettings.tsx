@@ -1,8 +1,6 @@
 import { Button, Checkbox, Divider, Flex, Grid, Group, Paper, Space, Text, TextInput } from '@mantine/core';
 import { MainInterface } from '../../Main';
 import { UpdateStringValue } from '../../../../../subComponents/updateStringValue/UpdateStringValue';
-// import { TableHistoryLocation } from '.././tableHistoryLocation/TableHistoryLocation';
-// import { IconCancel, IconCircleCheck } from '@tabler/icons-react';
 import { useState } from 'react';
 import { TableServices } from '../tableServices/TableServices';
 import { useDisclosure } from '@mantine/hooks';
@@ -43,34 +41,27 @@ export function CompSettings(props: MainInterface) {
       }
       return 'xs'
   }
-
   const editDevice = async (device: DeviceClass) => {
     setSelectedDevice(new DeviceClass(device))
     setModalDevice.open()
   }
   const addNewDevice = async () => {
-    const res = await props.comp.addNewDevice(props.pickComp)
-    console.log(res)
+    await props.comp.addNewDevice(props.pickComp)
   }
-
   const editStatus = async (status: StatusClass) => {
     setSelectedStatus(new StatusClass(status))
     setModalStatus.open()
   }
   const addNewStatus = async () => {
-    const res = await props.comp.addNewStatus(props.pickComp)
-    console.log(res)
+    await props.comp.addNewStatus(props.pickComp)
   }
-
   const editField = async (field: FieldClass) => {
     setSelectedField(new FieldClass(field))
     setModalField.open()
   }
   const addNewField = async () => {
-    const res = await props.comp.addNewField(props.pickComp)
-    console.log(res)
+    await props.comp.addNewField(props.pickComp)
   }
-
   const deleteCompany = async () => {
     props.setLoadingText(props.text?.deleting)
     props.setLoaderShow.open()
@@ -89,17 +80,16 @@ export function CompSettings(props: MainInterface) {
 
       <Divider my="lg" label="Devices" labelPosition="left" />
       <Group>
-        <Button variant='default' size='xs' onClick={addNewDevice}>{props.text?.addNewDevice}</Button>
-        <Button variant='default' size='xs' onClick={setModalDeviceLine.open}>{props.text?.deviceLine}</Button>
+        <Button w={'200px'} size='xs' onClick={addNewDevice}>{props.text?.addNewDevice}</Button>
+        <Button w={'200px'} size='xs' onClick={setModalDeviceLine.open}>{props.text?.deviceLine}</Button>
       </Group>
       <Space h="xl"/>
       <Grid w="100%" gutter="md">
         {[
-          ...props.comp.devices_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`device-${i}`} onClick={() => editDevice(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
-        ].map((item, i) => 
-          // <Grid.Col key={`Devices-${i}`} span={{ base: 12, sm: 12 / props.comp.devices_ids.length }}>
+          ...props.comp.devices_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`device-${i}`} onClick={() => editDevice(s)} size='xs' color='green'>{s.name}</Button>)
+        ].map((item, i) =>
             <Grid.Col key={`Devices-${i}`} span={{ base: 4, sm: 1.5}}>
-            <Flex direction="column" align="center" justify="center" h="100%">
+            <Flex direction="column" justify="center" h="100%">
               {item}
             </Flex>
           </Grid.Col>
@@ -108,17 +98,16 @@ export function CompSettings(props: MainInterface) {
 
       <Divider my="lg" label="Fields" labelPosition="left" />
       <Group>
-        <Button variant='default' size='xs' onClick={addNewField}>{props.text?.addNewField}</Button>
-        <Button variant='default' size='xs' onClick={setModalFieldLine.open}>{props.text?.fieldLine}</Button>
+        <Button w={'200px'} size='xs' onClick={addNewField}>{props.text?.addNewField}</Button>
+        <Button w={'200px'} size='xs' onClick={setModalFieldLine.open}>{props.text?.fieldLine}</Button>
       </Group>
       <Space h="xl"/>
       <Grid w="100%" gutter="md">
         {[
           ...props.comp.fields_ids.map((s, i) => <Button variant='default' key={`status-${i}`} onClick={() => editField(s)} size='xs'>{s.name}</Button>)
-        ].map((item, i) => 
-          // <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
+        ].map((item, i) =>
             <Grid.Col key={`Statuses-${i}`} span={{ base: 4, sm: 1.5}}>
-            <Flex direction="column" align="center" justify="center" h="100%">
+            <Flex direction="column" justify="center" h="100%">
               {item}
             </Flex>
           </Grid.Col>
@@ -127,17 +116,17 @@ export function CompSettings(props: MainInterface) {
       
       <Divider my="lg" label="Statuses" labelPosition="left" />
       <Group>
-        <Button variant='default' size='xs' onClick={addNewStatus}>{props.text?.addNewStatus}</Button>
-        <Button variant='default' size='xs' onClick={setModalStatusLine.open}>{props.text?.statusLine}</Button>
+        <Button w={'200px'} size='xs' onClick={addNewStatus}>{props.text?.addNewStatus}</Button>
+        <Button w={'200px'} size='xs' onClick={setModalStatusLine.open}>{props.text?.statusLine}</Button>
       </Group>
       <Space h="xl"/>
       <Grid w="100%" gutter="md">
         {[
-          ...props.comp.statuses_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`status-${i}`} onClick={() => editStatus(s)} size='xs' color='green' w='100px'>{s.name}</Button>)
+          ...props.comp.statuses_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`status-${i}`} onClick={() => editStatus(s)} size='xs' color='green'>{s.name}</Button>)
         ].map((item, i) => 
           // <Grid.Col key={`Statuses-${i}`} span={{ base: 12, sm: 12 / props.comp.statuses_ids.length }}>
             <Grid.Col key={`Statuses-${i}`} span={{ base: 4, sm: 1.5}}>
-            <Flex direction="column" align="center" justify="center" h="100%">
+            <Flex direction="column" justify="center" h="100%">
               {item}
             </Flex>
           </Grid.Col>

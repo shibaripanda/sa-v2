@@ -24,7 +24,7 @@ export class UserGateway {
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('deletePhoto')
   async deletePhoto(@CurrentUser() user: User, @MessageBody() messageBody: { deletePhoto: string }) {
-    console.log('getPhotos');
+    // console.log('getPhotos');
     return await this.kafkaService.sendAnyReq('deletePhoto_auth', { _id: user._id, deletePhoto: messageBody.deletePhoto });
   }
 
@@ -32,7 +32,7 @@ export class UserGateway {
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('getPhotoBuffer')
   async getPhotoBuffer(@MessageBody() messageBody: { photo: string }) {
-    console.log('getPhotoBuffer', messageBody);
+    // console.log('getPhotoBuffer', messageBody);
     return await this.kafkaService.sendAnyReq('getPhotoBuffer_bot', messageBody);
   }
 
@@ -40,7 +40,7 @@ export class UserGateway {
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('getPhotos')
   async getPhotos(@CurrentUser() user: User) {
-    console.log('getPhotos');
+    // console.log('getPhotos');
     return await this.kafkaService.sendAnyReq('getPhotos_auth', { _id: user._id });
   }
 }

@@ -72,7 +72,6 @@ export function Dashboard(props: DashScreenInterface) {
     },
   ];
 
-  
   useEffect(() => {
     const onConnect = () => {
       console.log("connected", socket.id);

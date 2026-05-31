@@ -8,47 +8,54 @@ export type StaffUserDocument = HydratedDocument<StaffUser>;
 @Schema({ timestamps: true })
 export class StaffUser {
   @Prop({ required: true })
-  origin_user_id: Types.ObjectId;
+  origin_user_id!: Types.ObjectId;
 
   @Prop({ required: true, default: 'procentWork' })
-  profitMode: ProfitMode;
+  profitMode!: ProfitMode;
 
   @Prop({ required: true, default: 25 })
-  profit: number;
+  profit!: number;
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Role', autopopulate: true }],
     required: true,
     default: [],
   })
-  role_ids: Types.ObjectId[];
+  role_ids!: Types.ObjectId[];
+
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Field', autopopulate: true }],
+    required: true,
+    default: [],
+  })
+  userStaffFieldsLine!: Types.ObjectId[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Service', autopopulate: true }],
     required: true,
     default: [],
   })
-  userStaffServices: Types.ObjectId[];
+  userStaffServices!: Types.ObjectId[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Status', autopopulate: true }],
     required: true,
     default: [],
   })
-  filterStatusesHiden: Types.ObjectId[];
+  filterStatusesHiden!: Types.ObjectId[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Device', autopopulate: true }],
     required: true,
     default: [],
   })
-  filterDevicesHiden: Types.ObjectId[];
+  filterDevicesHiden!: Types.ObjectId[];
 
   @Prop()
-  startTime: number;
+  startTime!: number;
 
   @Prop()
-  endTime: number;
+  endTime!: number;
 }
 
 export const StaffUserSchema = SchemaFactory.createForClass(StaffUser);

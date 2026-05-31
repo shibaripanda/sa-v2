@@ -2,6 +2,10 @@ import { IconBook, IconBuildingCastle, IconBuildingStore, IconBuildingWarehouse,
 
 export class DefaultDataClass {
 
+  timeForAutoExit(): number {
+    return 60000
+  }
+
   activOrderViewDefault() {
     return 0
   }

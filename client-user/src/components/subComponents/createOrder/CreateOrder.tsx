@@ -1,4 +1,4 @@
-import { ActionIcon, AspectRatio, Autocomplete, Box, Button, Center, Divider, Grid, Group, Image, Modal, Overlay, Slider, Space, Text, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, AspectRatio, Autocomplete, Box, Button, Center, Checkbox, Divider, Grid, Group, Image, Modal, Overlay, Slider, Space, Text, TextInput, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { Field } from "../../../interfaces/field";
@@ -18,7 +18,7 @@ export function CreateOrder(props: CreateOrder) {
   const [photo,  setPhoto ] = useState<string>('');
   const [value, setValue] = useState(props.user.sizeNewOrderForm);
 
-  
+  const [multiOrder, setMultiOrder] = useState(false);
 
   const newOrderData = () => {
     const orderFields = [...props.comp.fields_ids]
@@ -126,14 +126,14 @@ export function CreateOrder(props: CreateOrder) {
     { value: 100, label: 'xl' },
   ];
   const aiStatus = (f: Field) => {
-    if(f.ai && f.aiVoice && !f.currentData) return <Tooltip label={props.text?.photoOrVoice}><div>🤖*</div></Tooltip>
-    if(f.ai && !f.currentData) return <Tooltip label={props.text?.photo}><div>🤖</div></Tooltip>
-    if(f.aiVoice && !f.currentData) return <Tooltip label={props.text?.voice}><div>💬</div></Tooltip>
+    if(f.ai && f.aiVoice && !f.currentData) return <Tooltip label={props.text?.photoOrVoice}><div><Text size={sizeElement()} style={{ lineHeight: 1, whiteSpace: 'nowrap', marginRight: '11px' }}>✨💬</Text></div></Tooltip>
+    if(f.ai && !f.currentData) return <Tooltip label={props.text?.photo}><div><Text size={sizeElement()}>✨</Text></div></Tooltip>
+    if(f.aiVoice && !f.currentData) return <Tooltip label={props.text?.voice}><div><Text size={sizeElement()}>💬</Text></div></Tooltip>
     if(f.currentData) return <Tooltip label={props.text?.clear}><IconSquareX style={{cursor: 'pointer'}} onClick={() => updateNewOrder(f.name, '')}/></Tooltip>
     return ''
   }
 
-  console.log('newOrder', newOrder)
+  // console.log('newOrder', newOrder)
  
   return (
     <>
@@ -171,8 +171,9 @@ export function CreateOrder(props: CreateOrder) {
                 {newOrder.filter(f => !_selectedDevice_.blockFields.includes(f._id)).map(d => 
                   <Grid.Col key={`Fildes-${d._id}`} span={{ base: 12, sm: 4}}>
                     {d.variants ?
-                    <Tooltip label={d.currentData?.toString() ?? ''} disabled={d.currentData ? d.currentData?.toString().length < 25 : true}>
+                      <Tooltip label={d.currentData?.toString() ?? ''} disabled={d.currentData ? d.currentData?.toString().length < 25 : true}>
                       <Autocomplete
+                      error={d.mustHave && !d.currentData}
                       rightSection={aiStatus(d)} 
                       onChange={(v) => {
                         updateNewOrder(d.name, v)
@@ -184,13 +185,15 @@ export function CreateOrder(props: CreateOrder) {
                       withAsterisk={d.mustHave}
                       data={['dddd', 'eeee']}/></Tooltip> 
                       :
+                      <Tooltip label={d.currentData?.toString() ?? ''} disabled={d.currentData ? d.currentData?.toString().length < 25 : true}>
                       <TextInput
+                      error={d.mustHave && !d.currentData}
                       rightSection={aiStatus(d)} 
                       onChange={(v) => updateNewOrder(d.name, v.target.value)} 
                       label={d.name + (d.onlyNumber ? ' (only numbers)' : '')} 
                       value={d.currentData ?? ''} 
                       size={sizeElement()}  
-                      withAsterisk={d.mustHave}/>
+                      withAsterisk={d.mustHave}/></Tooltip>
                     }
                   </Grid.Col>)}
               </Grid> 
@@ -293,7 +296,7 @@ export function CreateOrder(props: CreateOrder) {
           <><Space h='xl'/>
             <Grid justify="flex-start" align="stretch" w="100%">
               <Grid.Col key={'1'} span={{ base: 12, sm: 2}}>
-                <Button fullWidth size={sizeElement()} disabled={!props.photos.filter(p => p.activ).length || !newOrder.filter(n => n.ai).filter(n => !n.currentData).map(n => n.name).length} onClick={analyzPhotos}>{props.text?.analyz} 🤖</Button>
+                <Button fullWidth size={sizeElement()} disabled={!props.photos.filter(p => p.activ).length || !newOrder.filter(n => n.ai).filter(n => !n.currentData).map(n => n.name).length} onClick={analyzPhotos}>{props.text?.analyz} ✨</Button>
               </Grid.Col>
               <Grid.Col key={'2'} span={{ base: 12, sm: 2}}>
                 <Button fullWidth size={sizeElement()} color="orange" disabled={!props.photos.length} onClick={deeleteAllPhoto}>{props.text?.clear} 🖼</Button>
@@ -301,10 +304,15 @@ export function CreateOrder(props: CreateOrder) {
               <Grid.Col key={'3'} span={{ base: 12, sm: 4}}>
                 <Button  onClick={() => orderCreate.createNewOrder({...props, newOrder, _selectedDevice_})} fullWidth size={sizeElement()} color="green" disabled={activCreateOrderBut()}>{props.text?.createOrder}</Button>
               </Grid.Col>
-              <Grid.Col key={'4'} span={{ base: 12, sm: 2}}>
+              <Grid.Col key={'4'} span={{ base: 12, sm: 0.5}}>
+                <Tooltip label={props.text?.multiOrder}>
+                  <Checkbox checked={multiOrder} onChange={(event) => setMultiOrder(event.currentTarget.checked)}/>
+                </Tooltip>
+              </Grid.Col>
+              <Grid.Col key={'5'} span={{ base: 12, sm: 1.75}}>
                 <Button onClick={onClearNewOrder} disabled={!newOrder.some(f => f.currentData !== null)} fullWidth size={sizeElement()} color="red">{props.text?.clear}</Button>
               </Grid.Col>
-              <Grid.Col key={'5'} span={{ base: 12, sm: 2}}>
+              <Grid.Col key={'6'} span={{ base: 12, sm: 1.75}}>
                 <Button onClick={onCancelNewOrderClose} fullWidth size={sizeElement()} color="red">{props.text?.cancel}</Button>
               </Grid.Col>
             </Grid>

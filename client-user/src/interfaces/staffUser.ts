@@ -1,3 +1,4 @@
+import { Field } from "./field";
 
 type ProfitMode = 'fullProcent' | 'procentWork' | 'fix'
 
@@ -9,6 +10,8 @@ export interface StaffUser {
 
     profitMode: ProfitMode;
     profit: number;
+
+    userStaffFieldsLine: Field[];
 
     filterStatuses: string[];
     filterDevices: string[];
