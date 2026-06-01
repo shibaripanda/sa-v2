@@ -1,13 +1,14 @@
 import { Card, Group, Image, Text } from '@mantine/core';
 import classes from './OrderListItemCard.module.css';
 import mainPic from '../../../../../../../images/mainpic.png'
-import { Order } from '../../../../../../../interfaces/order';
+import { OrderClass } from '../../../../../../../classes/OrderClass';
+import { cardBorderColorObj } from '../../../../../../subComponents/colorShema/buttonColorObj';
 
-export function OrderListItemCard({...order}: Order) {
+export function OrderListItemCard({ order }: { order: OrderClass }) {
 
   const stats = [
-    { title: 'Status', value: order._id },
-    { title: 'Id', value: order._id },
+    { title: 'Status', value: order.statusId },
+    { title: 'Id', value: order.order_id },
     { title: 'Price', value: '170' },
   ];
 
@@ -23,8 +24,8 @@ export function OrderListItemCard({...order}: Order) {
   ));
 
   return (
-    <Card withBorder padding="lg" radius="md" className={classes.card} style={{ borderWidth: 1, borderColor: 'var(--mantine-color-red-5)' }}>
-      <Card.Section className={classes.top}><Text className={classes.toptitle}>{order._id}</Text></Card.Section>
+    <Card withBorder padding="lg" radius="md" className={classes.card} style={{ borderWidth: 2, ...cardBorderColorObj(order.color) }}>
+      <Card.Section className={classes.top}><Text className={classes.toptitle}>{order.order_id}</Text></Card.Section>
       <Card.Section>
         <Image
           src={mainPic}
@@ -34,16 +35,16 @@ export function OrderListItemCard({...order}: Order) {
       </Card.Section>
 
       <Group justify="space-between" mt="lg">
-        <Text className={classes.title}>{order._id}</Text>
+        <Text className={classes.title}>{order.deviceId}</Text>
         <Group gap={5}>
           <Text fz="xs" c="dimmed">
-            11.11.2025
+            {order.createdAt}
           </Text>
           {/* <RingProgress size={18} thickness={2} sections={[{ value: 80, color: 'blue' }]} /> */}
         </Group>
       </Group>
       <Text mt="sm" mb="md" c="dimmed" fz="xs" style={{ whiteSpace: 'pre-line' }}>
-        {`${order._id})`}
+        {order.statusId}
       </Text>
       <Card.Section className={classes.footer}>{items}</Card.Section>
     </Card>

@@ -2,37 +2,34 @@ import cx from 'clsx';
 import { Table } from '@mantine/core';
 import classes from './OrdersListTable.module.css';
 import { MainInterface } from '../../../Main';
-import { Order } from '../../../../../../../interfaces/order';
+import { OrderClass } from '../../../../../../../classes/OrderClass';
 
 interface OrderVar1 extends MainInterface {
   scrolled: any;
   controlSize: string;
-  openOrderFullscreen: (order: Order) => void;
+  openOrderFullscreen: (order: OrderClass) => void;
 }
 
 export function OrdersListTable(props: OrderVar1) {
 
+  const fieldsLine = props.comp.fields_ids
+
   console.log('OrdersListTable', props.orders)
 
   const rows = props.orders.items.map((order) => (
-    // <Table.Tr key={order._id} onClick={() => {}} style={{ cursor: 'pointer' }}>
     <Table.Tr key={order._id} onClick={() => props.openOrderFullscreen(order)} style={{ cursor: 'pointer' }}> 
-      <Table.Td>{order._id}</Table.Td>
-      {/* <Table.Td>{order.device} {order.brend} {order.model}</Table.Td>
-      <Table.Td>{order.problem}</Table.Td>
-      <Table.Td>{order.serial_number}</Table.Td> */}
+      {fieldsLine.map(f => (<Table.Td key={f._id}>{order.data[f._id] ?? ''}</Table.Td>))}
     </Table.Tr>
   ));
 
   return (
-      <Table w={props.controlSize}>
-        <Table.Thead className={cx(classes.header, { [classes.scrolled]: props.scrolled })}>
-          <Table.Tr>
-            {props.comp.fields_ids.map(f => <Table.Th>{f.name}</Table.Th>)}
-            <Table.Th>Name</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
+    <Table w={props.controlSize}>
+      <Table.Thead className={cx(classes.header, { [classes.scrolled]: props.scrolled })}>
+        <Table.Tr>
+          {fieldsLine.map(f => <Table.Th key={f._id}>{f.name}</Table.Th>)}
+        </Table.Tr>
+      </Table.Thead>
+      <Table.Tbody>{rows}</Table.Tbody>
+    </Table>
   );
 }

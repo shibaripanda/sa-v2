@@ -1,13 +1,13 @@
 import { Grid } from '@mantine/core';
 import { MainInterface } from '../../../Main';
 import { OrderListItemCard } from './OrderListItemCard';
-import { Order } from '../../../../../../../interfaces/order';
+import { OrderClass } from '../../../../../../../classes/OrderClass';
 
 interface orderListItemInterface extends MainInterface {
   scrolled: any;
   controlSize: string;
   countItemsLime: number;
-  openOrderFullscreen: (order: Order) => void;
+  openOrderFullscreen: (order: OrderClass) => void;
 }
 
 export function OrderListItem(props: orderListItemInterface) {
@@ -17,7 +17,7 @@ export function OrderListItem(props: orderListItemInterface) {
     onClick={() => props.openOrderFullscreen(order)}
     style={{ cursor: 'pointer' }}
     >
-      <OrderListItemCard {...order}/>
+      <OrderListItemCard order={order}/>
     </Grid.Col>
   ));
 

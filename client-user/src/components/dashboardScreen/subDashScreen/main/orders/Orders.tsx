@@ -4,14 +4,14 @@ import { OrdersListTable } from './ordersListsVariants/orderListITable/OrdersLis
 import { MainInterface } from '../Main';
 import { OrderListItem } from './ordersListsVariants/orderListCards/OrderListItem';
 import { useDisclosure } from '@mantine/hooks';
-import { Order } from '../../../../../interfaces/order';
+import { OrderClass } from '../../../../../classes/OrderClass';
 
 export function Orders(props: MainInterface) {
   const [scrolled, setScrolled] = useState(false);
-  const [openOrder, setOpenOrder] = useState<Order | null>(null);
+  const [openOrder, setOpenOrder] = useState<OrderClass | null>(null);
   const [oneOpenOrder, {open, close} ] = useDisclosure();
 
-  const openOrderFullscreen = (order: Order) => {
+  const openOrderFullscreen = (order: OrderClass) => {
     if(!order) {
       setOpenOrder(null)
       close()
@@ -81,7 +81,7 @@ export function Orders(props: MainInterface) {
           close()
         }}
         >
-      {openOrder?._id}
+      {openOrder?._id} GGG
     </Modal>
     </>
   );

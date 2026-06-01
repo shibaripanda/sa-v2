@@ -19,11 +19,8 @@ type DropHeadMenu =
   {
     link: string;
     label: string;
-    links: {
-        name: string;
-        action: () => void;
-    }[];
-}[]
+    links: {name: string; action: () => void}[];
+  }[]
 
 export type Photos = {photo: string; image: any; activ: boolean}[]
 
@@ -73,19 +70,11 @@ export function Dashboard(props: DashScreenInterface) {
   ];
 
   useEffect(() => {
-    const onConnect = () => {
-      console.log("connected", socket.id);
-    };
-
-    const onDisconnect = (reason: string) => {
-      console.log("disconnected", reason);
-    };
-
+    const onConnect = () => {console.log("connected", socket.id)};
+    const onDisconnect = (reason: string) => {console.log("disconnected", reason)};
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-
     return () => {
-
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
     };
@@ -93,16 +82,13 @@ export function Dashboard(props: DashScreenInterface) {
 
   useEffect(() => {
     const token = props.user.token || '';
-
     if (token) {
       socket.auth = { token };
-
       if (!socket.connected) {
         socket.connect();
       }
       props.user.onSocket({...props, photos, setPhotos })
       props.user.getImages({...props, photos, setPhotos })
-
       return;
     }
   }, [props.user.token])

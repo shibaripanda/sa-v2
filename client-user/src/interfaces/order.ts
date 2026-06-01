@@ -30,4 +30,6 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
 
+  // color?: number;
+
 }

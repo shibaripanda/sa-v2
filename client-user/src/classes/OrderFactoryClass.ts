@@ -12,7 +12,7 @@ interface CreateNewOrder extends HeaderInterface {
   photos: Photos;
 }
 export interface OrderPagination {
-  items: Order[];
+  items: OrderClass[];
   meta: {
     limit: number;
     page: number;
@@ -23,15 +23,22 @@ export interface OrderPagination {
 
 export class OrderFactoryClass {
 
+  private orderConvertUse(order: Order, dashBoard: DashScreenInterface) {
+    const orderUse = new OrderClass(order, dashBoard)
+    console.log(orderUse)
+    if (orderUse) return orderUse
+  }
+
   getOrders(dashBoard: DashScreenInterface, orders: OrderPagination, setOrders: any) {
     socket.emit('getOrders', { page: orders.meta.page, limit: orders.meta.limit, compId: dashBoard.comp._id, serviceId: dashBoard.service._id }, (res: {orders: OrderPagination}) => {
-      console.log('getOrders', res)
-      setOrders(res.orders)
+      const useOrders = res.orders.items.map(or => this.orderConvertUse(or, dashBoard))
+      console.log('getOrders', {...res.orders, items: useOrders})
+      setOrders({...res.orders, items: useOrders})
     })
   }
 
   createNewOrder(crData: CreateNewOrder): void {
-    const order = new OrderClass();
+    const order = new OrderClass(null, crData);
 
     order.createrName = crData.user.name;
     order.createrOriginId = crData.user._id;
@@ -74,9 +81,10 @@ export class OrderFactoryClass {
       await new Promise(resolve => setTimeout(resolve, 1000))
 
       if(res.status){
-        crData.setOrders((ex: OrderPagination) => {
-          return {...ex, items: [res.order, ...ex.items]}
-        })
+        crData.setOrders((prev: OrderPagination) => ({
+          ...prev,
+          items: [this.orderConvertUse(res.order, crData), ...prev.items],
+        }));
         crData.setLoadingText(crData.text?.ready)
       }
 
