@@ -1,4 +1,4 @@
-import { ActionIcon, AspectRatio, Autocomplete, Box, Button, Center, Checkbox, Divider, Grid, Group, Image, Modal, Overlay, Slider, Space, Text, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, Autocomplete, Box, Button, Center, Checkbox, Divider, Grid, Group, Image, Modal, Overlay, Slider, Space, Text, TextInput, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { Field } from "../../../interfaces/field";

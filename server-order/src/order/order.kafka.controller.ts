@@ -14,6 +14,15 @@ export interface GetOrders {
 export class OrderKafkaController {
   constructor(private orderService: OrderService) {}
 
+  @MessagePattern('editOrderStatus_order')
+  async editOrderStatus(@Payload() newStatus: { _id: string; newStatusId: string }) {
+    const res = await this.orderService.editOrderStatus(newStatus);
+    return {
+      value: res,
+      key: 'editOrderStatus_order',
+    };
+  }
+
   @MessagePattern('createOrder_order')
   async createOrder(@Payload() newOrder: Order) {
     const res = await this.orderService.createOrder(newOrder);

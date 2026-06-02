@@ -19,7 +19,7 @@ export class DefaultDataClass {
   }
 
   ordersDefault() {
-    return { items: [], meta: { limit: 100, page: 1, total: 0, totalPages: 0 } }
+    return { items: [], meta: { limit: 5, page: 1, total: 0, totalPages: 0 } }
   }
 
   navBarDataDefault() {

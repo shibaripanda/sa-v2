@@ -29,6 +29,14 @@ export class OrderGateway {
 
   @UseGuards(UniversalJwtGuard)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
+  @SubscribeMessage('editOrderStatus')
+  async editOrderStatus(@CurrentUser() user: User, @MessageBody() messageBody: { _id: string; newStatusId: string }) {
+    // console.log(user, messageBody);
+    return await this.kafkaService.sendAnyReq('editOrderStatus_order', messageBody);
+  }
+
+  @UseGuards(UniversalJwtGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('createOrder')
   async createOrder(@CurrentUser() user: User, @MessageBody() messageBody: object) {
     // console.log(user, messageBody);

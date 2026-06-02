@@ -1,56 +1,63 @@
-import { Card, Group, Image, Text } from '@mantine/core';
+import { ActionIcon, Button, Card, Group, Image, Text } from '@mantine/core';
 import classes from './OrderListItemCard.module.css';
 import mainPic from '../../../../../../../images/mainpic.png'
 import { OrderClass } from '../../../../../../../classes/OrderClass';
 import { cardBorderColorObj } from '../../../../../../subComponents/colorShema/buttonColorObj';
+import { OrderListItemInterface } from './OrderListItem';
+import { IconEdit } from '@tabler/icons-react';
+import { StatusEdit } from './StatusEdit';
 
-export function OrderListItemCard({ order }: { order: OrderClass }) {
 
-  const stats = [
-    { title: 'Status', value: order.statusId },
-    { title: 'Id', value: order.order_id },
-    { title: 'Price', value: '170' },
+export interface OrderListItemCardInterface extends OrderListItemInterface {
+  order: OrderClass;
+}
+
+export function OrderListItemCard(props: OrderListItemCardInterface) {
+  // export function OrderListItemCard({ order }: { order: OrderClass }) {
+
+  const marks = [
+    { value: 1.2, label: 'xs', image: 100 },
+    { value: 1.5, label: 'xs', image: 150 },
+    { value: 2, label: 'sm', image: 200 },
+    { value: 2.4, label: 'sm', image: 250 },
+    { value: 3, label: 'md', image: 300 },
+    { value: 4, label: 'md', image: 350 },
+    { value: 6, label: 'lg', image: 400 },
+    { value: 12, label: 'xl', image: 450 },
   ];
-
-  const items = stats.map((stat) => (
-    <div key={stat.title}>
-      {/* <Text size="xs" color="dimmed">
-        {stat.title}
-      </Text> */}
-      <Text fw={500} size="sm">
-        {stat.value}
-      </Text>
-    </div>
-  ));
+  const elSize = marks.find(m => m.value === props.countItemsLime)?.label || 'md'
+  const elImage = marks.find(m => m.value === props.countItemsLime)?.image || 150
 
   return (
-    <Card withBorder padding="lg" radius="md" className={classes.card} style={{ borderWidth: 2, ...cardBorderColorObj(order.color) }}>
-      <Card.Section className={classes.top}><Text className={classes.toptitle}>{order.order_id}</Text></Card.Section>
+    <Card withBorder padding="lg" radius="md" className={classes.card} style={{ borderWidth: 2, ...cardBorderColorObj(props.order.color) }}>
+
+      <Card.Section className={classes.top}>
+        
+        <Text fw={700} size={elSize}>{props.order.order_id}</Text>
+        {/* <Text fw={700} size={elSize}>{props.order.statusId}</Text> */}
+        <StatusEdit {...props} elSize={elSize}/>
+      </Card.Section>
+
       <Card.Section>
         <Image
-          src={mainPic}
-          alt={order._id}
-          height={100}
+          style={{ cursor: 'pointer' }}
+          src={`data:image/jpeg;base64,${props.order.preview?.image}` || mainPic}
+          onClick={() => props.openOrderFullscreen(props.order)}
+          // src={mainPic}
+          alt={props.order._id}
+          height={elImage}
+          fallbackSrc="https://placehold.co/600x400?text=image"
         />
       </Card.Section>
 
-      <Group justify="space-between" mt="lg">
-        <Text className={classes.title}>{order.deviceId}</Text>
-        <Group gap={5}>
-          <Text fz="xs" c="dimmed">
-            {order.createdAt}
-          </Text>
-          {/* <RingProgress size={18} thickness={2} sections={[{ value: 80, color: 'blue' }]} /> */}
-        </Group>
-      </Group>
-      <Text mt="sm" mb="md" c="dimmed" fz="xs" style={{ whiteSpace: 'pre-line' }}>
-        {order.statusId}
-      </Text>
-      <Card.Section className={classes.footer}>{items}</Card.Section>
+      <Card.Section className={classes.top}>
+        <Text fw={700} size={elSize}>{props.order.deviceName}</Text>
+        <Text fw={700} c="dimmed" size={elSize}>{props.order.createdAt}</Text>
+        <ActionIcon size={elSize} variant="filled" color="gray" aria-label="Settings">
+          <IconEdit style={{ width: '70%', height: '70%' }} />
+        </ActionIcon>
+      </Card.Section>
+
     </Card>
   );
-
-  // return (
-  //   <div>{order._id}</div> 
-  // )
 }

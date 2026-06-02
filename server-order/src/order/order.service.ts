@@ -17,6 +17,16 @@ export class OrderService {
 
   private readonly letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+  async editOrderStatus(newStatus: { _id: string; newStatusId: string }) {
+    try {
+      await this.orderModel.findByIdAndUpdate(newStatus._id, { statusId: newStatus.newStatusId }, { new: true });
+      return { status: true };
+    } catch (e) {
+      console.error('Mongo editOrderStatus error:', e);
+      return { status: false, error: getErrorMessage(e) };
+    }
+  }
+
   async createOrder(order: Order) {
     try {
       const order_id = await this.generateUniqueOrder_id(order.compId);

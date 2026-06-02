@@ -30,6 +30,6 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
 
-  // color?: number;
+  preview?: { photo: string, image: string } | null;
 
 }
