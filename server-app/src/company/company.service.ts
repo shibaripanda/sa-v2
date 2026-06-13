@@ -14,7 +14,7 @@ export class CompanyService {
   ) {}
 
   async getCompany(_id: Types.ObjectId, session: ClientSession) {
-    return await this.companyModel.findById({ _id }).session(session);
+    return await this.companyModel.findById({ _id }, { botTokenEncrypted: 0 }).session(session);
   }
 
   async updateCompanyData(_id: Types.ObjectId, data: object) {
@@ -46,10 +46,13 @@ export class CompanyService {
   }
 
   async getCompanyesWhereStaff(user_staff_ids: Types.ObjectId[], comp_ids: Types.ObjectId[], user_id: Types.ObjectId) {
-    const res = await this.companyModel.find({
-      staff_users_ids: { $in: user_staff_ids },
-      _id: { $nin: comp_ids },
-    });
+    const res = await this.companyModel.find(
+      {
+        staff_users_ids: { $in: user_staff_ids },
+        _id: { $nin: comp_ids },
+      },
+      { botTokenEncrypted: 0 },
+    );
     // const res = await this.companyModel.find({ user_owner_id: user_id });
     if (!res.length) return [];
     for (const c of res) {
@@ -64,15 +67,15 @@ export class CompanyService {
   }
 
   async getCompanyWhereOwner(user_owner_id: Types.ObjectId) {
-    return await this.companyModel.find({ user_owner_id });
+    return await this.companyModel.find({ user_owner_id }, { botTokenEncrypted: 0 });
   }
 
   async getCompanyForDelete(user_owner_id: Types.ObjectId, session: ClientSession) {
-    return await this.companyModel.find({ user_owner_id }).session(session);
+    return await this.companyModel.find({ user_owner_id }, { botTokenEncrypted: 0 }).session(session);
   }
 
   async getCompanyWithRelations(companyId: Types.ObjectId) {
-    return await this.companyModel.findById(companyId);
+    return await this.companyModel.findById(companyId, { botTokenEncrypted: 0 });
   }
 
   async deleteCompany(_id: Types.ObjectId, session?: ClientSession) {

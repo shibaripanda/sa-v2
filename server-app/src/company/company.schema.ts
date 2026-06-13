@@ -93,6 +93,18 @@ export class Company {
     default: [],
   })
   shops_ids!: Types.ObjectId[];
+
+  @Prop({
+    required: true,
+    default: '',
+  })
+  botTokenEncrypted!: string;
+
+  @Prop({
+    required: true,
+    default: true,
+  })
+  botStatus!: boolean;
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
