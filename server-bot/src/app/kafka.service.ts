@@ -4,9 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
-  constructor(
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
-  ) {
+  constructor(@Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka) {
     console.log('KafkaService start');
   }
 

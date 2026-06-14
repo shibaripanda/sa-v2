@@ -33,7 +33,7 @@ export class UserService {
   }
 
   async addNewPhoto(_id: Types.ObjectId, photo: string) {
-    await this.userModel.updateOne(
+    const res = await this.userModel.updateOne(
       { _id },
       {
         $push: {
@@ -45,6 +45,8 @@ export class UserService {
         },
       },
     );
+    console.log(res);
+    if (res.modifiedCount && res.matchedCount) await this.appKafkaService.emitAnyReq('newPhoto_api', { _id });
   }
 
   async getUserByTgId(telegramId: number) {

@@ -129,9 +129,11 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
     const existingSet = new Set(basePhotos.map(p => p.photo))
 
     const missing = this.photos.filter(p => !existingSet.has(p))
+    console.log(missing)
     const loaded = await Promise.all(
       missing.map(photo =>
         new Promise<{ photo: string; image: any; activ: boolean }>(resolve => {
+          console.log(photo)
           socket.emit('getPhotoBuffer', { photo }, (res: any) => {
             resolve({
               photo,
@@ -149,7 +151,7 @@ export class UserClass extends (Model as new (data: User) => ModelWithData<User>
 
   async updatePhotos(dashData: DashData) {
     socket.emit('getPhotos', (res: {photos: string[]}) => {
-      console.log('updatePhotos', res)
+      // console.log('updatePhotos', res)
       const updatedUser = { ...this, photos: res.photos };
       this.photos = res.photos
       dashData.pickUser(updatedUser)

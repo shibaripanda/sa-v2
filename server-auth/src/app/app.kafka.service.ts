@@ -20,6 +20,14 @@ export class AppKafkaService implements OnModuleInit {
     //   key: 123,
     // });
   }
+  emitAnyReq(message: string, data: object | string) {
+    return firstValueFrom<boolean | { status: boolean }>(
+      this.kafkaClient.emit(message, {
+        value: data,
+        key: message,
+      }),
+    );
+  }
 
   deleteAccount(_id: ObjID) {
     return firstValueFrom<boolean>(

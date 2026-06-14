@@ -22,10 +22,7 @@ export class BotService {
   }
 
   async addNewPhoto(_id: string, photo: string) {
-    await this.kafkaService.emitAnyReq('addNewPhoto_auth', {
-      _id,
-      photo,
-    });
-    await this.kafkaService.emitAnyReq('newPhoto_api', { _id });
+    await this.kafkaService.emitAnyReq('addNewPhoto_auth', { _id, photo });
+    // await this.kafkaService.emitAnyReq('newPhoto_api', { _id });
   }
 }

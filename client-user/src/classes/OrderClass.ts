@@ -72,18 +72,26 @@ export class OrderClass implements Order {
     this.data = order?.data ?? {};
     this.snapshot = order?.snapshot ?? {};
 
-    this.createdAt = order?.createdAt ? this.formatOrderDate(order.createdAt) : '';
-    this.updatedAt = order?.updatedAt ? this.formatOrderDate(order.updatedAt) : '';
+    this.createdAt = order?.createdAt ?? new Date().toISOString();
+    this.updatedAt = order?.updatedAt ?? new Date().toISOString();
 
     this.color = order?.statusId ? app.comp.statuses_ids.find(s => s._id == order.statusId)?.color ?? 0 : 0;
     this.preview = order?.preview ?? null;
 
     this.getOneImage().then((image) => {
       if (!image) return;
-      console.log(image)
+      // console.log(image)
       this.uploadedPhotos.push(image as {photo: string, image: string});
       this.preview = image;
     });
+  }
+
+  get createdDate() {
+    return this.formatOrderDate(this.createdAt);
+  }
+
+  get updatedDate() {
+    return this.formatOrderDate(this.updatedAt);
   }
 
   async editStatus(app: MainInterface, newStatusId: string, setSort: any) {
@@ -121,7 +129,7 @@ export class OrderClass implements Order {
     })
   }
 
-  async getOneImage() {
+  private async getOneImage() {
     if (this.preview) return;
     if (this.photos.length === 0) return;
    

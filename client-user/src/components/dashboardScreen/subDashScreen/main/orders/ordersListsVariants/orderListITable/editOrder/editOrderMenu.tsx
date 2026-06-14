@@ -1,13 +1,14 @@
-import { OrderListItemCardInterface } from "./OrderListItemCard";
 import { useState } from 'react';
 import { Box, Menu, Text } from '@mantine/core';
-import { cardBorderColorObj } from "../../../../../../subComponents/colorShema/buttonColorObj";
+import { OrderClass } from '../../../../../../../../classes/OrderClass';
+import { cardBorderColorObj } from '../../../../../../../subComponents/colorShema/buttonColorObj';
+import { MainTableInterface } from '../OrdersListTable';
 
-export interface StatusEditInterface extends OrderListItemCardInterface {
-  elSize: string;
+export interface EditOrderMenuInterface extends MainTableInterface {
+  order: OrderClass;
 }
 
-export function StatusEdit(props: StatusEditInterface) {
+export function EditOrderMenu(props: EditOrderMenuInterface) {
 
     const [sort, setSort] = useState(props.order.statusId);
     const [opened, setOpened] = useState(false);
@@ -29,7 +30,7 @@ export function StatusEdit(props: StatusEditInterface) {
                     borderRadius: '5px',
                 }}
                 >
-                <Text fw={700} style={{ cursor: 'pointer', marginTop: '2px' }} size={props.elSize}>{props.order.statusName}</Text>
+                <Text fw={700} size='sm' style={{ cursor: 'pointer', marginTop: '2px' }}>{props.order.statusName}</Text>
             </Box>
         </Menu.Target>
 

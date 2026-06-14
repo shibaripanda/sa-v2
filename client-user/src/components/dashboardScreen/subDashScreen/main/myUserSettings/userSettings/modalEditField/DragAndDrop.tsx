@@ -15,7 +15,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import cx from 'clsx';
-import { Button, Grid, Text } from '@mantine/core';
+import { Grid, Group, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import classes from './DndList.module.css';
 import { IconGripVertical } from '@tabler/icons-react';
@@ -50,23 +50,33 @@ function SortableItem({ item, index, l, text}: ItemProps) {
       {...listeners}
       justify="space-between" align="center"
     >
-      <Grid.Col span={3} mt='xs'>
+      {/* <Grid.Col span={3} mt='xs'>
         <IconGripVertical size={'30px'}/>
-      </Grid.Col>
-      <Grid.Col span={7}>
+      </Grid.Col> */}
+      {/* <Grid.Col span={7}>
+          <Text>{item.name}</Text>
+          <Text c="dimmed" size="sm">
+            {text?.position}: {index + 1}
+          </Text> */}
+          {/* {index === 0 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.new}</Text>)}
+          {index === l - 1 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.closed}</Text>)} */}
+      {/* </Grid.Col> */}
+      {/* <Grid.Col span={2}>
+        <Button fullWidth size='xs'></Button>
+      </Grid.Col> */}
+
+      <Group justify="space-between">
+        <IconGripVertical size={'30px'}/>
           <Text>{item.name}</Text>
           <Text c="dimmed" size="sm">
             {text?.position}: {index + 1}
           </Text>
-          {/* {index === 0 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.new}</Text>)}
-          {index === l - 1 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.closed}</Text>)} */}
-      </Grid.Col>
-      <Grid.Col span={2}>
-        <Button fullWidth size='xs'></Button>
-      </Grid.Col>
+      </Group>
     </Grid> 
   );
 }
+
+const blockFields = [{order: 0, name: 'ID', _id: 'id'}, {order: 1, name: 'Status', _id: 'status'}, {order: 2, name: 'Created', _id: 'created'}, {order: 3, name: 'Updated', _id: 'updated'}]
 
 export function DragAndDrop(props: MainInterface) {
   const [state, handlers] = useListState(props.comp.fields_ids);
@@ -103,7 +113,9 @@ export function DragAndDrop(props: MainInterface) {
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={state.map((i) => i._id)} strategy={verticalListSortingStrategy}>
         {state.map((item, index) => (
-          <SortableItem key={item._id} item={item} index={index} l={state.length} text={props.text} />
+          <div  style={{cursor: 'pointer'}}>
+            <SortableItem key={item._id} item={item} index={index} l={state.length} text={props.text}/>
+          </div>
         ))}
       </SortableContext>
     </DndContext>

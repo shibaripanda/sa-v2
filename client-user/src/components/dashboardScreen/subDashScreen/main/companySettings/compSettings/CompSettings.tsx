@@ -86,7 +86,7 @@ export function CompSettings(props: MainInterface) {
       <Space h="xl"/>
       <Grid w="100%" gutter="md">
         {[
-          ...props.comp.devices_ids.map((s, i) => <Button style={buttonColorObj(s.color)} key={`device-${i}`} onClick={() => editDevice(s)} size='xs' color='green'>{s.name}</Button>)
+          ...props.comp.devices_ids.map((s, i) => <Button variant='default' key={`device-${i}`} onClick={() => editDevice(s)} size='xs' color='green'>{s.name}</Button>)
         ].map((item, i) =>
             <Grid.Col key={`Devices-${i}`} span={{ base: 4, sm: 1.5}}>
             <Flex direction="column" justify="center" h="100%">

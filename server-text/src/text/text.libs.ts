@@ -239,8 +239,7 @@ export const myLib: LengInstruction[] = [
     update: false,
   },
   {
-    rutext:
-      'Безвозвратное удаление аккаунта, ваших компаний, сервисов и заказов',
+    rutext: 'Безвозвратное удаление аккаунта, ваших компаний, сервисов и заказов',
     index: 'deleteaccountInfo',
     update: false,
   },

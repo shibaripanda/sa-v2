@@ -15,7 +15,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import cx from 'clsx';
-import { Button, Grid, Text } from '@mantine/core';
+import { Button, Grid, Group, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import classes from './DndList.module.css';
 import { MainInterface } from '../../Main';
@@ -51,20 +51,15 @@ function SortableItem({ item, index, l, text}: ItemProps) {
       {...listeners}
       justify="space-between" align="center"
     >
-      <Grid.Col span={3} mt='xs'>
+      <Group justify="space-between">
         <IconGripVertical size={'30px'}/>
-      </Grid.Col>
-      <Grid.Col span={7}>
           <Text>{item.name}</Text>
           <Text c="dimmed" size="sm">
             {text?.position}: {index + 1}
           </Text>
           {index === 0 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.new}</Text>)}
           {index === l - 1 && (<Text td="underline" fw={700} c="dimmed" size="sm">{text?.closed}</Text>)}
-      </Grid.Col>
-      <Grid.Col span={2}>
-        <Button fullWidth size='xs' style={buttonColorObj(item.color)}></Button>
-      </Grid.Col>
+      </Group>
     </Grid> 
   );
 }
@@ -104,7 +99,9 @@ export function DragAndDrop(props: MainInterface) {
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={state.map((i) => i._id)} strategy={verticalListSortingStrategy}>
         {state.map((item, index) => (
-          <SortableItem key={item._id} item={item} index={index} l={state.length} text={props.text} />
+          <div  style={{cursor: 'pointer'}}>
+            <SortableItem key={item._id} item={item} index={index} l={state.length} text={props.text}/>
+          </div>
         ))}
       </SortableContext>
     </DndContext>

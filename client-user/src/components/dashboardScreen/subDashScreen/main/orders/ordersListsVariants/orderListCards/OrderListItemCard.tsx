@@ -2,7 +2,6 @@ import { ActionIcon, Button, Card, Group, Image, Text } from '@mantine/core';
 import classes from './OrderListItemCard.module.css';
 import mainPic from '../../../../../../../images/mainpic.png'
 import { OrderClass } from '../../../../../../../classes/OrderClass';
-import { cardBorderColorObj } from '../../../../../../subComponents/colorShema/buttonColorObj';
 import { OrderListItemInterface } from './OrderListItem';
 import { IconEdit } from '@tabler/icons-react';
 import { StatusEdit } from './StatusEdit';
@@ -29,14 +28,7 @@ export function OrderListItemCard(props: OrderListItemCardInterface) {
   const elImage = marks.find(m => m.value === props.countItemsLime)?.image || 150
 
   return (
-    <Card withBorder padding="lg" radius="md" className={classes.card} style={{ borderWidth: 2, ...cardBorderColorObj(props.order.color) }}>
-
-      <Card.Section className={classes.top}>
-        
-        <Text fw={700} size={elSize}>{props.order.order_id}</Text>
-        {/* <Text fw={700} size={elSize}>{props.order.statusId}</Text> */}
-        <StatusEdit {...props} elSize={elSize}/>
-      </Card.Section>
+    <Card withBorder padding="lg" radius="md" className={classes.card} style={{ borderWidth: 1 }}>
 
       <Card.Section>
         <Image
@@ -51,8 +43,18 @@ export function OrderListItemCard(props: OrderListItemCardInterface) {
       </Card.Section>
 
       <Card.Section className={classes.top}>
-        <Text fw={700} size={elSize}>{props.order.deviceName}</Text>
-        <Text fw={700} c="dimmed" size={elSize}>{props.order.createdAt}</Text>
+        <Text fw={700} size={elSize}>{props.order.order_id}</Text>
+        <Text fw={700} c="dimmed" size={elSize}>{props.order.createdDate}</Text>
+      </Card.Section>
+
+      {/* <Card.Section className={classes.top}>
+        <StatusEdit {...props} elSize={elSize}/>
+      </Card.Section> */}
+
+      
+
+      <Card.Section className={classes.top}>
+        <StatusEdit {...props} elSize={elSize}/>
         <ActionIcon size={elSize} variant="filled" color="gray" aria-label="Settings">
           <IconEdit style={{ width: '70%', height: '70%' }} />
         </ActionIcon>

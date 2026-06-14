@@ -1,7 +1,7 @@
-import { Button, Checkbox, Group, HueSlider, Modal, Space } from '@mantine/core'
+import { Button, Checkbox, Group, Modal, Space } from '@mantine/core'
 import { MainInterface } from '../../Main';
-import { useState } from 'react';
-import { buttonColorObj } from '../../../../../subComponents/colorShema/buttonColorObj';
+// import { useState } from 'react';
+// import { buttonColorObj } from '../../../../../subComponents/colorShema/buttonColorObj';
 import { DeviceClass } from '../../../../../../classes/DeviceClass';
 import { UpdateStringValueDevice } from '../../../../../subComponents/updateStringValue/UpdateStringValueDevice';
 
@@ -16,7 +16,7 @@ export function ModalEditDevice(props: ModalEditDeviceInterface) {
 
     if(props.selectedDevice) {
 
-        const [statusColor, onChangeDeviceColor] = useState(props.selectedDevice.color);
+        // const [statusColor, onChangeDeviceColor] = useState(props.selectedDevice.color);
 
         console.log(props.selectedDevice)
         const deleteDevice = async () => {
@@ -64,17 +64,17 @@ export function ModalEditDevice(props: ModalEditDeviceInterface) {
                     title={<UpdateStringValueDevice {...props} setSelectedDevice={props.setSelectedDevice} device={props.selectedDevice!} dataName="name" func={props.selectedDevice.editDevice.bind(props.selectedDevice)} key={`up1`}/>} 
                     withCloseButton={true}
                     onClose={() => {
-                        if (statusColor !== props.selectedDevice?.color) {
-                            props.selectedDevice?.editDevice(props.selectedDevice._id, 'color', statusColor.toString(), props.comp, props.pickComp)
-                        }
+                        // if (statusColor !== props.selectedDevice?.color) {
+                        //     props.selectedDevice?.editDevice(props.selectedDevice._id, 'color', statusColor.toString(), props.comp, props.pickComp)
+                        // }
                         props.setModalDevice.close()
                         props.setSelectedDevice(null)
                     }}
                     >
                     <Space h='lg'/>
-                    <HueSlider value={statusColor} onChange={onChangeDeviceColor} />
-                    <Space h='lg'/>
-                    <Space h='lg'/>
+                    {/* <HueSlider value={statusColor} onChange={onChangeDeviceColor} /> */}
+                    {/* <Space h='lg'/> */}
+                    {/* <Space h='lg'/> */}
 
                     {props.comp.fields_ids.map(f => 
                     <Group>
@@ -87,7 +87,7 @@ export function ModalEditDevice(props: ModalEditDeviceInterface) {
                     </Group>)}
 
                     <Group justify='space-between'>
-                        {statusColor !== props.selectedDevice?.color ? (
+                        {/* {statusColor !== props.selectedDevice?.color ? (
                         <Button
                             style={buttonColorObj(props.selectedDevice?.color)}
                             size="xs"
@@ -95,7 +95,8 @@ export function ModalEditDevice(props: ModalEditDeviceInterface) {
                         >
                             {props.text?.original}
                         </Button>
-                        ) : (<div></div>)}
+                        ) : (<div></div>)} */}
+                        <div></div>
                         {props.comp.devices_ids.length > 1 && (<Button size="xs" color='red' onClick={deleteDevice}>{props.text?.delete}</Button>)}
                     </Group>
                 </Modal>
