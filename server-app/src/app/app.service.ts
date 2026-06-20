@@ -11,6 +11,7 @@ import { ShopService } from 'src/shop/shop.service';
 import { StaffUserService } from 'src/staff-user/staff-user.service';
 import { StatusService } from 'src/status/status.service';
 import { WorkService } from 'src/work/work.service';
+import { AppKafkaService } from './app.kafka.service';
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -26,6 +27,7 @@ export class AppService implements OnModuleInit {
     private readonly workService: WorkService,
     private readonly statusService: StatusService,
     private readonly staffUserService: StaffUserService,
+    private readonly kafkaService: AppKafkaService,
   ) {}
 
   async onModuleInit() {
@@ -36,6 +38,14 @@ export class AppService implements OnModuleInit {
     //   },
     //   key: 123,
     // });
+  }
+
+  async addNewStaffUser(email?: string, username?: string) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    const existingUser = await this.kafkaService.sendAnyReq('getUserByEmailOrUsername_app', { email, username });
+    console.log('existingUser', existingUser);
   }
 
   async deleteService(service_id: Types.ObjectId) {

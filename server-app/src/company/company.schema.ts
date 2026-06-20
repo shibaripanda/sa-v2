@@ -95,7 +95,7 @@ export class Company {
   shops_ids!: Types.ObjectId[];
 
   @Prop({
-    required: true,
+    required: false,
     default: '',
   })
   botTokenEncrypted!: string;

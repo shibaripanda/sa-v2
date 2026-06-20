@@ -8,6 +8,16 @@ import { Types } from 'mongoose';
 export class UserKafkaController {
   constructor(private userService: UserService) {}
 
+  @MessagePattern('getUserByEmailOrUsername_app')
+  async getUserByEmailOrUsername(@Payload() value: { email?: string; username?: string }) {
+    const res = await this.userService.getUserByEmailOrUsername(value.email, value.username);
+    console.log('auth', res);
+    return {
+      value: { user_id: res },
+      key: 'getUserByEmailOrUsername_app',
+    };
+  }
+
   @MessagePattern('deletePhoto_auth')
   async deletePhoto(@Payload() value: { _id: ObjID; deletePhoto: string }) {
     const res = await this.userService.deletePhoto(value._id, value.deletePhoto);

@@ -18,6 +18,7 @@ import { Connection } from 'mongoose';
 import { AppKafkaController } from './app.kafka.controller';
 import { GlobalConfigModule } from 'src/globalConfig/globalConfig.module';
 import { FieldModule } from 'src/field/field.module';
+import { AppKafkaService } from './app.kafka.service';
 
 @Global()
 @Module({
@@ -72,7 +73,7 @@ import { FieldModule } from 'src/field/field.module';
     ServiceModule,
   ],
   controllers: [AppKafkaController],
-  providers: [AppService],
+  providers: [AppService, AppKafkaService],
   exports: [ClientsModule, JwtModule],
 })
 export class AppModule {}

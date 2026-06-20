@@ -78,6 +78,8 @@ export function CompSettings(props: MainInterface) {
     <Paper withBorder radius="md" p="xs">
       <Text>{props.text?.companySettings}</Text>
 
+      <Button onClick={() => props.staffUser.addNewStaffUser(props)}>Add New Staff User</Button>
+
       <Divider my="lg" label="Devices" labelPosition="left" />
       <Group>
         <Button w={'200px'} size='xs' onClick={addNewDevice}>{props.text?.addNewDevice}</Button>

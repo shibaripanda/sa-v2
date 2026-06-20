@@ -21,7 +21,14 @@ export class KafkaService implements OnModuleInit {
       'googleLoginAdd',
     ];
     const text = ['textavailable', 'textlib'];
-    const user = ['update-user', 'delete-account', 'getPhotos_auth', 'getPhotoBuffer_bot', 'deletePhoto_auth'];
+    const user = [
+      'update-user',
+      'delete-account',
+      'getPhotos_auth',
+      'getPhotoBuffer_bot',
+      'deletePhoto_auth',
+      'add-new-staff-user',
+    ];
     const status = ['edit-status', 'delete-status'];
     const device = ['edit-device', 'delete-device'];
     const field = ['edit-field', 'delete-field'];

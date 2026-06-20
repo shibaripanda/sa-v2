@@ -17,6 +17,7 @@ import { OrderModule } from 'src/order/order.module';
 import { AppGateway } from './app.gateway';
 import { AppAdminGateway } from './app.admin.gateway';
 import { KafkaController } from './kafka.controller';
+import { UserStaffModule } from 'src/userStaff/userStaff.module';
 
 @Global()
 @Module({
@@ -42,6 +43,7 @@ import { KafkaController } from './kafka.controller';
         inject: [ConfigService],
       },
     ]),
+    UserStaffModule,
     UserModule,
     TextModule,
     AuthModule,

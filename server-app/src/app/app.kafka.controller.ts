@@ -7,6 +7,15 @@ import { Types } from 'mongoose';
 export class AppKafkaController {
   constructor(private readonly appService: AppService) {}
 
+  @MessagePattern('add-new-staff-user')
+  async addNewStaffUser(@Payload() value: { email?: string; username?: string }) {
+    const res = await this.appService.addNewStaffUser(value.email, value.username);
+    return {
+      value: res,
+      key: Date.now(),
+    };
+  }
+
   @MessagePattern('delete-service')
   async deleteService(@Payload() value: { service_id: Types.ObjectId }) {
     const res = await this.appService.deleteService(value.service_id);

@@ -16,6 +16,25 @@ export class UserService {
     console.log('UserService initialized');
   }
 
+  async getUserByEmailOrUsername(email?: string, username?: string) {
+    if (!email && !username) return null;
+
+    if (email) {
+      const res = await this.userModel.findOne({ email });
+      if (res) return res._id;
+    }
+
+    if (username) {
+      const res = await this.userModel.findOne({ telegramUserName: username });
+      if (res) return res._id;
+    }
+    return null;
+  }
+
+  async getUserByEmail(email: string) {
+    return await this.userModel.findOne({ email });
+  }
+
   async deletePhoto(_id: Types.ObjectId, deletePhoto: string) {
     return await this.userModel.findByIdAndUpdate(
       _id,

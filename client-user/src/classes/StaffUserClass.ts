@@ -1,16 +1,13 @@
+import { DashScreenInterface } from "../components/dashboardScreen/mainScreen/Dashboard"
 import { StaffUser } from "../interfaces/staffUser"
-import { AxiosClass } from "./AxiosClass"
+import { socket } from "../utils/socket"
 import { Model, ModelWithData } from "./interfacesClass"
 
 export class StaffUserClass extends (Model as new (data: StaffUser) => ModelWithData<StaffUser>) {
 
-  private axiosClass = new AxiosClass()
-
-  async updateStaffUser(dataName: string, newValue: string, pickStaffUser: (staffUser: StaffUser) => void) {
-    const res = await this.axiosClass.axiosAuthServer('POST', '/update-staffuser', dataName, {[dataName]: newValue})
-    if (!res) return false
-    const updatedUser = { ...this, [dataName]: newValue };
-    pickStaffUser(updatedUser)
-    return true
-  }
+  addNewStaffUser(dashData: DashScreenInterface, email?: string, username?: string) {
+      socket.emit('addNewStaffUser', { email: 'prevetlunatikam@gmail.com', username: 'username' }, (res: any) => {
+        console.log('addNewStaffUser', res)
+      })
+    }
 }
