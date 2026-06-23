@@ -17,6 +17,7 @@ export class UniversalJwtGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext): boolean {
+    console.log('UniversalJwtGuard');
     const type = context.getType<'http' | 'ws'>();
 
     // ================= HTTP =================

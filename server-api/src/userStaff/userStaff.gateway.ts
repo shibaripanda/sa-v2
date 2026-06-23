@@ -7,6 +7,8 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { UniversalJwtGuard } from 'src/guards/universalJwtGuard';
 import { MessageBody } from '@nestjs/websockets';
 import { User } from 'src/user/interfaces/user';
+import { AddNewStaffUserDto } from './dto/addNewStaffUserDto.dto';
+import { RoleGuard } from 'src/guards/roleGuard';
 
 export interface MySocket extends Socket {
   data: {
@@ -20,10 +22,11 @@ export interface MySocket extends Socket {
 export class UserStaffGateway {
   constructor(private readonly kafkaService: KafkaService) {}
 
-  @UseGuards(UniversalJwtGuard)
+  @UseGuards(UniversalJwtGuard, RoleGuard)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
   @SubscribeMessage('addNewStaffUser')
-  async addNewStaffUser(@CurrentUser() user: User, @MessageBody() messageBody: { email?: string; username?: string }) {
+  async addNewStaffUser(@CurrentUser() user: User, @MessageBody() messageBody: AddNewStaffUserDto) {
+    console.log(user);
     console.log(messageBody);
     return await this.kafkaService.sendAnyReq('add-new-staff-user', { _id: user._id, ...messageBody });
   }

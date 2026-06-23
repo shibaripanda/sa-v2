@@ -6,8 +6,17 @@ import { Model, ModelWithData } from "./interfacesClass"
 export class StaffUserClass extends (Model as new (data: StaffUser) => ModelWithData<StaffUser>) {
 
   addNewStaffUser(dashData: DashScreenInterface, email?: string, username?: string) {
-      socket.emit('addNewStaffUser', { email: 'prevetlunatikam@gmail.com', username: 'username' }, (res: any) => {
-        console.log('addNewStaffUser', res)
-      })
+
+    const data = {
+      email: email,
+      username: username,
+      company_id: dashData.comp._id,
+      service_id: dashData.service._id
     }
+
+    socket.emit('addNewStaffUser', data, (res: any) => {
+      console.log('addNewStaffUser', res)
+    })
+  }
+  
 }
