@@ -1,13 +1,15 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
 import { Types } from 'mongoose';
+import { IsUserHasAccessGuard } from './guards/isUserHasAccessGuard';
 
 @Controller()
 export class AppKafkaController {
   constructor(private readonly appService: AppService) {}
 
-  @MessagePattern('add-new-staff-user')
+  @UseGuards(IsUserHasAccessGuard)
+  @MessagePattern('addNewStaffUser_app')
   async addNewStaffUser(@Payload() value: { email?: string; username?: string }) {
     const res = await this.appService.addNewStaffUser(value.email, value.username);
     return {

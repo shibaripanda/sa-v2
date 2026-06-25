@@ -27,7 +27,7 @@ export class KafkaService implements OnModuleInit {
       'getPhotos_auth',
       'getPhotoBuffer_bot',
       'deletePhoto_auth',
-      'add-new-staff-user',
+      'addNewStaffUser_app',
     ];
     const status = ['edit-status', 'delete-status'];
     const device = ['edit-device', 'delete-device'];
