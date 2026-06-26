@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { CompanyService } from 'src/company/company.service';
+import { StaffUserDocument } from 'src/staff-user/staff-user.schema';
 import { StaffUserService } from 'src/staff-user/staff-user.service';
 
 interface RequestKafka extends Request {
@@ -14,7 +15,7 @@ interface RequestKafka extends Request {
 }
 
 @Injectable()
-export class IsUserHasAccessGuard implements CanActivate {
+export class RoleGuard implements CanActivate {
   constructor(
     private readonly companyService: CompanyService,
     private readonly staffUserService: StaffUserService,
@@ -23,28 +24,20 @@ export class IsUserHasAccessGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const type = context.getType<'http' | 'ws' | 'rpc'>();
 
-    console.log('IsUserHasAccessGuard');
+    console.log('RoleGuard');
 
     if (type === 'rpc') {
+      console.log(context.switchToRpc().getContext());
       const rpcData: RequestKafka = context.switchToRpc().getData();
 
-      const isOwner = await this.companyService.isOwner(rpcData.user_id, rpcData.company_id);
-      console.log(isOwner);
-      if (isOwner) {
-        rpcData.statusOwner = true;
-        return true;
-      }
+      if (!rpcData.statusOwner) return true;
 
-      const isStaff = await this.companyService.isStaff(rpcData.company_id, rpcData.staffUser_id);
-      console.log(isStaff);
-      if (!isStaff) return false;
-
-      const isLegalStaff = await this.staffUserService.isLegalStaff(rpcData.user_id, rpcData.staffUser_id);
-      console.log(isLegalStaff);
-      if (!isLegalStaff) return false;
-
-      rpcData.statusOwner = false;
       console.log(rpcData);
+
+      const staffUser: StaffUserDocument | null = await this.staffUserService.getStaffUserById(rpcData.staffUser_id);
+      if (staffUser) {
+        console.log(staffUser.role_ids.map((r) => r.actions).flat());
+      }
       return true;
     }
 

@@ -14,4 +14,7 @@ export class AddNewStaffUserDto {
 
   @IsMongoId()
   readonly service_id!: string;
+
+  @IsMongoId()
+  readonly staffUser_id!: string;
 }

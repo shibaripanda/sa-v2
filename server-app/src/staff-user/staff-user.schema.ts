@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { RoleDocument } from 'src/role/role.schema';
 
 type ProfitMode = 'fullProcent' | 'procentWork' | 'fix';
 
@@ -21,7 +22,7 @@ export class StaffUser {
     required: true,
     default: [],
   })
-  role_ids!: Types.ObjectId[];
+  role_ids!: RoleDocument[];
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'Field', autopopulate: true }],

@@ -62,8 +62,18 @@ export class CompanyService {
     return res;
   }
 
+  async isStaff(company_id: Types.ObjectId, staffUser_id: Types.ObjectId) {
+    const res = await this.companyModel.findOne({ _id: company_id, staff_users_ids: { $in: [staffUser_id] } });
+    return res ? true : false;
+  }
+
   async getMyStaffUsers(origin_user_id: Types.ObjectId) {
     return await this.companyModel.find({ origin_user_id });
+  }
+
+  async isOwner(user_owner_id: Types.ObjectId, _id: Types.ObjectId) {
+    const res = await this.companyModel.findOne({ _id, user_owner_id }, { botTokenEncrypted: 0 });
+    return res ? true : false;
   }
 
   async getCompanyWhereOwner(user_owner_id: Types.ObjectId) {

@@ -14,8 +14,17 @@ export class StaffUserService {
     private staffUserModel: Model<StaffUserDocument>,
   ) {}
 
+  async getStaffUserById(_id: Types.ObjectId) {
+    return await this.staffUserModel.findById(_id);
+  }
+
   async deleteManyStaffUsers(ids: Types.ObjectId[], session?: ClientSession) {
     await this.staffUserModel.deleteMany({ _id: { $in: ids } }, { session });
+  }
+
+  async isLegalStaff(user_id: Types.ObjectId, staffUser_id: Types.ObjectId) {
+    const res = await this.staffUserModel.findOne({ _id: staffUser_id, origin_user_id: user_id });
+    return res;
   }
 
   async getMyStaffUsers_ids(origin_user_id: Types.ObjectId) {

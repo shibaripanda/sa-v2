@@ -11,7 +11,8 @@ export class StaffUserClass extends (Model as new (data: StaffUser) => ModelWith
       email: email,
       username: username,
       company_id: dashData.comp._id,
-      service_id: dashData.service._id
+      service_id: dashData.service._id,
+      staffUser_id: dashData.staffUser._id,
     }
 
     socket.emit('addNewStaffUser', data, (res: any) => {

@@ -13,19 +13,19 @@ export type ServiceDocument = HydratedDocument<Service>;
 @Schema({ timestamps: true })
 export class Service {
   @Prop({ required: true, default: 'New Service' })
-  name: string;
+  name!: string;
 
   @Prop({ required: true, default: 'Saturn, Start st. 15' })
-  address: string;
+  address!: string;
 
   @Prop({ required: true, default: '+3 424 22424242424' })
-  contacts: string;
+  contacts!: string;
 
   @Prop({ required: true, default: '9:00 - 10:00, weekend: 8:00 - 10:00' })
-  workTime: string;
+  workTime!: string;
 
   @Prop({ required: true, default: [] })
-  historyServiceLogin: HistoryServiceLogin[];
+  historyServiceLogin!: HistoryServiceLogin[];
 }
 
 export const ServiceSchema = SchemaFactory.createForClass(Service);
